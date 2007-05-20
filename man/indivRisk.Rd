@@ -1,0 +1,40 @@
+\name{indivRisk}
+\alias{indivRisk}
+\title{ Individual Risk computation }
+\description{
+Base individual risk computation
+}
+\usage{
+indivRisk(x, method = "approx", qual = 1)
+}
+\arguments{
+  \item{x}{ object from class freqCalc }
+  \item{method}{ approx (default) or exact }
+  \item{qual}{ final correction factor }
+}
+\details{
+Can be found in the link given below
+}
+\value{
+  \item{rk }{ base individual risk }
+  \item{method }{method}
+  \item{qual }{final correction factor}
+}
+\references{ have a look at: \url{http://neon.vb.cbs.nl/casc/Deliv/12d1.pdf} or
+\url{http://www.istat.it/dati/pubbsci/contributi/Contributi/contr_2003/2003_14.pdf} }
+\author{ Matthias Templ }
+\note{ The base individual risk method was developed by Benedetti, Capobianchi and Franconi }
+}
+\seealso{  \code{\link{freqCalc}} }
+\examples{
+## example from Capobianchi, Polettini and Lucarelli:
+data(francdat)
+f <- freqCalc(francdat, keyVars=c(2,4,5,6),w=8)
+f
+f$fk
+f$Fk
+## individual risk calculation:
+indivf <- indivRisk(f)  
+indivf$rk    
+}
+\keyword{ manip }

@@ -1,0 +1,50 @@
+\name{summary.micro}
+\alias{summary.micro}
+\title{ Summary method for objects from class micro }
+\description{
+Summary method for objects from class micro.
+}
+\usage{
+summary.micro(object, ...)
+}
+\arguments{
+  \item{object}{ objects from class micro }
+  \item{\dots}{  }
+}
+\details{
+This function computes several measures of information loss, like 
+}
+\value{
+  \item{meanx }{A conventional summary of the original data}
+  \item{meanxm }{A conventional summary of the microaggregated data}
+  \item{amean }{average relative absolute deviation of means }
+  \item{amedian }{average relative absolute deviation of medians }
+  \item{aonestep }{average relative absolute deviation of onestep from median}
+  \item{devvar }{average relative absolute deviation of variances }
+  \item{amad }{average relative absolute deviation of the mad}
+  \item{acov }{average relative absolute deviation of covariances }
+  \item{arcov }{average relative absolute deviation of robust (with mcd) covariances }
+  \item{acor }{average relative absolute deviation of correlations }
+  \item{arcor }{average relative absolute deviation of robust (with mcd) correlations }
+  \item{acors  }{average relative absolute deviation of rank-correlations  }
+  \item{adlm  }{average absolute deviation of lm regression coefficients (without intersept)  }
+  \item{adlts  }{average absolute deviation of lts regression coefficients (without intersept)  }
+  \item{apcaload  }{average absolute deviation of pca loadings  }
+  \item{apppacaload  }{average absolute deviation of robust (with projection pursuit approach) pca loadings  }
+   \item{atotals  }{average relative absolute deviation of totals  }
+  \item{pmtotals  }{average relative deviation of totals  }
+   
+}
+\references{  }
+\author{ Matthias Templ }
+\note{ 
+Additional measures of information loss will be included soon.
+}
+\seealso{\code{\link{microaggregation}}, \code{\link{valTable}}}
+\examples{
+data(free1)
+m1 <- microaggregation(free1[, 31:34], method="onedims", aggr=3)
+summary(m1)
+}
+\keyword{ print }
+

@@ -1,0 +1,28 @@
+\name{microData}
+\alias{microData}
+\docType{data}
+\title{ microData }
+\description{
+Small demonstration data set.
+}
+\usage{data(microData)}
+\format{
+  The format is:
+ num [1:13, 1:5] 5 7 2 1 7 8 12 3 15 4 ...
+ - attr(*, "dimnames")=List of 2
+  ..$ : chr [1:13] "10000" "11000" "12000" "12100" ...
+  ..$ : chr [1:5] "one" "two" "three" "four" ...
+}
+\details{
+}
+\source{
+}
+\references{
+}
+\examples{
+data(microData)
+m1 <- microaggregation(microData, method="mdav")
+x <- m1$x  ### fix me
+summary(m1)
+}
+\keyword{datasets}

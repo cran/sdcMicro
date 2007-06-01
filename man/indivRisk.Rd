@@ -2,7 +2,7 @@
 \alias{indivRisk}
 \title{ Individual Risk computation }
 \description{
-Base individual risk computation
+Base individual risk computation.
 }
 \usage{
 indivRisk(x, method = "approx", qual = 1)
@@ -13,7 +13,8 @@ indivRisk(x, method = "approx", qual = 1)
   \item{qual}{ final correction factor }
 }
 \details{
-Can be found in the link given below
+Determines the risk for each observation. After the risk is computed one can use e.g. the function
+localSuppr() for the protection of values of high risk. Further details can be found at the link given below.
 }
 \value{
   \item{rk }{ base individual risk }

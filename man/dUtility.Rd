@@ -12,13 +12,15 @@ dUtility(x, xm)
   \item{xm}{ perturbed data }
 }
 \details{
+Here we measure standardised distances of the perturbed data values to the original ones.
 }
 \value{
 data utility
 }
-\references{ \url{http://vneumann.etse.urv.es/publications/sci/lncs3050Outlier.pdf} }
+\references{ look e.g. in \url{http://vneumann.etse.urv.es/publications/sci/lncs3050Outlier.pdf} }
 \author{ Matthias Templ }
 \note{ 
+Note, that this measure of information loss does not evaluate how well univariate or multivariate statistics are preserved.
 }
 \seealso{  \code{\link{dRisk}} }
 \examples{

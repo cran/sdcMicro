@@ -20,15 +20,13 @@ freqCalc(x, keyVars = 1:3, w = 4)
   \item{keyVars }{keyVars}
   \item{w}{index of weight vector}
     \item{indexG }{}
-    \item{fk }{fk}
-    \item{Fk}{Fk}
-    \item{n1 }{}
-    \item{n2 }{}    
+    \item{fk }{the frequency of equal observations in the key variables subset sample given for each observation.}
+    \item{Fk}{estimated frequency in the population}
+    \item{n1 }{amount of observations with fk=1}
+    \item{n2 }{amount of observations with fk=2}    
 }
-\references{ \url{http://neon.vb.cbs.nl/casc/Deliv/12d1.pdf} }
+\references{ look e.g. in \url{http://neon.vb.cbs.nl/casc/Deliv/12d1.pdf} }
 \author{ Matthias Templ }
-\note{ 
-}
 \seealso{ \code{\link{indivRisk}} }
 \examples{
 data(francdat)

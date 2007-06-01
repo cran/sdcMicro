@@ -15,13 +15,13 @@ dataGen(x, n = 200)
 Uses the cholesky decomposition to generate synthetic data. For details see at the reference.
 }
 \value{
- generated synthetic data.
+ the generated synthetic data.
 }
 \references{ Have a look at \url{http://vneumann.etse.urv.es/publications/sci/lncs3050FastGen.pdf} }
 \author{ Matthias Templ }
-\note{ 
+\note{ With this method only multivariate normal distributed data with approxiomately the same covariance as the original data can be generated
+without reflecting the distribution of real complex data, which are, in general, not follows a multivariate normal distribution.
 }
-\seealso{  }
 \examples{
 data(mtcars)
 cov(mtcars[,4:6])

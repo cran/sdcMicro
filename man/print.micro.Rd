@@ -5,20 +5,16 @@
 Print method for objects from class micro.
 }
 \usage{
-print.micro(x, ...)
+\method{print}{micro}(x, ...)
 }
 \arguments{
   \item{x}{ object from class micro }
   \item{\dots}{  }
 }
-\details{
-}
 \value{
+information about method and aggregation level from objects of class micro.
 }
-\references{  }
 \author{ Matthias Templ }
-\note{
-}
 \seealso{ \code{\link{microaggregation}} }
 \examples{
 data(free1)

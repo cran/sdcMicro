@@ -5,7 +5,7 @@
 Summary method for objects from class freqCalc to provide information about local suppressions.
 }
 \usage{
-summary.freqCalc(object, ...)
+\method{summary}{freqCalc}(object, ...)
 }
 \arguments{
   \item{object}{object from class freqCalc }
@@ -15,11 +15,9 @@ summary.freqCalc(object, ...)
   Shows the amount of local suppressions on each variable in which local suppression was applied.
 }
 \value{
+information about local suppression in each variable (if there is already a local suppression done).
 }
-\references{  }
 \author{Matthias Templ }
-\note{ 
-}
 \seealso{ \code{\link{freqCalc}} }
 \examples{
 ## example from Capobianchi, Polettini and Lucarelli:

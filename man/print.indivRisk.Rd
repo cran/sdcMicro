@@ -5,20 +5,16 @@
  Print method for objects from class indivRisk
 }
 \usage{
-print.indivRisk(x, ...)
+\method{print}{indivRisk}(x, ...)
 }
 \arguments{
   \item{x}{ object from class indivRisk }
   \item{\dots}{ }
 }
-\details{
-}
 \value{
+few information about the method and the final correction factor for objects of class \sQuote{indivRisk}.
 }
-\references{ }
 \author{ Matthias Templ }
-\note{ 
-}
 \seealso{ \code{\link{indivRisk}} }
 \examples{
 ## example from Capobianchi, Polettini and Lucarelli:

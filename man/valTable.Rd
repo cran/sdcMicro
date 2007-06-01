@@ -22,14 +22,13 @@ Tabelarise the output from summary.micro. Will be enhanced to all perturbation m
 \value{
 Measures of information loss splitted for the comparison of different methods.
 }
-\references{  }
 \author{ Matthias Templ }
-\note{ 
-}
 \seealso{ \code{\link{microaggregation}}, \code{\link{summary.micro}} }
 \examples{
-data(free1)
-valTable(free1[200:300, 31:34], method=c("simple","onedims","pca"))
+data(Tarragona)
+valTable(Tarragona[100:200,], method=c("simple","onedims","pca","clustpppca"))
+## valTable(Tarragona, method=c("simple","onedims","pca","clustpppca","mdav"))
+## clustpppca outperforms the other algorithms for this data set...
 }
 \keyword{ print }
 

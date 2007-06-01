@@ -5,20 +5,16 @@
 Print method for objects from class freqCalc.
 }
 \usage{
-print.freqCalc(x, ...)
+\method{print}{freqCalc}(x, ...)
 }
 \arguments{
   \item{x}{ object from class freqCalc }
   \item{\dots}{  }
 }
-\details{
-}
 \value{
+information about the frequency counts for key variables for object of class \sQuote{freqCalc}.
 }
-\references{  }
 \author{ Matthias Templ }
-\note{
-}
 \seealso{ \code{\link{freqCalc}} }
 \examples{
 ## example from Capobianchi, Polettini and Lucarelli:

@@ -5,7 +5,7 @@
 Summary method for objects from class micro.
 }
 \usage{
-summary.micro(object, ...)
+\method{summary}{micro}(object, ...)
 }
 \arguments{
   \item{object}{ objects from class micro }
@@ -35,16 +35,15 @@ This function computes several measures of information loss, like
   \item{pmtotals  }{average relative deviation of totals  }
    
 }
-\references{  }
 \author{ Matthias Templ }
 \note{ 
 Additional measures of information loss will be included soon.
 }
 \seealso{\code{\link{microaggregation}}, \code{\link{valTable}}}
 \examples{
-data(free1)
-m1 <- microaggregation(free1[, 31:34], method="onedims", aggr=3)
-summary(m1)
+data(Tarragona)
+m1 <- microaggregation(Tarragona, method="onedims", aggr=3)
+## summary(m1)
 }
 \keyword{ print }
 

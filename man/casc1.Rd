@@ -13,12 +13,6 @@
   ..$ : chr [1:13] "1" "2" "3" "4" ...
   ..$ : chr [1:7] "1" "2" "3" "4" ...
 }
-\details{
-}
-\source{
-}
-\references{
-}
 \examples{
 data(casc1)
 casc1

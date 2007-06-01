@@ -2,7 +2,7 @@
 \alias{dRisk}
 \title{ overal disclosure risk }
 \description{
-  Disclosure risk via standard deviation-based intervals
+  Disclosure risk via standard deviation-based intervals.
 }
 \usage{
 dRisk(x, xm, k = 0.01)
@@ -13,14 +13,15 @@ dRisk(x, xm, k = 0.01)
   \item{k}{ percentage of the standard deviation }
 }
 \details{
+An interval is built around each value of the perturbed value with the help of the standard deviation. 
+Then we look if the original values are in these intervals or not.
+With parameter k we can enlarge or down scaling the interval.
 }
 \value{
-The disclosure risk
+The disclosure risk.
 }
 \references{ \url{http://vneumann.etse.urv.es/publications/sci/lncs3050Outlier.pdf} }
 \author{Matthias Templ }
-\note{
-}
 \seealso{ \code{\link{dUtility}} }
 \examples{
 data(free1)

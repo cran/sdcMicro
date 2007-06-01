@@ -3,7 +3,7 @@
 \docType{data}
 \title{ Demo data set from mu-Argus}
 \description{
-Demo data set from mu-Argus. 
+Demo data set from the mu-Argus software for SDC. 
 }
 \usage{data(free1)}
 \format{
@@ -14,12 +14,10 @@ Demo data set from mu-Argus.
   ..$ : chr [1:34] "REGION" "SEX" "AGE" "MARSTAT" ...
 }
 \details{
-See at the source.
+Please, see at the link given below.
 }
 \source{
 \url{http://neon.vb.cbs.nl/casc/}
-}
-\references{
 }
 \examples{
 data(free1)

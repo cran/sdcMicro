@@ -7,33 +7,36 @@ The test data set was obtained on July 27, 2000 using the Data Extraction System
 }
 \usage{data(CASCrefmicrodata)}
 \format{
-  A data frame with 1080 observations on the following 13 variables.
+  A data frame sampled from year 1995 with 1080 observations on the following 13 variables.
   \describe{
-    \item{\code{AFNLWGT}}{a numeric vector}
-    \item{\code{AGI}}{a numeric vector}
-    \item{\code{EMCONTRB}}{a numeric vector}
-    \item{\code{FEDTAX}}{a numeric vector}
-    \item{\code{PTOTVAL}}{a numeric vector}
-    \item{\code{STATETAX}}{a numeric vector}
-    \item{\code{TAXINC}}{a numeric vector}
-    \item{\code{POTHVAL}}{a numeric vector}
-    \item{\code{INTVAL}}{a numeric vector}
-    \item{\code{PEARNVAL}}{a numeric vector}
-    \item{\code{FICA}}{a numeric vector}
-    \item{\code{WSALVAL}}{a numeric vector}
-    \item{\code{ERNVAL}}{a numeric vector}
+    \item{\code{AFNLWGT}}{Final weight (2 implied decimal places)}
+    \item{\code{AGI}}{Adjusted gross income}
+    \item{\code{EMCONTRB}}{Employer contribution for hlth insurance}
+    \item{\code{FEDTAX}}{Federal income tax liability}
+    \item{\code{PTOTVAL}}{Total person income}
+    \item{\code{STATETAX}}{State income tax liability}
+    \item{\code{TAXINC}}{Taxable income amount}
+    \item{\code{POTHVAL}}{Total other persons income}
+    \item{\code{INTVAL}}{Amt of interest income}
+    \item{\code{PEARNVAL}}{Total person earnings}
+    \item{\code{FICA}}{Soc. sec. retirement payroll deduction}
+    \item{\code{WSALVAL}}{Amount: Total Wage and salary}
+    \item{\code{ERNVAL}}{Business or Farm net earnings}
   }
 }
 \details{
+Further details are given in the link below.
 }
 \source{
   \url{http://neon.vb.cbs.nl/casc/testsets.html}
 }
 \references{
 Brand, R. and
-Domingo-Ferrer, J. and Mateo-Sanz, J.M., Reference data sets to test and compare {SDC} methods for protection of numerical microdata.
+Domingo-Ferrer, J. and Mateo-Sanz, J.M., Reference data sets to test and compare {SDC} methods for protection of numerical microdata. 
+Unpublished. \url{http://neon.vb.cbs.nl/casc/CASCrefmicrodata.pdf}
 }
 \examples{
 data(CASCrefmicrodata)
+head(CASCrefmicrodata)
 }
 \keyword{datasets}

@@ -24,16 +24,17 @@ A real data set comprising figures of 834 companies in the Tarragona area. Data 
     \item{\code{NET.PROFIT}}{a numeric vector}
   }
 }
-\details{
-}
 \source{
   \url{http://neon.vb.cbs.nl/casc/testsets.html}
 }
 \references{
 Brand, R. and
 Domingo-Ferrer, J. and Mateo-Sanz, J.M., Reference data sets to test and compare {SDC} methods for protection of numerical microdata.
+Unpublished. \url{http://neon.vb.cbs.nl/casc/CASCrefmicrodata.pdf}
 }
 \examples{
 data(Tarragona)
+head(Tarragona)
+dim(Tarragona)
 }
 \keyword{datasets}

@@ -3,7 +3,7 @@
 \alias{sdcMicro}
 \docType{package}
 \title{
-Statistical Disclosure Control (SDC) for the generation of protected microdata for researchers.
+Statistical Disclosure Control (SDC) for the generation of protected microdata for researchers and for public use.
 }
 \description{
 This package includes most of the methods of the popular software mu-Argus and includes additional methods which are not included in mu-Argus.
@@ -78,6 +78,8 @@ m1 <- microaggregation(microData, method="mdav")
 x <- m1$x  ### fix me
 summary(m1)
 plotMicro(m1, 0.1, which.plot=1)  # too less observations...
+data(free1)
+plotMicro(microaggregation(free1[,31:34], method="onedims"), 0.1, which.plot=1)
 
 
 ## disclosure risk (interval) and data utility:

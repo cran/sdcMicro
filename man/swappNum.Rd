@@ -24,8 +24,6 @@ the rank swapped data.
 }
 \references{ Look, e.g. on \url{http://www.niss.org/dgii/TR/dataswap-finalrevision.pdf} }
 \author{ Matthias Templ}
-\note{ 
-}
 \seealso{ \code{\link{microaggregation}} }
 \examples{
 ## Numerical Rank Swapping:

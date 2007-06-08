@@ -20,8 +20,8 @@ feasible to implement a GUI if there will be a large demand for a GUI like in mu
 \tabular{ll}{
 Package: \tab sdcMicro\cr
 Type: \tab Package\cr
-Version: \tab 1.0\cr
-Date: \tab 2007-05-08\cr
+Version: \tab 1.2\cr
+Date: \tab 2007-06-08\cr
 License: \tab GPL 2.0 \cr
 }
 

@@ -5,12 +5,13 @@
 Base individual risk computation.
 }
 \usage{
-indivRisk(x, method = "approx", qual = 1)
+indivRisk(x, method = "approx", qual = 1, survey=TRUE)
 }
 \arguments{
   \item{x}{ object from class freqCalc }
   \item{method}{ approx (default) or exact }
   \item{qual}{ final correction factor }
+  \item{survey}{ TRUE, if one have survey data and FALSE if one deal with the whole population. } 
 }
 \details{
 Determines the risk for each observation. After the risk is computed one can use e.g. the function

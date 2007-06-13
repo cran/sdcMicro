@@ -21,6 +21,8 @@ localSuppr() for the protection of values of high risk. Further details can be f
   \item{rk }{ base individual risk }
   \item{method }{method}
   \item{qual }{final correction factor}
+  \item{fk }{frequency count}
+  \item{knames }{colnames of the key variables}  
 }
 \references{ have a look at: \url{http://neon.vb.cbs.nl/casc/Deliv/12d1.pdf} or
 \url{http://www.istat.it/dati/pubbsci/contributi/Contributi/contr_2003/2003_14.pdf} }

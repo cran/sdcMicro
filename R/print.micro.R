@@ -2,7 +2,7 @@
 function(x, ...){
   cat(paste("\n Object created with method", x$method))
   cat("\n -------------------------")
-  cat(paste("\n Aggregation level:", x$aggr))
+  cat("Try names(your object from class micro) for more details")
   cat("\n")
 }
 

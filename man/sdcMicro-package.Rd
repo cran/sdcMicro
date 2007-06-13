@@ -53,6 +53,11 @@ f2 <- freqCalc(localS$freqCalc, keyVars=c(4,5,6), w=8)
 indivf2 <- indivRisk(f2)
 indivf2$rk
 ## select another keyVar and run localSupp once again, if you think the table is not fully protected
+data(free1)
+f <- freqCalc(free1, keyVars=1:3, w=30)
+ind <- indivRisk(f)
+## and now you can use the interactive plot for individual risk objects: 
+## plot(ind)
 
 ## Data from mu-Argus:
 ## Global recoding:

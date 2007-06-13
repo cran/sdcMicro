@@ -1,6 +1,7 @@
 `swappNum` <-
 function(x, w=1:(dim(x)[2]), p){
   xx <- x[,w]
+  y=x
   if( class(xx) == "matrix" || class(xx) == "data.frame" ){
     N <- dim(xx)[1] } else { N <- length(xx) }
   ranges <- round(p*N/100)
@@ -32,6 +33,8 @@ function(x, w=1:(dim(x)[2]), p){
   }
   ### Multivariate:
   x[,w] <- apply(xx, 2, swapping)
-  x
+  res <- list(x=y, xm=x, method="swappNum", p=p)
+  class(res) <- "micro"
+  res
 }
 

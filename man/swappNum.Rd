@@ -20,7 +20,9 @@ of two swapped values cannot differ by more than p percente of the total number 
 records. The function apply the rank swapping on each variable independently.
 }
 \value{
-the rank swapped data.
+  \item{x }{original data}
+  \item{xm  }{the rank swapped data }
+  \item{method  }{ info about the method name }
 }
 \references{ Look, e.g. on \url{http://www.niss.org/dgii/TR/dataswap-finalrevision.pdf} }
 \author{ Matthias Templ}

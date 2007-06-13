@@ -1,7 +1,8 @@
 `indivRisk` <-
 function(x, method="approx", qual=1, survey=TRUE){
   ## x ... object from freqCalc
-  if(survey ==TRUE){
+  if(length(colnames(x$freqCalc)) > 0) knames <- colnames(x$freqCalc)[f$keyVars] else knames <- NULL
+  if( survey == TRUE ){
   P <- ncol(x$freqCalc)
   N <- dim(x$freqCalc)[1]
   fk <- x$fk
@@ -54,10 +55,10 @@ function(x, method="approx", qual=1, survey=TRUE){
     }    
   }
   rk <- rk * qual
-  rk <- list(rk=rk, method=method, qual=qual)
+  rk <- list(rk=rk, method=method, qual=qual, fk=x$fk, knames=knames)
   }
   if(survey == FALSE){
-    rk <- list(rk=1/x$fk, method=NA, qual=NA)
+    rk <- list(rk=1/x$fk, method=NA, qual=NA, fk=x$fk, knames=knames)
   }
   class(rk) <- "indivRisk"
   invisible(rk)

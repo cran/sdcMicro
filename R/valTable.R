@@ -1,7 +1,6 @@
 `valTable` <-
-function (x, method = c("simple", "single", "onedims", "pca", 
-    "pppca", "clustpca", "clustpppca", "mdav"), measure = "mean", 
-    clustermethod = "Mclust", aggr = 3, nc = 8, transf = "log") 
+function (x, method = c("simple", "onedims", "clustpppca", "addNoise: additive", "swappNum"), measure = "mean", 
+    clustermethod = "Mclust", aggr = 3, nc = 8, transf = "log", p=15, noise=15, w=1:dim(x)[2], delta=0.1) 
 {
 `prcompRob` <-
 function (X, k = 0, sca = "mad", scores = TRUE) 
@@ -47,9 +46,16 @@ function (X, k = 0, sca = "mad", scores = TRUE)
 
     m <- list()
     for (i in 1:length(method)) {
+        if( method[i] %in% c("simple", "single", "onedims", "pca", 
+    "pppca", "clustpca", "clustpppca", "mdav", "influence", "rdm", "clustmcdpca","mcdpca")){
         m[[i]] <- microaggregation(x = x, method = method[i], 
             measure = measure, clustermethod = clustermethod, 
             aggr = aggr, nc = nc, transf = transf)
+        }
+        if( method[i] == "swappNum" ){ m[[i]] <- swappNum(x, p=p) }
+        if( substring(method[i],1,8) == "addNoise" ){
+          m[[i]] <- addNoise(x, noise=noise, method=substring(method[i],11,nchar(method[i])))
+        }
     }
     s <- list()
     s <- lapply(m, summary, robCov = FALSE, robReg = FALSE)

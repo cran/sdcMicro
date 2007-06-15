@@ -27,10 +27,16 @@ function(x, keyVars=1:3 , w=4){
   #xx <- cbind(y[,keyVars], indexG, y[, ncol(x)])
   xx <- cbind(z1, indexG)  
   xx <- as.data.frame(xx[order(xx[,"indexG"]),])
-  z <- aggregate(xx[,cn], list(xx$indexG), sum)
+  if( length(w) > 0 ){
+    z <- aggregate(xx[,cn], list(xx$indexG), sum)
+  } else {
+     z <- aggregate(rep(1,nrow(xx)), list(xx$indexG), sum)
+  }
   z <- merge(xx, z, by.x="indexG", by.y="Group.1")
   #colnames(z)[ncol(z)-1] <- cn
-  colnames(z)[ncol(z)] <- cn
+  if( length(w) > 0 ){
+    colnames(z)[ncol(z)] <- cn
+  }
   colnames(z)[ncol(z)] <- "Fk"
   z <- cbind(z, z$Freq)
   colnames(z)[ncol(z)] <- "fk"

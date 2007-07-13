@@ -5,7 +5,7 @@
   Function to perform various methods of microaggregation.
 }
 \usage{
-microaggregation(x, method = "pca", aggr = 3, nc = 8, clustermethod = "Mclust", opt = FALSE, measure = "mean", trim = 0, varsort = 1, transf = "log", blow = TRUE, blowxm = 0)
+microaggregation(x, method = "pca", aggr = 3, nc = 8, clustermethod = "clara", opt = FALSE, measure = "mean", trim = 0, varsort = 1, transf = "log", blow = TRUE, blowxm = 0)
 }
 \arguments{
   \item{x}{ data frame or matrix }
@@ -34,6 +34,9 @@ seems to be unsuitable for microaggregation due to it's rather high breakdown po
 This function contains also a method with which the data can be clustered with a variety of different clustering algorithms. Clustering 
 observations before applying microaggregation might be useful. Note, that the data are automatically log-transformed and standardised before
 clustering because most of the clustering algorithms performs better on log-transformed and standardised data.
+
+The usage of clustering method \sQuote{Mclust} requires package mclust02, which must be loaded first.
+The package is not loaded automatically, since the package is not under GPL but on a differnt licence. 
 
 The are some projection methods for microaggregation included. The robust version \sQuote{pppca} or 
 \sQuote{clustpppca} (clustering at first)

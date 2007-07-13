@@ -1,5 +1,5 @@
 `microaggregation` <-
-function (x, method = "pca", aggr = 3, nc = 8, clustermethod = "Mclust", 
+function (x, method = "pca", aggr = 3, nc = 8, clustermethod = "clara", 
     opt = FALSE, measure = "mean", trim = 0, varsort = 1, transf = "log", 
     blow = TRUE, blowxm = 0) 
 {

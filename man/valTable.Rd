@@ -5,7 +5,7 @@
 A Function for the comparison of different perturbation methods.
 }
 \usage{
-valTable(x, method = c("simple", "onedims", "clustpppca", "addNoise: additive", "swappNum"), measure = "mean", clustermethod = "Mclust", aggr = 3, nc = 8, transf = "log", p=15, noise=15, w=1:dim(x)[2], delta=0.1)
+valTable(x, method = c("simple", "onedims", "clustpppca", "addNoise: additive", "swappNum"), measure = "mean", clustermethod = "clara", aggr = 3, nc = 8, transf = "log", p=15, noise=15, w=1:dim(x)[2], delta=0.1)
 }
 \arguments{
   \item{x}{ data frame or matrix }
@@ -35,7 +35,7 @@ then followed by a \sQuote{:} and a blank and then followed by the name of the m
 data(Tarragona)
 valTable(Tarragona[100:200,], method=c("simple","onedims","pca","clustpppca","addNoise: additive"))
 ## valTable(Tarragona, method=c("simple","onedims","pca","clustpppca","mdav", "addNoise: additive", "swappNum"))
-## clustpppca outperforms the other algorithms for this data set...
+## clustpppca in combination with Mclust outperforms the other algorithms for this data set...
 }
 \keyword{ print }
 

@@ -44,12 +44,20 @@ f <- freqCalc(francdat, keyVars=c(2,4,5,6),w=8)
 f
 f$fk
 f$Fk
+## with missings:
+x <- francdat
+x[3,5] <- NA
+x[4,2] <- x[4,4] <- NA
+x[5,6]  <- NA
+x[6,2]  <- NA
+f2 <- freqCalc(x,  keyVars=c(2,4,5,6),w=8)
+f2$Fk
 ## individual risk calculation:
 indivf <- indivRisk(f)  
 indivf$rk         
 ## Local Suppression            
 localS <- localSupp(f, keyVar=2, indivRisk=indivf$rk, threshold=0.25)
-f2 <- freqCalc(localS$freqCalc, keyVars=c(4,5,6), w=8)
+f2 <- freqCalc(localS$freqCalc, keyVars=c(2,4,5,6), w=8)
 indivf2 <- indivRisk(f2)
 indivf2$rk
 ## select another keyVar and run localSupp once again, if you think the table is not fully protected

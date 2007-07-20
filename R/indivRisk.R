@@ -1,7 +1,7 @@
 `indivRisk` <-
 function(x, method="approx", qual=1, survey=TRUE){
   ## x ... object from freqCalc
-  if(length(colnames(x$freqCalc)) > 0) knames <- colnames(x$freqCalc)[f$keyVars] else knames <- NULL
+  if(length(colnames(x$freqCalc)) > 0) knames <- colnames(x$freqCalc)[x$keyVars] else knames <- NULL
   if( survey == TRUE ){
   P <- ncol(x$freqCalc)
   N <- dim(x$freqCalc)[1]

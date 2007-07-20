@@ -93,7 +93,7 @@ plot.indivRisk <- function (x, ...)
         p1(method=method)
     }
     m <- tktoplevel()
-    tkwm.title(m, "Visualisierung der Normalverteilung")
+    tkwm.title(m, "Individual risk adjustments")
         fontHeading <- tkfont.create(family="tahoma",size=10)
         tkpack(tklabel(m, text="Please, see at the plot the active graphik device in R", font=fontHeading))
     tkwm.geometry(m, "+0+0")

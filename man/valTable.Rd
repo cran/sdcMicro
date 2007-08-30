@@ -33,7 +33,7 @@ then followed by a \sQuote{:} and a blank and then followed by the name of the m
 \seealso{ \code{\link{microaggregation}}, \code{\link{summary.micro}} }
 \examples{
 data(Tarragona)
-valTable(Tarragona[100:200,], method=c("simple","onedims","pca","clustpppca","addNoise: additive"))
+valTable(Tarragona[100:200,], method=c("simple","onedims","pca","addNoise: additive"))
 ## valTable(Tarragona, method=c("simple","onedims","pca","clustpppca","mdav", "addNoise: additive", "swappNum"))
 ## clustpppca in combination with Mclust outperforms the other algorithms for this data set...
 }

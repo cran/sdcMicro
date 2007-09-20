@@ -113,5 +113,16 @@ cov(dataGen(mtcars[,4:6],n=200))
 pairs(mtcars[,4:6])
 pairs(dataGen(mtcars[,4:6],n=200))
 
+## PRAM
+
+set.seed(123)
+x <- sample(1:4, 250, replace=TRUE)
+pr1 <- pram(x)
+length(which(pr1$x == x))
+x2 <- sample(1:4, 250, replace=TRUE)
+length(which(pram(x2)$x == x2))
+
+data(free1)
+marstatPramed <- pram(free1[,"MARSTAT"])  
 
 }

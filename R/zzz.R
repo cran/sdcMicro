@@ -1,7 +1,7 @@
 .First.lib <- function(lib,pkg)
 {
   library.dynam("sdcMicro",pkg,lib)
-  cat("\n sdcMicro version 2.0.4 is loaded \n\n")
+  cat("\n sdcMicro version 2.1.0 is loaded \n\n")
   cat("--------\n")
   cat("If you are experiencing any problems with the package \n")
   cat("please, send a mail to \n\n")

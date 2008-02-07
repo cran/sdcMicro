@@ -5,13 +5,19 @@
 Global recoding
 }
 \usage{
-globalRecode(x, breaks, labels)
+globalRecode(x, breaks, labels, method="equidistant")
 }
 \arguments{
-  \item{x}{ vector for recoding }
+  \item{x}{ vector of class numeric or of class factor with integer labels for recoding }
   \item{breaks}{ either a numeric vector of cut points or number giving the number of intervals which x is to be cut into. }
   \item{labels}{ labels for the levels of the resulting category. By default, labels are constructed using "(a,b]" interval notation. 
                   If labels = FALSE, simple integer codes are returned instead of a factor. }
+  \item{method}{ method \dQuote{equidistant} for equal sized intervalls 
+  
+                 method \dQuote{logEqui} for equal sized intervalls for log-transformed data
+                 
+                 method \dQuote{equalAmount} for intervalls with approxiomately the same amount of observations
+  }
 }
 \details{
 If a labels parameter is specified, its values are used to name the factor levels. 
@@ -23,6 +29,11 @@ A factor is returned, unless labels = FALSE which results in the mere integer le
 \seealso{  \code{\link{cut}} }
 \examples{
 data(free1)
-free1[, "AGE"] <- globalRecode(free1[,"AGE"], breaks=c(1,9,19,29,39,49,59,69,100), labels=1:8)
+head(globalRecode(free1[,"AGE"], breaks=c(1,9,19,29,39,49,59,69,100), labels=1:8))
+table(globalRecode(free1[,"AGE"], breaks=c(1,9,19,29,39,49,59,69,100), labels=1:8))
+table(globalRecode(free1[,"AGE"], breaks=c(1,9,19,29,39,49,59,69,100)))
+table(globalRecode(free1[,"AGE"], breaks=6))
+table(globalRecode(free1[,"AGE"], breaks=6, method="logEqui"))
+table(globalRecode(free1[,"AGE"], breaks=6, method="equalAmount"))
 }
 \keyword{ manip }

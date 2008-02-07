@@ -1,0 +1,154 @@
+\begin{thebibliography}{10}
+
+\bibitem{Anwar93}
+N.~Anwar.
+\newblock Micro-aggregation - the small aggregates method.
+\newblock In {\em Internal report}. Luxembourg: Eurostat, 1993.
+
+\bibitem{Borchsenius05}
+L.~Borchsenius.
+\newblock New developements in the danish system for access to micro data.
+\newblock In {\em Monographs of official statistics, Work session on
+  statistical data confidentiality}. Eurostat, Luxembourg, 2005.
+
+\bibitem{Brand04}
+R.~Brand.
+\newblock Microdata protection through noise addition.
+\newblock In {\em Privacy in Statistical Databases. Lecture Notes in Computer
+  Science. Springer}, pages 347--359, 2004.
+
+\bibitem{Capobianchi01}
+A.~Capobianchi, S.~Polettini, and M.~Lucarelli.
+\newblock Strategy for the implementation of individual risk methodology into
+  $\mu$-{ARGUS}.
+\newblock Technical report, Report for the {CASC} project. No: 1.2-D1, 2001.
+
+\bibitem{Dalenius82}
+T.~Dalenius and S.~Reiss.
+\newblock Data-swapping: A technique for disclosure control.
+\newblock In {\em Proceedings of the Section on Survey Research Methods},
+  volume~6, pages 73--85, 1982.
+
+\bibitem{Defays98}
+D.~Defays and Anwar M.N.
+\newblock Masking microdata using micro-aggregation.
+\newblock {\em Journal of Official Statistics}, 14(4):449--461, 1998.
+
+\bibitem{Defays93}
+D.~Defays and P.~Nanopoulos.
+\newblock Panels of enterprises and confidentiality: the small aggregates
+  method.
+\newblock In {\em Proceedings of the 1992 Symposium on Design and Analysis of
+  Longitudinal Surveys}, pages 195--204. Statistics Canada, Ottawa, 1993.
+
+\bibitem{Domingo02}
+J.~Domingo-Ferrer and J.M. Mateo-Sanz.
+\newblock Practical data-oriented microaggregation for statistical disclosure
+  control.
+\newblock {\em IEEE Trans. on Knowledge and Data Engineering}, 14(1):189--201,
+  2002.
+
+\bibitem{Elliot05}
+M.~Elliot, A.~Hundepool, E.S. Nordholt, J-L. Tambay, and T.~Wende.
+\newblock Glossary on statistical disclosure control, 2005.
+
+\bibitem{Franconi04}
+L.~Franconi and S.~Polettini.
+\newblock Individual risk estimation in $\mu$-{ARGUS}: a review.
+\newblock In {\em Privacy in Statistical Databases. Lecture Notes in Computer
+  Science. Springer}, pages 262--272, 2004.
+
+\bibitem{Heitzig05}
+J.~Heitzig.
+\newblock The 'jackkife' method: confidentiality protection for complex
+  statistical analyses.
+\newblock In {\em Joint UNECE/Eurostat work session on statistical data
+  confidentiality, Geneva, Switzerland}, 2005.
+
+\bibitem{Heitzig06}
+J.~Heitzig.
+\newblock Using the jackknife method to produce safe plots of microdata.
+\newblock In {\em Privacy in Statistical Databases. Lecture Notes in Computer
+  Science. Springer}, pages 139--151, 2006.
+
+\bibitem{HundepoolCASC04}
+A.~Hundepool.
+\newblock The casc project.
+\newblock In {\em Privacy in Statistical Databases. Lecture Notes in Computer
+  Science. Springer}, pages 199--212, 2004.
+
+\bibitem{Hundepool05oh}
+A.~Hundepool and P.~De~Wolf.
+\newblock Onsite@home: Remote access at statistics netherlands.
+\newblock In {\em Joint UNECE/Eurostat work session on statistical data
+  confidentiality, Geneva, Switzerland}, 2005.
+
+\bibitem{Hundepool06mu}
+A.~Hundepool, A.~Van~deWetering, Ramaswamy R., L.~Franconi, A.~Capobianchi,
+  P-P. DeWolf, J.~Domingo-Ferrer, V.~Torra, R.~Brand, and S.~Giessing.
+\newblock $\mu$-argus version 4.1 software and user’s manual, 2006.
+
+\bibitem{Kooiman97}
+P.~Kooiman, L.~Willenbourg, and J.~Gouweleeuw.
+\newblock A method for disclosure limitation of microdata.
+\newblock Technical report, Research paper 9705, Statistics Netherlands,
+  Voorburg, 2002.
+
+\bibitem{Leisch02}
+Friedrich Leisch.
+\newblock Sweave, part {I}: Mixing {R} and {\LaTeX}.
+\newblock {\em R News}, 2(3):28--31, December 2002.
+
+\bibitem{Sanz04}
+J.M. Mateo-Sanz, A.~Mart{\'i}nez-Ballest{\'e}, and J.~Domingo-Ferrer.
+\newblock Fast generation of accurate synthetic microdata.
+\newblock In J.~In: Domingo-Ferrer, editor, {\em Privacy in Statistical
+  Databases, Lecture Notes in Computer Science}, pages 298--306. Springer,
+  2004.
+
+\bibitem{Meindl07}
+B.~Meindl and M.~Templ.
+\newblock The anonymisation of the {CVTS2} and income tax dataset. an approach
+  using {R}-package sdcmicro.
+\newblock In {\em to appear in: Joint UNECE/Eurostat Work Session on
+  Statistical Data Confidentiality. Monographs of Official Statistics.}, 2007.
+
+\bibitem{R07}
+{R Development Core Team}.
+\newblock {\em R: A Language and Environment for Statistical Computing}.
+\newblock R Foundation for Statistical Computing, Vienna, Austria, 2007.
+\newblock {ISBN} 3-900051-07-0.
+
+\bibitem{Rousseeuw84}
+P.J. Rousseeuw.
+\newblock Least median of squares regression.
+\newblock {\em Journal of the American Statistical Association}, 79:871--880,
+  1984.
+
+\bibitem{Steel05}
+P.~Steel and A.~Reznek.
+\newblock Issues in designing a confidential preserving model server.
+\newblock In {\em Monographs of official statistics, Work session on
+  statistical data confidentiality}. Eurostat, Luxembourg, 2005.
+
+\bibitem{Templ06}
+M.~Templ.
+\newblock Software development for {SDC} in {R}.
+\newblock In {\em Privacy in Statistical Databases. Lecture Notes in Computer
+  Science. Springer}, pages 347--359, 2006.
+
+\bibitem{TemplR07}
+M.~Templ.
+\newblock {\em sdcMicro. Manual and Package.}
+\newblock Statistics Austria and Vienna University of Technology, Vienna,
+  Austria, 2007.
+\newblock {\it
+  http://cran.r-project.org/src/contrib/Descriptions/sdcMicro.html}.
+
+\bibitem{Ting05}
+D.~Ting, S.~Fienberg, and M.~Trottini.
+\newblock Romm methodology for microdata release.
+\newblock In {\em Monographs of official statistics, Work session on
+  statistical data confidentiality}. Eurostat, Luxembourg, 2005.
+
+\end{thebibliography}

@@ -3,6 +3,13 @@ function (x, method = "pca", aggr = 3, nc = 8, clustermethod = "clara",
     opt = FALSE, measure = "mean", trim = 0, varsort = 1, transf = "log", 
     blow = TRUE, blowxm = 0) 
 {
+    stopifnot( method %in% c("simple", "single", "onedims", "pca", "mcdpca", "pppca", "clustmcdpca",
+                             "clustpppca", "clustpca", "rmd", "mdav", "influence"  ))
+    if( method == "rmd" ){
+      blow = FALSE
+      warning("object$blow have been set to TRUE and 
+           object$xm == object$blowxm \n--------\n")
+    }
     factorOfTotals <- function(x, aggr) {
         n <- dim(x)[1]
         abgerundet <- floor(n/aggr)
@@ -504,6 +511,43 @@ function (x, method = "pca", aggr = 3, nc = 8, clustermethod = "clara",
             clustermethod = clustermethod, measure = measure, 
             trim = trim, varsort = varsort, transf = transf, 
             blowup = blowup, blowxm = blowxm, fot = fot)
+    }
+    if( method == "rmd" ){
+       ##x <- data.frame(x1 = round(rnorm(25,10,2),1), x2 <- round(runif(25,1,50)), x3 <- round(abs(rnorm(25,30,10))))
+       ##x <- as.matrix(x)
+       ##colnames(x)=c("x1","x2","x3")
+       y <- x
+       cm <- colMeans(x, na.rm=TRUE)  ## fuers Ruecktransf.
+       csd <- sd(x, na.rm=TRUE)   ## fuers Ruecktransf.
+       y <- apply(y, 2, function(x) (x - mean(x, na.rm=TRUE))/sd(x, na.rm=TRUE))
+       d <- as.matrix(dist(y))
+       rr <- covMcd(y)
+       md <- mahalanobis(y, center=rr$center, cov=rr$cov)
+       diag(d) <- NA
+       #d[lower.tri(d)] <- NA
+       kn <- function(d,s,ne){
+         w <- rep(0,ne)
+         for( i in 1:ne ){
+           w[i] <- which.min(d[,s])
+           d[w,s] <- NA
+         }
+         return(w)
+       }
+       for( i in 1:floor(dim(x)[1]/aggr) ){
+         s <- which.max(md)
+         md[s] <- NA
+         w <- kn(d,s,3)
+         d[w,] <- NA
+         y[w,] <- rep(colMeans(y[w,]), each=aggr)
+       }
+       ### Ruecktrans:
+       for( i in 1: dim(x)[2] ){
+         y[,i] <- (y[,i] * csd[i]) + cm[i]
+       }
+       res <- list(x = x, method = method, clustering = clustering,
+       aggr = aggr, nc = nc, xm = y, roundxm = round(y), clustermethod = clustermethod,
+       measure = measure, trim = trim, varsort = varsort,
+       transf = transf, blow = TRUE, blowxm = y, fot = fot)
     }
     if (method == "mdav") {
         maxDistinct <- function(d, j) {

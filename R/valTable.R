@@ -47,7 +47,7 @@ function (X, k = 0, sca = "mad", scores = TRUE)
     m <- list()
     for (i in 1:length(method)) {
         if( method[i] %in% c("simple", "single", "onedims", "pca", 
-    "pppca", "clustpca", "clustpppca", "mdav", "influence", "rdm", "clustmcdpca","mcdpca")){
+    "pppca", "clustpca", "clustpppca", "mdav", "influence", "rmd", "clustmcdpca","mcdpca")){
         m[[i]] <- microaggregation(x = x, method = method[i], 
             measure = measure, clustermethod = clustermethod, 
             aggr = aggr, nc = nc, transf = transf)

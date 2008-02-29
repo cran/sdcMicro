@@ -60,12 +60,33 @@ localS <- localSupp(f, keyVar=2, indivRisk=indivf$rk, threshold=0.25)
 f2 <- freqCalc(localS$freqCalc, keyVars=c(2,4,5,6), w=8)
 indivf2 <- indivRisk(f2)
 indivf2$rk
+
 ## select another keyVar and run localSupp once again, if you think the table is not fully protected
 data(free1)
 f <- freqCalc(free1, keyVars=1:3, w=30)
 ind <- indivRisk(f)
 ## and now you can use the interactive plot for individual risk objects: 
 ## plot(ind)
+
+## Local suppression with localSupp2 and localSupp2Wrapper is more effective:
+## example from Capobianchi, Polettini and Lucarelli:
+data(francdat)
+l1 <- localSupp2(francdat, keyVars=c(2,4,5,6), w=8)
+l1
+l1$x
+l2 <- localSupp2(francdat, keyVars=c(2,4,5,6), w=8, k=2)
+l3 <- localSupp2(francdat, keyVars=c(2,4,5,6), w=8, k=4)
+## long computation time:
+## l = localSupp2(free1, keyVar=1:3, w=30, k=2, importance=c(0.1,1,0.8))
+
+## we want to avoid missings in column 5:
+l1 <- localSupp2Wrapper(francdat, keyVars=c(2,4,5,6), importance=c(1,1,0,1), w=8, kAnon=1)
+l1$x
+## we want to avoid missings in column 5 and allow missings in 1 only if
+## is really necessary:
+l1 <- localSupp2Wrapper(francdat, keyVars=c(2,4,5,6), importance=c(0.1,1,0,1), w=8, kAnon=1)
+l1$x
+plot(l1)
 
 ## Data from mu-Argus:
 ## Global recoding:

@@ -236,7 +236,7 @@ function (x, method = "pca", aggr = 3, nc = 8, clustermethod = "clara",
         m <- means(x = x, index = index, measure = measure, trim = trim)
         mr <- round(m)
         if (blow == TRUE) {
-            blowxm <- blowup(x, mr, aggr)
+            blowxm <- blowup(x, m, aggr)#mr
         }
         res <- list(x = x, method = method, clustering = clustering, 
             aggr = aggr, nc = nc, xm = m, roundxm = mr, clustermethod = clustermethod, 
@@ -251,7 +251,7 @@ function (x, method = "pca", aggr = 3, nc = 8, clustermethod = "clara",
             trim = trim)
         mr <- round(m)
         if (blow == TRUE) {
-            blowxm <- blowup(x, mr, aggr)
+            blowxm <- blowup(x, m, aggr)#mr
             rownames(blowxm) <- rownames(xx)
         }
         res <- list(x = x, method = method, clustering = clustering, 
@@ -272,7 +272,7 @@ function (x, method = "pca", aggr = 3, nc = 8, clustermethod = "clara",
             trim = trim)
         mr <- round(m)
         blow = TRUE
-        b <- blowup(x, mr, aggr)
+        b <- blowup(x, m, aggr)#mr
         y <- x
         for (i in 1:dim(x)[2]) {
             y[, i] <- b[xxx[, i], i]
@@ -291,7 +291,7 @@ function (x, method = "pca", aggr = 3, nc = 8, clustermethod = "clara",
             trim = trim)
         mr <- round(m)
         if (blow == TRUE) {
-            blowxm <- blowup(x, mr, aggr)
+            blowxm <- blowup(x, m, aggr) #mr, aggr)
             rownames(blowxm) <- rownames(xx)
         }
         res <- list(x = x, method = method, clustering = clustering, 
@@ -310,7 +310,7 @@ function (x, method = "pca", aggr = 3, nc = 8, clustermethod = "clara",
             trim = trim)
         mr <- round(m)
         if (blow == TRUE) {
-            blowxm <- blowup(x, mr, aggr)
+            blowxm <- blowup(x, m, aggr)#mr
             rownames(blowxm) <- rownames(xx)
         }
         res <- list(x = x, method = method, clustering = clustering, 
@@ -328,7 +328,7 @@ function (x, method = "pca", aggr = 3, nc = 8, clustermethod = "clara",
             trim = trim)
         mr <- round(m)
         if (blow == TRUE) {
-            blowxm <- blowup(x, mr, aggr)
+            blowxm <- blowup(x, m, aggr)#mr
             rownames(blowxm) <- rownames(xx)
         }
         res <- list(x = x, method = method, clustering = clustering, 
@@ -370,7 +370,7 @@ function (x, method = "pca", aggr = 3, nc = 8, clustermethod = "clara",
             trim = trim)
         mr <- round(m)
         if (blow == TRUE) {
-            blowxm <- blowup(x, mr, aggr)
+            blowxm <- blowup(x, m, aggr)#mr
             rownames(blowxm) <- rownames(yy)
         }
         res <- list(x = x, method = method, clustering = clustering, 
@@ -414,7 +414,7 @@ function (x, method = "pca", aggr = 3, nc = 8, clustermethod = "clara",
             trim = trim)
         mr <- round(m)
         if (blow == TRUE) {
-            blowxm <- blowup(x, mr, aggr)
+            blowxm <- blowup(x, m, aggr)#mr
             rownames(blowxm) <- rownames(xx)
         }
         res <- list(x = x, method = method, clustering = clustering, 
@@ -460,7 +460,7 @@ function (x, method = "pca", aggr = 3, nc = 8, clustermethod = "clara",
             trim = trim)
         mr <- round(m)
         if (blow == TRUE) {
-            blowxm <- blowup(x, mr, aggr)
+            blowxm <- blowup(x, m, aggr)#mr
             rownames(blowxm) <- rownames(xx)
         }
         res <- list(x = x, method = method, clustering = clustering, 
@@ -503,7 +503,7 @@ function (x, method = "pca", aggr = 3, nc = 8, clustermethod = "clara",
             trim = trim)
         mr <- round(m)
         if (blow == TRUE) {
-            blowxm <- blowup(x, mr, aggr)
+            blowxm <- blowup(x, m, aggr) #mr
             rownames(blowxm) <- rownames(xx)
         }
         res <- list(x = x, method = method, clustering = clustering, 
@@ -533,13 +533,15 @@ function (x, method = "pca", aggr = 3, nc = 8, clustermethod = "clara",
          }
          return(w)
        }
-       for( i in 1:floor(dim(x)[1]/aggr) ){
+       for( i in 1:(floor(dim(x)[1]/aggr)-1) ){
          s <- which.max(md)
          md[s] <- NA
          w <- kn(d,s,3)
          d[w,] <- NA
          y[w,] <- rep(colMeans(y[w,]), each=aggr)
        }
+         w <- which(!is.na(d[,1]))
+         y[w,] <- rep(colMeans(y[w,]), each=length(w))
        ### Ruecktrans:
        for( i in 1: dim(x)[2] ){
          y[,i] <- (y[,i] * csd[i]) + cm[i]
@@ -592,7 +594,7 @@ function (x, method = "pca", aggr = 3, nc = 8, clustermethod = "clara",
         m <- means(x = b, index = index, measure = measure, trim = trim)
         mr <- round(m)
         if (blow == TRUE) {
-            blowxm <- blowup(b, mr, aggr)
+            blowxm <- blowup(b, m, aggr) #mr, aggr)
         }
         res <- list(x = b, method = method, clustering = clustering, 
             aggr = aggr, nc = nc, xm = m, roundxm = mr, clustermethod = clustermethod, 

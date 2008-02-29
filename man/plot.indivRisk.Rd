@@ -21,11 +21,16 @@
 \author{ Matthias Templ }
 \seealso{ \code{\link{indivRisk}} }
 \examples{
+## example from Capobianchi, Polettini and Lucarelli:
+data(francdat)
+ff <- freqCalc(francdat, keyVars=c(2,4,5,6),w=8)
+irisk <- indivRisk( ff ) 
+## and now apply:
+## plot(irisk)
 data(free1)
-f <- freqCalc(free1, keyVars=1:3,w=30)
-## individual risk calculation:
-indivf <- indivRisk(f)  
-## now use:
-##plot(indivf)  
+ff <- freqCalc(free1, keyVars=1:3, w=30)
+irisk2 <- indivRisk(ff)
+## and now apply:
+## plot(irisk2) 
 }
 \keyword{ aplot }

@@ -1,0 +1,57 @@
+\name{dRiskRMD}
+\alias{dRiskRMD}
+\title{ RMD based disclosure risk }
+\description{
+  Distance-based disclosure risk estimation via robust Mahalanobis Distances
+}
+\usage{
+dRiskRMD(x, xm, k = 0.01, k2=0.05)
+}
+\arguments{
+  \item{x}{ original data  }
+  \item{xm}{ masked data }
+  \item{k}{ weight for adjusting the influence of the robust Mahalanobis distances, i.e. to increase or decrease each of the disclosure risk intervals. }
+  \item{k2}{parameter for method RMDID2 to choose a small interval around each masked observation.}
+}
+\details{
+  This method is an extension of method SDID because it account for the \dQuote{outlyingness} of each observations. This is a quite natural
+  approach since outliers do have a higher risk of re-identification and therefore these outliers needs to be larger disclosure risk intervals
+  as observations in the center of the data cloud.
+   
+  The algorithm works as follows:
+  \begin{enumerate}
+  \item Robust Mahalanobis distances are estimated in order to get a robust multivariate distance for each observation.
+  \item Intervals are estimated for each observation around every data point of the original data points where the length 
+        of the interval is defined/weighted by the squared robust Mahalanobis distance and the parameter $k$. 
+        The higher the RMD of an observation the larger the interval. 
+  \item Check if the corresponding masked values fall into the intervals around the original values or not. 
+        If the value of the corresponding observation is within such an interval the whole observation is considered unsafe. 
+        So, we get a whole vector indicating which observation is save or not ($\rightarrow$ we are finished already when 
+        using method RMDID1).
+  \item For method RMDID1w: we return the weighted (via RMD) vector of disclosure risk.
+  \item For method RMDID2: whenever an observation is considered unsafe it is checked if $m$ other observations 
+        from the masked data are very close (defined by a parameter $k2$ for the length of the intervals as for SDID or RSDID) 
+        to such an unsafe observation from the masked data, using Euclidean distances. 
+        If more than $m$ points are in such a small interval, we conclude that this observation is ``save''. 
+  \end{enumerate}
+}
+\value{
+The disclosure risk.
+  \item{risk1}{percentage of sensitive observations according to method RMDID1.}
+  \item{risk2}{standardized version of risk1}
+  \item{wrisk1}{amount of sensitive observations according to RMDID1 weighted by their corresponding robust Mahalanobis distances.}
+  \item{wrisk2}{RMDID2 measure}
+  \item{indexRisk1}{index of observations with high risk according to risk1 measure}
+  \item{indexRisk2}{index of observations with high risk according to wrisk2 measure}
+}
+\references{  }
+\author{Matthias Templ }
+\seealso{ \code{\link{dRisk}} }
+\examples{
+data(Tarragona)
+x <- Tarragona[, 5:7]
+y <- addNoise(x)$xm
+dRiskRMD(x, xm=y)
+dRisk(x, xm=y)
+}
+\keyword{ manip }

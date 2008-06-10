@@ -1,25 +1,26 @@
-`microaggregation` <-
-function (x, method = "pca", aggr = 3, nc = 8, clustermethod = "clara", 
-    opt = FALSE, measure = "mean", trim = 0, varsort = 1, transf = "log", 
-    blow = TRUE, blowxm = 0) 
+microaggregation <- function (x, method = "pca", aggr = 3, nc = 8, clustermethod = "clara",
+    opt = FALSE, measure = "mean", trim = 0, varsort = 1, transf = "log",
+    blow = TRUE, blowxm = 0)
 {
-    stopifnot( method %in% c("simple", "single", "onedims", "pca", "mcdpca", "pppca", "clustmcdpca",
-                             "clustpppca", "clustpca", "rmd", "mdav", "influence"  ))
-    if( method == "rmd" ){
-      blow = FALSE
-      warning("object$blow have been set to TRUE and 
-           object$xm == object$blowxm \n--------\n")
-    }
+    rownames(x) <- 1:nrow(x)
+    stopifnot(method %in% c("simple", "single", "onedims", "pca",
+        "mcdpca", "pppca", "clustmcdpca", "clustpppca", "clustpca",
+        "rmd", "mdav", "influence"))
+    #if (method == "rmd") {
+    #    blow = FALSE
+    #    warning("object$blow have been set to TRUE and \n
+    #             object$xm == object$blowxm \n--------\n")
+    #}
     factorOfTotals <- function(x, aggr) {
         n <- dim(x)[1]
         abgerundet <- floor(n/aggr)
         fot <- solve(abgerundet, n)
         fot
     }
-    "indexMicro" <- function(x, aggr) {
+    indexMicro <- function(x, aggr) {
         n <- dim(x)[1]
         if (n < 2 * aggr) {
-            stop(paste("Too less observations (", n, ") for aggregate = ", 
+            stop(paste("Too less observations (", n, ") for aggregate = ",
                 aggr, sep = ""))
         }
         aa <- seq(1, n, aggr)
@@ -42,7 +43,7 @@ function (x, method = "pca", aggr = 3, nc = 8, clustermethod = "clara",
         }
         index
     }
-    "means" <- function(x, index, measure, trim = 0) {
+    means <- function(x, index, measure, trim = 0) {
         m <- matrix(ncol = ncol(x), nrow = length(index))
         if (measure == "mean") {
             for (i in 1:length(index)) {
@@ -116,8 +117,11 @@ function (x, method = "pca", aggr = 3, nc = 8, clustermethod = "clara",
         rownames(xx) <- rownames(x)
         xx
     }
-    "clust" <- function(x, nc, clustermethod = "Mclust", opt = FALSE, 
+    clust <- function(x, nc, clustermethod = "Mclust", opt = FALSE,
         transf = "log") {
+        if (transf == "none") {
+            y <- x
+        }
         if (transf == "log") {
             y <- scale(log(x))
         }
@@ -165,7 +169,7 @@ function (x, method = "pca", aggr = 3, nc = 8, clustermethod = "clara",
             centers <- t(a$mu)
             groesse <- rep(0, nc)
             for (i in seq(nc)) {
-                groesse[i] <- length(which(a$classification == 
+                groesse[i] <- length(which(a$classification ==
                   i))
             }
             size <- groesse
@@ -177,7 +181,7 @@ function (x, method = "pca", aggr = 3, nc = 8, clustermethod = "clara",
             nc <- a$G
             groesse <- rep(0, nc)
             for (i in seq(nc)) {
-                groesse[i] <- length(which(a$classification == 
+                groesse[i] <- length(which(a$classification ==
                   i))
             }
             size <- groesse
@@ -185,7 +189,7 @@ function (x, method = "pca", aggr = 3, nc = 8, clustermethod = "clara",
         }
         list(centers = centers, clustresult = clustresult, nc = nc)
     }
-    "prcompRob" <- function(X, k = 0, sca = "mad", scores = TRUE) {
+    prcompRob <- function(X, k = 0, sca = "mad", scores = TRUE) {
         n <- nrow(X)
         p <- ncol(X)
         if (k == 0) {
@@ -204,27 +208,27 @@ function (x, method = "pca", aggr = 3, nc = 8, clustermethod = "clara",
             Bnorm <- sqrt(apply(B^2, 1, sum))
             A <- diag(1/Bnorm) %*% B
             Y <- A %*% P %*% t(X)
-            if (sca == "mad") 
+            if (sca == "mad")
                 s <- apply(Y, 1, mad)
-            if (sca == "tau") 
+            if (sca == "tau")
                 s <- apply(Y, 1, scale.tau)
-            if (sca == "A") 
+            if (sca == "A")
                 s <- apply(Y, 1, scale.a)
             j <- order(s)[n]
             S[k] <- s[j]
             V[, k] <- A[j, ]
-            if (V[1, k] < 0) 
+            if (V[1, k] < 0)
                 V[, k] <- (-1) * V[, k]
             P <- P - (V[, k] %*% t(V[, k]))
         }
         if (scores) {
-            list(scale = S, loadings = V, scores = Xcentr %*% 
+            list(scale = S, loadings = V, scores = Xcentr %*%
                 V)
         }
         else list(scale = S, loadings = V)
     }
     fot <- factorOfTotals(x, aggr)
-    if (method == "simple" || method == "single" || method == 
+    if (method == "simple" || method == "single" || method ==
         "pca" || method == "mcdpca" || method == "pppca") {
         clustering <- FALSE
     }
@@ -236,27 +240,27 @@ function (x, method = "pca", aggr = 3, nc = 8, clustermethod = "clara",
         m <- means(x = x, index = index, measure = measure, trim = trim)
         mr <- round(m)
         if (blow == TRUE) {
-            blowxm <- blowup(x, m, aggr)#mr
+            blowxm <- blowup(x, m, aggr)
         }
-        res <- list(x = x, method = method, clustering = clustering, 
-            aggr = aggr, nc = nc, xm = m, roundxm = mr, clustermethod = clustermethod, 
-            measure = measure, trim = trim, varsort = varsort, 
+        res <- list(x = x, method = method, clustering = clustering,
+            aggr = aggr, nc = nc, xm = m, roundxm = mr, clustermethod = clustermethod,
+            measure = measure, trim = trim, varsort = varsort,
             transf = transf, blow = blow, blowxm = blowxm, fot = fot)
     }
     if (method == "single") {
         sortvec <- sort(x[, varsort], index.return = TRUE)$ix
         xx <- x[sortvec, ]
         index <- indexMicro(xx, aggr)
-        m <- means(x = xx, index = index, measure = measure, 
+        m <- means(x = xx, index = index, measure = measure,
             trim = trim)
         mr <- round(m)
         if (blow == TRUE) {
-            blowxm <- blowup(x, m, aggr)#mr
+            blowxm <- blowup(x, m, aggr)
             rownames(blowxm) <- rownames(xx)
         }
-        res <- list(x = x, method = method, clustering = clustering, 
-            aggr = aggr, nc = nc, xm = m, roundxm = mr, clustermethod = clustermethod, 
-            measure = measure, trim = trim, varsort = varsort, 
+        res <- list(x = x, method = method, clustering = clustering,
+            aggr = aggr, nc = nc, xm = m, roundxm = mr, clustermethod = clustermethod,
+            measure = measure, trim = trim, varsort = varsort,
             transf = transf, blow = blow, blowxm = blowxm, fot = fot)
     }
     if (method == "onedims") {
@@ -268,18 +272,18 @@ function (x, method = "pca", aggr = 3, nc = 8, clustermethod = "clara",
             rank(x[, i], ties = "min")
         })
         index <- indexMicro(xx, aggr)
-        m <- means(x = xx, index = index, measure = measure, 
+        m <- means(x = xx, index = index, measure = measure,
             trim = trim)
         mr <- round(m)
         blow = TRUE
-        b <- blowup(x, m, aggr)#mr
+        b <- blowup(x, m, aggr)
         y <- x
         for (i in 1:dim(x)[2]) {
             y[, i] <- b[xxx[, i], i]
         }
-        res <- list(x = x, method = method, clustering = clustering, 
-            aggr = aggr, nc = nc, xm = m, roundxm = mr, clustermethod = clustermethod, 
-            measure = measure, trim = trim, varsort = varsort, 
+        res <- list(x = x, method = method, clustering = clustering,
+            aggr = aggr, nc = nc, xm = m, roundxm = mr, clustermethod = clustermethod,
+            measure = measure, trim = trim, varsort = varsort,
             transf = transf, blow = blow, blowxm = y, fot = fot)
     }
     if (method == "pca") {
@@ -287,16 +291,16 @@ function (x, method = "pca", aggr = 3, nc = 8, clustermethod = "clara",
         s1 <- sort(p$scores[, 1], index.return = TRUE)$ix
         xx <- x[s1, ]
         index <- indexMicro(xx, aggr)
-        m <- means(x = xx, index = index, measure = measure, 
+        m <- means(x = xx, index = index, measure = measure,
             trim = trim)
         mr <- round(m)
         if (blow == TRUE) {
-            blowxm <- blowup(x, m, aggr) #mr, aggr)
+            blowxm <- blowup(x, m, aggr)
             rownames(blowxm) <- rownames(xx)
         }
-        res <- list(x = x, method = method, clustering = clustering, 
-            aggr = aggr, nc = nc, xm = m, roundxm = mr, clustermethod = clustermethod, 
-            measure = measure, trim = trim, varsort = varsort, 
+        res <- list(x = x, method = method, clustering = clustering,
+            aggr = aggr, nc = nc, xm = m, roundxm = mr, clustermethod = clustermethod,
+            measure = measure, trim = trim, varsort = varsort,
             transf = transf, blow = blow, blowxm = blowxm, fot = fot)
     }
     if (method == "mcdpca") {
@@ -306,17 +310,17 @@ function (x, method = "pca", aggr = 3, nc = 8, clustermethod = "clara",
         s1 <- sort(p$scores[, 1], index.return = TRUE)$ix
         xx <- x[s1, ]
         index <- indexMicro(xx, aggr)
-        m <- means(x = xx, index = index, measure = measure, 
+        m <- means(x = xx, index = index, measure = measure,
             trim = trim)
         mr <- round(m)
         if (blow == TRUE) {
-            blowxm <- blowup(x, m, aggr)#mr
+            blowxm <- blowup(x, m, aggr)
             rownames(blowxm) <- rownames(xx)
         }
-        res <- list(x = x, method = method, clustering = clustering, 
-            aggr = aggr, nc = nc, xm = m, roundxm = mr, clustermethod = clustermethod, 
-            measure = measure, trim = trim, varsort = varsort, 
-            transf = transf, blowup = blowup, blowxm = blowxm, 
+        res <- list(x = x, method = method, clustering = clustering,
+            aggr = aggr, nc = nc, xm = m, roundxm = mr, clustermethod = clustermethod,
+            measure = measure, trim = trim, varsort = varsort,
+            transf = transf, blowup = blowup, blowxm = blowxm,
             fot = fot)
     }
     if (method == "pppca") {
@@ -324,21 +328,21 @@ function (x, method = "pca", aggr = 3, nc = 8, clustermethod = "clara",
         s1 <- sort(p$scores[, 1], index.return = TRUE)$ix
         xx <- x[s1, ]
         index <- indexMicro(xx, aggr)
-        m <- means(x = xx, index = index, measure = measure, 
+        m <- means(x = xx, index = index, measure = measure,
             trim = trim)
         mr <- round(m)
         if (blow == TRUE) {
-            blowxm <- blowup(x, m, aggr)#mr
+            blowxm <- blowup(x, m, aggr)
             rownames(blowxm) <- rownames(xx)
         }
-        res <- list(x = x, method = method, clustering = clustering, 
-            aggr = aggr, nc = nc, xm = m, roundxm = mr, clustermethod = clustermethod, 
-            measure = measure, trim = trim, varsort = varsort, 
-            transf = transf, blowup = blowup, blowxm = blowxm, 
+        res <- list(x = x, method = method, clustering = clustering,
+            aggr = aggr, nc = nc, xm = m, roundxm = mr, clustermethod = clustermethod,
+            measure = measure, trim = trim, varsort = varsort,
+            transf = transf, blowup = blowup, blowxm = blowxm,
             fot = fot)
     }
     if (method == "influence") {
-        ac.scale <- clust(x = x, nc = nc, clustermethod = clustermethod, 
+        ac.scale <- clust(x = x, nc = nc, clustermethod = clustermethod,
             opt = FALSE, transf = "log")
         cent <- matrix(ac.scale$centers, ncol = nc, byrow = TRUE)
         j <- matrix(ncol = 1, nrow = nc)
@@ -356,31 +360,31 @@ function (x, method = "pca", aggr = 3, nc = 8, clustermethod = "clara",
         }
         for (i in 1:nc) {
             if (i == 1) {
-                yy <- matrix(unlist(xx[[i]]), ncol = ncol(x), 
+                yy <- matrix(unlist(xx[[i]]), ncol = ncol(x),
                   dimnames = list(rownames(xx[[i]]), colnames(xx[[i]])))
             }
             if (i > 1) {
-                yy <- rbind(yy, matrix(unlist(xx[[i]]), ncol = ncol(x), 
+                yy <- rbind(yy, matrix(unlist(xx[[i]]), ncol = ncol(x),
                   dimnames = list(rownames(xx[[i]]), colnames(xx[[i]]))))
             }
         }
         xx <- yy
         index <- indexMicro(xx, aggr)
-        m <- means(x = xx, index = index, measure = measure, 
+        m <- means(x = xx, index = index, measure = measure,
             trim = trim)
         mr <- round(m)
         if (blow == TRUE) {
-            blowxm <- blowup(x, m, aggr)#mr
+            blowxm <- blowup(x, m, aggr)
             rownames(blowxm) <- rownames(yy)
         }
-        res <- list(x = x, method = method, clustering = clustering, 
-            aggr = aggr, nc = ac.scale$nc, xm = m, roundxm = mr, 
-            clustermethod = clustermethod, measure = measure, 
-            trim = trim, varsort = varsort, transf = transf, 
+        res <- list(x = x, method = method, clustering = clustering,
+            aggr = aggr, nc = ac.scale$nc, xm = m, roundxm = mr,
+            clustermethod = clustermethod, measure = measure,
+            trim = trim, varsort = varsort, transf = transf,
             blowup = blowup, blowxm = blowxm, fot = fot)
     }
     if (method == "clustpca") {
-        ac.scale <- clust(x = x, nc = nc, clustermethod = clustermethod, 
+        ac.scale <- clust(x = x, nc = nc, clustermethod = clustermethod,
             opt = FALSE, transf = "log")
         cent <- matrix(ac.scale$centers, ncol = nc, byrow = TRUE)
         xx <- list()
@@ -391,7 +395,7 @@ function (x, method = "pca", aggr = 3, nc = 8, clustermethod = "clara",
                 xx[[i]] <- y[order(y[, varsort]), ]
             }
             else {
-                p <- princomp(scale(x[w, , drop = FALSE]))$scores[, 
+                p <- princomp(scale(x[w, , drop = FALSE]))$scores[,
                   1]
                 psortind <- sort(p, index.return = TRUE)$ix
                 y <- x[w, , drop = FALSE]
@@ -400,31 +404,31 @@ function (x, method = "pca", aggr = 3, nc = 8, clustermethod = "clara",
         }
         for (i in 1:nc) {
             if (i == 1) {
-                yy <- matrix(unlist(xx[[i]]), ncol = ncol(x), 
+                yy <- matrix(unlist(xx[[i]]), ncol = ncol(x),
                   dimnames = list(rownames(xx[[i]]), colnames(xx[[i]])))
             }
             if (i > 1) {
-                yy <- rbind(yy, matrix(unlist(xx[[i]]), ncol = ncol(x), 
+                yy <- rbind(yy, matrix(unlist(xx[[i]]), ncol = ncol(x),
                   dimnames = list(rownames(xx[[i]]), colnames(xx[[i]]))))
             }
         }
         xx <- yy
         index <- indexMicro(xx, aggr)
-        m <- means(x = xx, index = index, measure = measure, 
+        m <- means(x = xx, index = index, measure = measure,
             trim = trim)
         mr <- round(m)
         if (blow == TRUE) {
-            blowxm <- blowup(x, m, aggr)#mr
+            blowxm <- blowup(x, m, aggr)
             rownames(blowxm) <- rownames(xx)
         }
-        res <- list(x = x, method = method, clustering = clustering, 
-            aggr = aggr, nc = ac.scale$nc, xm = m, roundxm = mr, 
-            clustermethod = clustermethod, measure = measure, 
-            trim = trim, varsort = varsort, transf = transf, 
+        res <- list(x = x, method = method, clustering = clustering,
+            aggr = aggr, nc = ac.scale$nc, xm = m, roundxm = mr,
+            clustermethod = clustermethod, measure = measure,
+            trim = trim, varsort = varsort, transf = transf,
             blowup = blowup, blowxm = blowxm, fot = fot)
     }
     if (method == "clustmcdpca") {
-        ac.scale <- clust(x = x, nc = nc, clustermethod = clustermethod, 
+        ac.scale <- clust(x = x, nc = nc, clustermethod = clustermethod,
             opt = FALSE, transf = "log")
         cent <- matrix(ac.scale$centers, ncol = nc, byrow = TRUE)
         xx <- list()
@@ -437,7 +441,7 @@ function (x, method = "pca", aggr = 3, nc = 8, clustermethod = "clara",
             else {
                 x.mcd <- cov.mcd(x[w, ], cor = TRUE)
                 x.scale <- scale(x[, w], x.mcd$center, sqrt(diag(x.mcd$cor)))
-                p <- princomp(x.scale, covmat = x.mcd)$scores[, 
+                p <- princomp(x.scale, covmat = x.mcd)$scores[,
                   1]
                 psortind <- sort(p, index.return = TRUE)$ix
                 y <- x[w, , drop = FALSE]
@@ -446,32 +450,32 @@ function (x, method = "pca", aggr = 3, nc = 8, clustermethod = "clara",
         }
         for (i in 1:nc) {
             if (i == 1) {
-                yy <- matrix(unlist(xx[[i]]), ncol = ncol(x), 
+                yy <- matrix(unlist(xx[[i]]), ncol = ncol(x),
                   dimnames = list(rownames(xx[[i]]), colnames(xx[[i]])))
             }
             if (i > 1) {
-                yy <- rbind(yy, matrix(unlist(xx[[i]]), ncol = ncol(x), 
+                yy <- rbind(yy, matrix(unlist(xx[[i]]), ncol = ncol(x),
                   dimnames = list(rownames(xx[[i]]), colnames(xx[[i]]))))
             }
         }
         xx <- yy
         index <- indexMicro(xx, aggr)
-        m <- means(x = xx, index = index, measure = measure, 
+        m <- means(x = xx, index = index, measure = measure,
             trim = trim)
         mr <- round(m)
         if (blow == TRUE) {
-            blowxm <- blowup(x, m, aggr)#mr
+            blowxm <- blowup(x, m, aggr)
             rownames(blowxm) <- rownames(xx)
         }
-        res <- list(x = x, method = method, clustering = clustering, 
-            aggr = aggr, nc = ac.scale$nc, xm = m, roundxm = mr, 
-            clustermethod = clustermethod, measure = measure, 
-            trim = trim, varsort = varsort, transf = transf, 
+        res <- list(x = x, method = method, clustering = clustering,
+            aggr = aggr, nc = ac.scale$nc, xm = m, roundxm = mr,
+            clustermethod = clustermethod, measure = measure,
+            trim = trim, varsort = varsort, transf = transf,
             blowup = blowup, blowxm = blowxm, fot = fot)
     }
     if (method == "clustpppca") {
-        ac.scale <- clust(x = x, nc = nc, clustermethod = clustermethod, 
-            opt = FALSE, transf = "log")
+        ac.scale <- clust(x = x, nc = nc, clustermethod = clustermethod,
+            opt = FALSE, transf = transf)
         cent <- matrix(ac.scale$centers, ncol = nc, byrow = TRUE)
         xx <- list()
         for (i in 1:nc) {
@@ -489,67 +493,65 @@ function (x, method = "pca", aggr = 3, nc = 8, clustermethod = "clara",
         }
         for (i in 1:nc) {
             if (i == 1) {
-                yy <- matrix(unlist(xx[[i]]), ncol = ncol(x), 
+                yy <- matrix(unlist(xx[[i]]), ncol = ncol(x),
                   dimnames = list(rownames(xx[[i]]), colnames(xx[[i]])))
             }
             if (i > 1) {
-                yy <- rbind(yy, matrix(unlist(xx[[i]]), ncol = ncol(x), 
+                yy <- rbind(yy, matrix(unlist(xx[[i]]), ncol = ncol(x),
                   dimnames = list(rownames(xx[[i]]), colnames(xx[[i]]))))
             }
         }
         xx <- yy
         index <- indexMicro(xx, aggr)
-        m <- means(x = xx, index = index, measure = measure, 
+        m <- means(x = xx, index = index, measure = measure,
             trim = trim)
         mr <- round(m)
         if (blow == TRUE) {
-            blowxm <- blowup(x, m, aggr) #mr
+            blowxm <- blowup(x, m, aggr)
             rownames(blowxm) <- rownames(xx)
         }
-        res <- list(x = x, method = method, clustering = clustering, 
-            aggr = aggr, nc = ac.scale$nc, xm = m, roundxm = mr, 
-            clustermethod = clustermethod, measure = measure, 
-            trim = trim, varsort = varsort, transf = transf, 
+        res <- list(x = x, method = method, clustering = clustering,
+            aggr = aggr, nc = ac.scale$nc, xm = m, roundxm = mr,
+            clustermethod = clustermethod, measure = measure,
+            trim = trim, varsort = varsort, transf = transf,
             blowup = blowup, blowxm = blowxm, fot = fot)
     }
-    if( method == "rmd" ){
-       ##x <- data.frame(x1 = round(rnorm(25,10,2),1), x2 <- round(runif(25,1,50)), x3 <- round(abs(rnorm(25,30,10))))
-       ##x <- as.matrix(x)
-       ##colnames(x)=c("x1","x2","x3")
-       y <- x
-       cm <- colMeans(x, na.rm=TRUE)  ## fuers Ruecktransf.
-       csd <- sd(x, na.rm=TRUE)   ## fuers Ruecktransf.
-       y <- apply(y, 2, function(x) (x - mean(x, na.rm=TRUE))/sd(x, na.rm=TRUE))
-       d <- as.matrix(dist(y))
-       rr <- covMcd(y)
-       md <- mahalanobis(y, center=rr$center, cov=rr$cov)
-       diag(d) <- NA
-       #d[lower.tri(d)] <- NA
-       kn <- function(d,s,ne){
-         w <- rep(0,ne)
-         for( i in 1:ne ){
-           w[i] <- which.min(d[,s])
-           d[w,s] <- NA
-         }
-         return(w)
-       }
-       for( i in 1:(floor(dim(x)[1]/aggr)-1) ){
-         s <- which.max(md)
-         md[s] <- NA
-         w <- kn(d,s,3)
-         d[w,] <- NA
-         y[w,] <- rep(colMeans(y[w,]), each=aggr)
-       }
-         w <- which(!is.na(d[,1]))
-         y[w,] <- rep(colMeans(y[w,]), each=length(w))
-       ### Ruecktrans:
-       for( i in 1: dim(x)[2] ){
-         y[,i] <- (y[,i] * csd[i]) + cm[i]
-       }
-       res <- list(x = x, method = method, clustering = clustering,
-       aggr = aggr, nc = nc, xm = y, roundxm = round(y), clustermethod = clustermethod,
-       measure = measure, trim = trim, varsort = varsort,
-       transf = transf, blow = TRUE, blowxm = y, fot = fot)
+    if (method == "rmd") {
+        y <- x
+        cm <- colMeans(x, na.rm = TRUE)
+        csd <- sd(x, na.rm = TRUE)
+        y <- apply(y, 2, function(x) (x - mean(x, na.rm = TRUE))/sd(x,
+            na.rm = TRUE))
+        d <- as.matrix(dist(y))
+        rr <- covMcd(y)
+        md <- mahalanobis(y, center = rr$center, cov = rr$cov)
+        diag(d) <- 0
+        kn <- function(d, s, ne) {
+            w <- rep(0, ne)
+            for (i in 1:ne) {
+                w[i] <- which.min(d[, s])
+                d[w, ] <- NA
+            }
+            return(list(w = w, d = d))
+        }
+        for (i in 1:(floor(dim(x)[1]/aggr) - 1)) {
+            s <- which.max(md)
+            tmp <- kn(d, s, aggr)
+            w <- tmp$w
+            d <- tmp$d
+            md[w] <- NA
+            y[w, ] <- rep(colMeans(y[w, ]), each = aggr)
+        }
+        w <- which(!is.na(d[, 1]))
+        y[w, ] <- rep(colMeans(y[w, ]), each = length(w))
+        for (i in 1:dim(x)[2]) {
+            y[, i] <- (y[, i] * csd[i]) + cm[i]
+        }
+        res <- list(x = x, method = method, clustering = clustering,
+            aggr = aggr, nc = nc, xm = y, roundxm = round(y),
+            clustermethod = clustermethod, measure = measure,
+            trim = trim, varsort = varsort, transf = transf,
+            blow = TRUE, blowxm = y, fot = fot)
     }
     if (method == "mdav") {
         maxDistinct <- function(d, j) {
@@ -564,44 +566,42 @@ function (x, method = "pca", aggr = 3, nc = 8, clustermethod = "clara",
         distVecs <- matrix(ncol = dim(x)[1], nrow = 1)
         maxD <- x[maxDistinct(d, 1), ]
         findNearest <- function(x, d) {
-            maxD <- x[maxDistinct(d, 1), ]
-            distVecs <- apply(x, 1, FUN = distToVec)
-            s <- sort(distVecs, index.return = TRUE)$ix[1:aggr]
-            sk <- x[s, ]
-            x <- x[-s, , drop = FALSE]
-            d <- as.matrix(dist(x))
-            maxD <- x[maxDistinct(d, 2), ]
-            distVecs2 <- apply(x, 1, FUN = distToVec)
+            ind1 <- which(d == max(d), arr.ind = TRUE)[1, 1]
+            distVecs1 <- d[ind1, ]
+            maxD1 <- x[ind1, ]
+            ind2 <- as.vector(which.max(d[ind1, ]))
+            maxD2 <- x[ind2, ]
+            distVecs2 <- d[ind2, ]
+            s1 <- sort(distVecs1, index.return = TRUE)$ix[1:aggr]
             s2 <- sort(distVecs2, index.return = TRUE)$ix[1:aggr]
-            sk <- rbind(sk, x[s2, ])
-            x <- x[-c(s2), , drop = FALSE]
-            d <- d[-s2, -s2]
+            sk <- rbind(x[s1, , drop = FALSE], x[s2, , drop = FALSE])
+            x <- x[-c(s1, s2), , drop = FALSE]
+            d <- as.matrix(dist(x))
             list(sk = sk, x = x, d = d)
         }
         a <- findNearest(x, d)
         b <- a$sk
-        while (dim(a$x)[1] >= 2 * aggr) {
+        while (dim(a$x)[1] > 2 * aggr) {
+            dim(a$x)[1]
             a <- findNearest(a$x, a$d)
             b <- rbind(b, a$sk)
         }
-        if (dim(a$x)[1] >= aggr && dim(a$x)[1] < 2 * aggr) {
-            b <- rbind(b, a$x)
-        }
-        if (dim(a$x)[1] < aggr && dim(a$x)[1] > 0) {
+        if (dim(a$x)[1] <= 2 * aggr) {
             b <- rbind(b, a$x)
         }
         index <- indexMicro(b, aggr)
         m <- means(x = b, index = index, measure = measure, trim = trim)
         mr <- round(m)
         if (blow == TRUE) {
-            blowxm <- blowup(b, m, aggr) #mr, aggr)
+            blowxm <- blowup(b, m, aggr)
         }
-        res <- list(x = b, method = method, clustering = clustering, 
-            aggr = aggr, nc = nc, xm = m, roundxm = mr, clustermethod = clustermethod, 
-            measure = measure, trim = trim, varsort = varsort, 
+        res <- list(x = b, method = method, clustering = clustering,
+            aggr = aggr, nc = nc, xm = m, roundxm = mr, clustermethod = clustermethod,
+            measure = measure, trim = trim, varsort = varsort,
             transf = transf, blow = blow, blowxm = blowxm, fot = fot)
     }
+    res$x <- res$x[order(as.numeric(rownames(res$x))),]
+    res$blowxm <- res$blowxm[order(as.numeric(rownames(res$blowxm))),]
     class(res) <- "micro"
     res
 }
-

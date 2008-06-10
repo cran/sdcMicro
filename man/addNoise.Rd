@@ -5,7 +5,7 @@
   Various adding noise methods for the perturbation of data can be used.
 }
 \usage{
-addNoise(x, noise = 15, method = "additive", p = 0.001, delta=0.1)
+addNoise(x, noise = 150, method = "additive", p = 0.001, delta=0.1)
 }
 \arguments{
   \item{x}{ data frame or matrix which should be perturbed }

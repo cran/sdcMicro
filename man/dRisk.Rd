@@ -2,7 +2,7 @@
 \alias{dRisk}
 \title{ overal disclosure risk }
 \description{
-  Disclosure risk via standard deviation-based intervals.
+  Distance-based disclosure risk estimation via standard deviation-based intervals.
 }
 \usage{
 dRisk(x, xm, k = 0.01)
@@ -15,14 +15,14 @@ dRisk(x, xm, k = 0.01)
 \details{
 An interval is built around each value of the perturbed value with the help of the standard deviation. 
 Then we look if the original values are in these intervals or not.
-With parameter k we can enlarge or down scaling the interval.
+With parameter k one can enlarge or down scaling the interval.
 }
 \value{
 The disclosure risk.
 }
-\references{ \url{http://vneumann.etse.urv.es/publications/sci/lncs3050Outlier.pdf} }
+\references{ see method SDID in \url{http://vneumann.etse.urv.es/publications/sci/lncs3050Outlier.pdf} }
 \author{Matthias Templ }
-\seealso{ \code{\link{dUtility}} }
+\seealso{ \code{\link{dUtility}}, \code{\link{dUtility}} }
 \examples{
 data(free1)
 m1 <- microaggregation(free1[, 31:34], method="onedims", aggr=3)

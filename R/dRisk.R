@@ -1,9 +1,11 @@
-`dRisk` <-
-function(x,xm,k=0.01){
-  mi <-  t(t(xm) - k*sd(xm))
-  ma <-  t(t(xm) + k*sd(xm))
-  w <- x < mi | x > ma
-  tab <- table(w)
-  as.numeric(tab[1]/sum(tab))
+dRisk <- function (x, xm, k = 0.01)
+{
+    if (dim(x)[1] != dim(xm)[1]) {
+        warning("dimension of perturbed data and original data are different")
+        xm <- xm[1:dim(x)[1], ]
+    }
+    mi <- t(t(xm) - k * sd(xm))
+    ma <- t(t(xm) + k * sd(xm))
+    w <- which(rowSums(x < mi | x > ma) %in% 0:1)
+    as.numeric(length(w)/nrow(x))
 }
-

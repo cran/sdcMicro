@@ -15,6 +15,9 @@ from other software, that the functions can be used in a very flexible way, that
 However, the user should have a detailed knowledge about SDC when applying the methods on data.
 Since, it is quite natural for R users to deal with a CLI, there is no GUI implemented till now. Nevertheless, via Rtcltk it will be
 feasible to implement a GUI if there will be a large demand for a GUI like in mu-Argus.
+
+Please note, that methods \dQuote{shuffling}, \dQuote{robShuffle} (robust shuffling), \dQuote{gadp} and \dQuote{robgadp} are not included 
+in the package because method \dQuote{shuffling} is under a US-patent by other authors, even shuffling consits only of 8 lines of code \ldots
 }
 \details{
 \tabular{ll}{

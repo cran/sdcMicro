@@ -43,7 +43,7 @@ function (X, k = 0, sca = "mad", scores = TRUE)
 }
 
     x1 <- as.data.frame(object$x)
-    x2 <- as.data.frame(object$xm)
+    x2 <- if( length(as.data.frame(object$blowxm)) > 0 ) as.data.frame(object$blowxm) else as.data.frame(object$xm)
     colnames(x2) <- colnames(x1)
     amx <- mapply(mean, x1)
     amxn <- mapply(mean, x2)
@@ -117,8 +117,7 @@ function (X, k = 0, sca = "mad", scores = TRUE)
         cp1 <- colMeans(p1$load)
         cp2 <- colMeans(p2$load)
         apcaload <- sum(abs(cp1 - cp2)/abs(cp1))
-    }
-    else {
+    } else {
         apcaload = "too less observations"
     }
     if (dim(x1)[1] > dim(x1)[2] && dim(x2)[1] > dim(x2)[2]) {
@@ -127,19 +126,28 @@ function (X, k = 0, sca = "mad", scores = TRUE)
         cp1 <- colMeans(p1$load)
         cp2 <- colMeans(p2$load)
         apppcaload <- sum(abs(cp1 - cp2)/abs(cp1))
-    }
-    else {
+    } else {
         apppcaload = "too less observations"
     }
     cmx1 <- apply(x1, 2, sum)
     cmx2 <- apply(x2, 2, sum) * object$fot
     atotals <- sum(abs((cmx1 - cmx2)/cmx1))
     pmtotals <- sum((cmx2 - cmx1)/cmx1)
+    util1 <- dUtility(x1, x2)
+    deigenvalues <- dUtility(x1, x2, method="eigen")
+    risk0 <- dRisk(x1, x2)
+    r <- dRiskRMD(x1, x2, k=0.7)
+    risk1 <- r$risk1
+    risk2 <- r$risk2
+    wrisk1 <- r$wrisk1
+    wrisk2 <- r$wrisk2
     list(meansx = summary(x1), meansxm = summary(x2), amean = amean, 
         amedian = amedian, aonestep = aonestep, devvar = devvar, 
         amad = amad, acov = acov, arcov = arcov, acor = acor, 
         arcor = arcor, acors = acors, adlm = adlm, adlts = adlts, 
         apcaload = apcaload, apppcaload = apppcaload, totalsOrig = cmx1, 
-        totalsMicro = cmx2, atotals = atotals, pmtotals = pmtotals)
+        totalsMicro = cmx2, atotals = atotals, pmtotals = pmtotals,
+        util1 = util1, deigenvalues=deigenvalues, risk0=risk0,
+        risk1=risk1, risk2=risk2, wrisk1=wrisk1, wrisk2=wrisk2)
 }
 

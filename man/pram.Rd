@@ -15,7 +15,7 @@ pram(x, pd=0.8, alpha=0.5)
 \details{
 The method is implemented exactly as descibed in the citation in the references.
 First a transition matrix is created in that way, that the diagonal entries of a matrix P
-are random numbers between {\tt pd} and 1. The remaining enties of the matrix are generated such that the rowSums of 
+are random numbers between \sQuote{pd} and 1. The remaining enties of the matrix are generated such that the rowSums of 
 the matrix is 1. Then a invariant transition matrix is generated.
 }
 \value{

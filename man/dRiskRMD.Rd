@@ -19,21 +19,24 @@ dRiskRMD(x, xm, k = 0.01, k2=0.05)
   as observations in the center of the data cloud.
    
   The algorithm works as follows:
-  \begin{enumerate}
-  \item Robust Mahalanobis distances are estimated in order to get a robust multivariate distance for each observation.
-  \item Intervals are estimated for each observation around every data point of the original data points where the length 
+
+  1. Robust Mahalanobis distances are estimated in order to get a robust multivariate distance for each observation.
+  
+  2. Intervals are estimated for each observation around every data point of the original data points where the length 
         of the interval is defined/weighted by the squared robust Mahalanobis distance and the parameter $k$. 
         The higher the RMD of an observation the larger the interval. 
-  \item Check if the corresponding masked values fall into the intervals around the original values or not. 
+
+  3. Check if the corresponding masked values fall into the intervals around the original values or not. 
         If the value of the corresponding observation is within such an interval the whole observation is considered unsafe. 
-        So, we get a whole vector indicating which observation is save or not ($\rightarrow$ we are finished already when 
+        So, we get a whole vector indicating which observation is save or not, and we are finished already when 
         using method RMDID1).
-  \item For method RMDID1w: we return the weighted (via RMD) vector of disclosure risk.
-  \item For method RMDID2: whenever an observation is considered unsafe it is checked if $m$ other observations 
+
+  4. For method RMDID1w: we return the weighted (via RMD) vector of disclosure risk.
+
+  5. For method RMDID2: whenever an observation is considered unsafe it is checked if $m$ other observations 
         from the masked data are very close (defined by a parameter $k2$ for the length of the intervals as for SDID or RSDID) 
         to such an unsafe observation from the masked data, using Euclidean distances. 
         If more than $m$ points are in such a small interval, we conclude that this observation is ``save''. 
-  \end{enumerate}
 }
 \value{
 The disclosure risk.
@@ -44,7 +47,6 @@ The disclosure risk.
   \item{indexRisk1}{index of observations with high risk according to risk1 measure}
   \item{indexRisk2}{index of observations with high risk according to wrisk2 measure}
 }
-\references{  }
 \author{Matthias Templ }
 \seealso{ \code{\link{dRisk}} }
 \examples{

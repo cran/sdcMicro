@@ -34,7 +34,7 @@ Further details can be found on the link given below.
 }
 \references{
 Brand, R. and
-Domingo-Ferrer, J. and Mateo-Sanz, J.M., Reference data sets to test and compare {SDC} methods for protection of numerical microdata. 
+Domingo-Ferrer, J. and Mateo-Sanz, J.M., Reference data sets to test and compare SDC methods for protection of numerical microdata. 
 Unpublished. \url{http://neon.vb.cbs.nl/casc/CASCrefmicrodata.pdf}
 }
 \examples{

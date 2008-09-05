@@ -27,7 +27,7 @@ localSuppr() for the protection of values of high risk. Further details can be f
 \references{ have a look at: \url{http://neon.vb.cbs.nl/casc/Deliv/12d1.pdf} or
 \url{http://www.istat.it/dati/pubbsci/contributi/Contributi/contr_2003/2003_14.pdf} }
 \author{ Matthias Templ }
-\note{ The base individual risk method was developed by Benedetti, Capobianchi and Franconi }
+\note{ The base individual risk method was developed by Benedetti, Capobianchi and Franconi 
 }
 \seealso{  \code{\link{freqCalc}} }
 \examples{

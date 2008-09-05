@@ -1,6 +1,7 @@
 `freqCalc` <-
 function(x, keyVars=1:3 , w=4){
 x <- as.matrix(x)
+#if( any(apply(x[, keyVars], 2, class)) ) x[, keyVars] <- apply(x[, keyVars], 2, function(x) as.integer(as.factor(x)))
 y <- x
 #x <- ifelse(is.na(x), -999999, x)
 x <- as.integer(apply(x[,keyVars], 1, rbind))

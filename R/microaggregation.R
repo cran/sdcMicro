@@ -516,37 +516,87 @@ microaggregation <- function (x, method = "pca", aggr = 3, nc = 8, clustermethod
             trim = trim, varsort = varsort, transf = transf,
             blowup = blowup, blowxm = blowxm, fot = fot)
     }
-    if (method == "rmd") {
+#    if (method == "rmd") {
+#        y <- x
+#        cm <- colMeans(x, na.rm = TRUE)
+#        csd <- sd(x, na.rm = TRUE)
+#        y <- apply(y, 2, function(x) (x - mean(x, na.rm = TRUE))/sd(x,
+#            na.rm = TRUE))
+#        d <- as.matrix(dist(y))
+#        rr <- covMcd(y)
+#        md <- mahalanobis(y, center = rr$center, cov = rr$cov)
+#        diag(d) <- 0
+#        kn <- function(d, s, ne) {
+#            w <- rep(0, ne)
+#            for (i in 1:ne) {
+#                w[i] <- which.min(d[, s])
+#                d[w, ] <- NA
+#            }
+#            return(list(w = w, d = d))
+#        }
+#        for (i in 1:(floor(dim(x)[1]/aggr) - 1)) {
+#            s <- which.max(md)
+#            tmp <- kn(d, s, aggr)
+#            w <- tmp$w
+#            d <- tmp$d
+#            md[w] <- NA
+#            y[w, ] <- rep(colMeans(y[w, ]), each = aggr)
+#        }
+#        w <- which(!is.na(d[, 1]))
+#        y[w, ] <- rep(colMeans(y[w, ]), each = length(w))
+#        for (i in 1:dim(x)[2]) {
+#            y[, i] <- (y[, i] * csd[i]) + cm[i]
+#        }
+#        res <- list(x = x, method = method, clustering = clustering,
+#            aggr = aggr, nc = nc, xm = y, roundxm = round(y),
+#            clustermethod = clustermethod, measure = measure,
+#            trim = trim, varsort = varsort, transf = transf,
+#            blow = TRUE, blowxm = y, fot = fot)
+#    }
+     if (method == "rmd") {
+	  #dyn.load("functionsRMD.dll")
         y <- x
         cm <- colMeans(x, na.rm = TRUE)
         csd <- sd(x, na.rm = TRUE)
-        y <- apply(y, 2, function(x) (x - mean(x, na.rm = TRUE))/sd(x,
-            na.rm = TRUE))
+        len <- nrow(y)
+        
+        y <- apply(y, 2, function(x) (x - mean(x, na.rm = TRUE))/sd(x, na.rm = TRUE))
+        
+        # eventuell C-Code (bringt aber nicht sonderlich viel!
+        # wenn dann noch irgendwo  dyn.load("functionsRMD.dll")  hinschreiben
+        #for (i in 1:ncol(y)) {
+        #    y[,i] <- .C("standardise", erg=as.double(y[,i]), as.integer(len), as.double(cm[i]), as.double(csd[i]))$erg
+        #}
+
         d <- as.matrix(dist(y))
+        set.seed(123)
         rr <- covMcd(y)
         md <- mahalanobis(y, center = rr$center, cov = rr$cov)
         diag(d) <- 0
-        kn <- function(d, s, ne) {
-            w <- rep(0, ne)
-            for (i in 1:ne) {
-                w[i] <- which.min(d[, s])
-                d[w, ] <- NA
+        kn <- function(ds, aggr) {
+            w <- rep(0, aggr)
+            for (i in 1:aggr) {
+                w[i] <- which.min(ds)
+                ds[w[i]] <- NA
             }
-            return(list(w = w, d = d))
+            return(w)
         }
+
         for (i in 1:(floor(dim(x)[1]/aggr) - 1)) {
             s <- which.max(md)
-            tmp <- kn(d, s, aggr)
-            w <- tmp$w
-            d <- tmp$d
+            w <- kn(d[,s], aggr)
+            d[w,] <- NA
             md[w] <- NA
             y[w, ] <- rep(colMeans(y[w, ]), each = aggr)
         }
         w <- which(!is.na(d[, 1]))
         y[w, ] <- rep(colMeans(y[w, ]), each = length(w))
         for (i in 1:dim(x)[2]) {
-            y[, i] <- (y[, i] * csd[i]) + cm[i]
+            y[,i] <- as.numeric((y[, i] * csd[i]) + cm[i])
+            # eventuell C-Code ausführen: Bringt aber nicht viel und Probleme beim Vergleich mit der bisherigen Version
+            #y[,i] <- as.numeric(.C("restandardise", erg=as.double(y[,i]), as.integer(nrow(x)), as.double(cm[i]), as.double(csd[i]))$erg)
         }
+
         res <- list(x = x, method = method, clustering = clustering,
             aggr = aggr, nc = nc, xm = y, roundxm = round(y),
             clustermethod = clustermethod, measure = measure,

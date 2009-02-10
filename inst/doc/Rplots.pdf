@@ -1,11 +1,11 @@
-%PDF-1.4
+%PDF-1.1
 %Å‚Å„ÅœÅ”\r
 1 0 obj
 <<
-/CreationDate (D:20090127114009)
-/ModDate (D:20090127114009)
+/CreationDate (D:20090210125549)
+/ModDate (D:20090210125549)
 /Title (R Graphics Output)
-/Producer (R 2.8.0)
+/Producer (R 2.7.2)
 /Creator (R)
 >>
 endobj
@@ -17,15 +17,23 @@ endobj
 endobj
 5 0 obj
 <<
-/Type /Page
-/Parent 3 0 R
-/Contents 6 0 R
-/Resources 4 0 R
+/Type /Font
+/Subtype /Type1
+/Name /F1
+/BaseFont /ZapfDingbats
 >>
 endobj
 6 0 obj
 <<
-/Length 7 0 R
+/Type /Page
+/Parent 3 0 R
+/Contents 7 0 R
+/Resources 4 0 R
+>>
+endobj
+7 0 obj
+<<
+/Length 8 0 R
 >>
 stream
 q
@@ -52,41 +60,17 @@ Q q 59.04 73.44 414.72 371.52 re W n
 S
 BT
 /F1 1 Tf 1 Tr 7.48 0 0 7.48 71.44 86.78 Tm (l) Tj 0 Tr
-ET
-BT
 /F1 1 Tf 1 Tr 7.48 0 0 7.48 103.44 86.94 Tm (l) Tj 0 Tr
-ET
-BT
 /F1 1 Tf 1 Tr 7.48 0 0 7.48 135.44 87.15 Tm (l) Tj 0 Tr
-ET
-BT
 /F1 1 Tf 1 Tr 7.48 0 0 7.48 167.44 88.01 Tm (l) Tj 0 Tr
-ET
-BT
 /F1 1 Tf 1 Tr 7.48 0 0 7.48 199.44 87.89 Tm (l) Tj 0 Tr
-ET
-BT
 /F1 1 Tf 1 Tr 7.48 0 0 7.48 231.44 88.61 Tm (l) Tj 0 Tr
-ET
-BT
 /F1 1 Tf 1 Tr 7.48 0 0 7.48 263.44 89.11 Tm (l) Tj 0 Tr
-ET
-BT
 /F1 1 Tf 1 Tr 7.48 0 0 7.48 295.44 89.44 Tm (l) Tj 0 Tr
-ET
-BT
 /F1 1 Tf 1 Tr 7.48 0 0 7.48 327.44 90.67 Tm (l) Tj 0 Tr
-ET
-BT
 /F1 1 Tf 1 Tr 7.48 0 0 7.48 359.44 90.69 Tm (l) Tj 0 Tr
-ET
-BT
 /F1 1 Tf 1 Tr 7.48 0 0 7.48 391.44 90.99 Tm (l) Tj 0 Tr
-ET
-BT
 /F1 1 Tf 1 Tr 7.48 0 0 7.48 423.44 91.63 Tm (l) Tj 0 Tr
-ET
-BT
 /F1 1 Tf 1 Tr 7.48 0 0 7.48 455.44 95.44 Tm (l) Tj 0 Tr
 ET
 Q q
@@ -105,17 +89,9 @@ Q q
 BT
 0.000 0.000 0.000 rg
 /F2 1 Tf 0.00 12.00 -12.00 0.00 41.76 83.86 Tm (0) Tj
-ET
-BT
 /F2 1 Tf 0.00 12.00 -12.00 0.00 41.76 166.53 Tm (10) Tj
-ET
-BT
 /F2 1 Tf 0.00 12.00 -12.00 0.00 41.76 252.53 Tm (20) Tj
-ET
-BT
 /F2 1 Tf 0.00 12.00 -12.00 0.00 41.76 338.53 Tm (30) Tj
-ET
-BT
 /F2 1 Tf 0.00 12.00 -12.00 0.00 41.76 424.53 Tm (40) Tj
 ET
 59.04 73.44 m
@@ -128,20 +104,10 @@ Q q
 BT
 0.000 0.000 0.000 rg
 /F2 1 Tf 19.00 0.00 0.00 19.00 -48.47 469.68 Tm (Frequency calculation: User computation time for the ) Tj
-ET
-BT
 /F6 1 Tf 19.00 0.00 0.00 19.00 400.81 469.68 Tm (m) Tj
-ET
-BT
 /F6 1 Tf 19.00 0.00 0.00 19.00 400.81 469.68 Tm (m) Tj
-ET
-BT
 /F2 1 Tf 19.00 0.00 0.00 19.00 411.75 469.68 Tm (-Argus test data set) Tj
-ET
-BT
 /F2 1 Tf 20.00 0.00 0.00 20.00 159.29 18.72 Tm (Number of key variables) Tj
-ET
-BT
 /F2 1 Tf 0.00 20.00 -20.00 0.00 12.96 124.71 Tm (User computation time [in sec]) Tj
 ET
 Q q 59.04 73.44 414.72 371.52 re W n
@@ -160,20 +126,10 @@ Q q 59.04 73.44 414.72 371.52 re W n
 S
 BT
 /F1 1 Tf 1 Tr 7.48 0 0 7.48 71.44 89.10 Tm (l) Tj 0 Tr
-ET
-BT
 /F1 1 Tf 1 Tr 7.48 0 0 7.48 103.44 90.55 Tm (l) Tj 0 Tr
-ET
-BT
 /F1 1 Tf 1 Tr 7.48 0 0 7.48 135.44 92.49 Tm (l) Tj 0 Tr
-ET
-BT
 /F1 1 Tf 1 Tr 7.48 0 0 7.48 167.44 96.50 Tm (l) Tj 0 Tr
-ET
-BT
 /F1 1 Tf 1 Tr 7.48 0 0 7.48 199.44 132.20 Tm (l) Tj 0 Tr
-ET
-BT
 /F1 1 Tf 1 Tr 7.48 0 0 7.48 231.44 428.60 Tm (l) Tj 0 Tr
 ET
 1.000 0.000 0.000 RG
@@ -184,18 +140,12 @@ ET
 S
 BT
 /F1 1 Tf 1 Tr 7.48 0 0 7.48 71.44 119.00 Tm (l) Tj 0 Tr
-ET
-BT
 /F1 1 Tf 1 Tr 7.48 0 0 7.48 103.44 119.86 Tm (l) Tj 0 Tr
-ET
-BT
 /F1 1 Tf 1 Tr 7.48 0 0 7.48 135.44 120.72 Tm (l) Tj 0 Tr
-ET
-BT
 /F1 1 Tf 1 Tr 7.48 0 0 7.48 167.44 127.60 Tm (l) Tj 0 Tr
-ET
 0.75 w
 [] 0 d
+ET
 114.94 396.03 m 143.02 396.03 l S
 0.000 0.000 1.000 RG
 114.94 347.10 m 143.02 347.10 l S
@@ -204,35 +154,17 @@ ET
 1.000 0.000 0.000 RG
 BT
 /F1 1 Tf 1 Tr 9.72 0 0 9.72 125.13 392.66 Tm (l) Tj 0 Tr
-ET
 0.000 0.000 1.000 RG
-BT
 /F1 1 Tf 1 Tr 9.72 0 0 9.72 125.13 343.73 Tm (l) Tj 0 Tr
-ET
 0.000 0.000 0.000 RG
-BT
 /F1 1 Tf 1 Tr 9.72 0 0 9.72 125.13 294.80 Tm (l) Tj 0 Tr
-ET
-BT
 0.000 0.000 0.000 rg
 /F2 1 Tf 16.00 0.00 0.00 16.00 157.06 409.01 Tm (mu-Argus \(out of memory with ) Tj
-ET
-BT
 /F2 1 Tf 16.00 0.00 0.00 16.00 157.06 390.29 Tm (5 or more key variables\)) Tj
-ET
-BT
 /F2 1 Tf 16.00 0.00 0.00 16.00 157.06 371.57 Tm () Tj
-ET
-BT
 /F2 1 Tf 16.00 0.00 0.00 16.00 157.06 360.08 Tm (advanced R code \(without loops\)) Tj
-ET
-BT
 /F2 1 Tf 16.00 0.00 0.00 16.00 157.06 341.36 Tm ( out of memory with 7 or more key variables) Tj
-ET
-BT
 /F2 1 Tf 16.00 0.00 0.00 16.00 157.06 322.64 Tm () Tj
-ET
-BT
 /F2 1 Tf 16.00 0.00 0.00 16.00 157.06 292.43 Tm (R/C++ interface) Tj
 ET
 Q q
@@ -259,41 +191,17 @@ Q q
 BT
 0.000 0.000 0.000 rg
 /F2 1 Tf 12.00 0.00 0.00 12.00 71.06 47.52 Tm (1) Tj
-ET
-BT
 /F2 1 Tf 12.00 0.00 0.00 12.00 103.06 47.52 Tm (2) Tj
-ET
-BT
 /F2 1 Tf 12.00 0.00 0.00 12.00 135.06 47.52 Tm (3) Tj
-ET
-BT
 /F2 1 Tf 12.00 0.00 0.00 12.00 167.06 47.52 Tm (4) Tj
-ET
-BT
 /F2 1 Tf 12.00 0.00 0.00 12.00 199.06 47.52 Tm (5) Tj
-ET
-BT
 /F2 1 Tf 12.00 0.00 0.00 12.00 231.06 47.52 Tm (6) Tj
-ET
-BT
 /F2 1 Tf 12.00 0.00 0.00 12.00 263.06 47.52 Tm (7) Tj
-ET
-BT
 /F2 1 Tf 12.00 0.00 0.00 12.00 295.06 47.52 Tm (8) Tj
-ET
-BT
 /F2 1 Tf 12.00 0.00 0.00 12.00 327.06 47.52 Tm (9) Tj
-ET
-BT
 /F2 1 Tf 12.00 0.00 0.00 12.00 355.73 47.52 Tm (10) Tj
-ET
-BT
 /F2 1 Tf 12.00 0.00 0.00 12.00 387.73 47.52 Tm (11) Tj
-ET
-BT
 /F2 1 Tf 12.00 0.00 0.00 12.00 419.73 47.52 Tm (12) Tj
-ET
-BT
 /F2 1 Tf 12.00 0.00 0.00 12.00 451.73 47.52 Tm (29) Tj
 ET
 442.40 73.44 m 442.40 73.44 l S
@@ -313,14 +221,14 @@ Q q 59.04 73.44 414.72 371.52 re W n
 Q
 endstream
 endobj
-7 0 obj
-5726
+8 0 obj
+5426
 endobj
 3 0 obj
 <<
 /Type /Pages
 /Kids [
-5 0 R
+6 0 R
 ]
 /Count 1
 /MediaBox [0 0 504 504]
@@ -329,23 +237,15 @@ endobj
 4 0 obj
 <<
 /ProcSet [/PDF /Text]
-/Font << /F1 9 0 R /F2 10 0 R /F6 11 0 R >>
+/Font << /F1 5 0 R /F2 10 0 R /F6 11 0 R >>
 /ExtGState << >>
->>
-endobj
-8 0 obj
-<<
-/Type /Encoding
-/BaseEncoding /WinAnsiEncoding
-/Differences [ 45/minus ]
 >>
 endobj
 9 0 obj
 <<
-/Type /Font
-/Subtype /Type1
-/Name /F1
-/BaseFont /ZapfDingbats
+/Type /Encoding
+/BaseEncoding /WinAnsiEncoding
+/Differences [ 45/minus ]
 >>
 endobj
 10 0 obj <<
@@ -353,7 +253,7 @@ endobj
 /Subtype /Type1
 /Name /F2
 /BaseFont /Helvetica
-/Encoding 8 0 R
+/Encoding 9 0 R
 >> endobj
 11 0 obj <<
 /Type /Font
@@ -366,15 +266,15 @@ xref
 0000000000 65535 f 
 0000000021 00000 n 
 0000000163 00000 n 
-0000006091 00000 n 
-0000006174 00000 n 
+0000005874 00000 n 
+0000005957 00000 n 
 0000000212 00000 n 
-0000000292 00000 n 
-0000006071 00000 n 
-0000006278 00000 n 
-0000006372 00000 n 
-0000006455 00000 n 
-0000006552 00000 n 
+0000000295 00000 n 
+0000000375 00000 n 
+0000005854 00000 n 
+0000006061 00000 n 
+0000006155 00000 n 
+0000006252 00000 n 
 trailer
 <<
 /Size 12
@@ -382,5 +282,5 @@ trailer
 /Root 2 0 R
 >>
 startxref
-6630
+6330
 %%EOF

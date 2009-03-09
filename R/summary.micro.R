@@ -25,10 +25,10 @@ function (X, k = 0, sca = "mad", scores = TRUE)
         Y <- A %*% P %*% t(X)
         if (sca == "mad") 
             s <- apply(Y, 1, mad)
-        if (sca == "tau") 
-            s <- apply(Y, 1, scale.tau)
-        if (sca == "A") 
-            s <- apply(Y, 1, scale.a)
+        #if (sca == "tau") 
+        #    s <- apply(Y, 1, scale.tau)
+        #if (sca == "A") 
+        #    s <- apply(Y, 1, scale.a)
         j <- order(s)[n]
         S[k] <- s[j]
         V[, k] <- A[j, ]

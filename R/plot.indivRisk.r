@@ -3,7 +3,8 @@ plot.indivRisk <- function (x, ...)
     ## x ... object from class indivRisk
     ## y ... object from class freqCalc
     if (!exists("slider.env"))
-        slider.env <<- new.env()
+        #slider.env <<- new.env()
+		slider.env <- new.env()
     library(tcltk)
     method = "histogram"
     mu <- 0.0025
@@ -100,7 +101,7 @@ plot.indivRisk <- function (x, ...)
     tkpack(fr <- tkframe(m), side = "top")
     tkpack(tklabel(fr, text = "Individual risk threshold =", width = "35"), side = "left")
     tkpack(sc <- tkscale(fr, command = norm.refresh, from = 0,
-        to = max(x$rk), orient = "horiz", resolution = 0.001, showvalue = T),
+        to = max(x$rk), orient = "horiz", resolution = 0.001, showvalue = TRUE),
         side = "left")
     assign("sc", sc, env = slider.env)
     evalq(tkconfigure(sc, variable = mu), env = slider.env)
@@ -108,14 +109,14 @@ plot.indivRisk <- function (x, ...)
     tkpack(tklabel(fr, text = "Re-identification rate =", width = "35"),
         side = "left")
     tkpack(sc <- tkscale(fr, command = norm.refresh, from = 0,
-        to = maxsd, orient = "horiz", resolution = 0.01, showvalue = T),
+        to = maxsd, orient = "horiz", resolution = 0.01, showvalue = TRUE),
         side = "left")
     assign("sc", sc, env = slider.env)
     evalq(tkconfigure(sc, variable = sd), env = slider.env)
     tkpack(fr <- tkframe(m), side = "top")
     tkpack(tklabel(fr, text = "Unsafe recods =", width = "35"), side = "left")
     tkpack(sc <- tkscale(fr, command = norm.refresh, from = 0,
-        to = length(x$rk), orient = "horiz", resolution = 1, showvalue = T),
+        to = length(x$rk), orient = "horiz", resolution = 1, showvalue = TRUE),
         side = "left")
         
     assign("sc", sc, env = slider.env)

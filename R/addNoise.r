@@ -8,7 +8,7 @@ addNoise <- function (x, noise = 150, method = "additive", p = 0.001, delta = 0.
     eps <- matrix(0, ncol = P, nrow = N)
     if (method == "additive") {
         x <- apply(x, 2, function(x) {
-            x + rnorm(N, 0, 1.96 * sd(x)/sqrt(N) * wnoise)
+            x + rnorm(N, 0, noise*sd(x)) #1.96 * sd(x)/sqrt(N) * wnoise)
         })
     }
     if (method == "correlated") {

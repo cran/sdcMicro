@@ -15,7 +15,7 @@ addNoise(x, noise = 150, method = "additive", p = 0.001, delta=0.1)
   \item{delta}{ parmeter for method \sQuote{correlated2}, see in the reference below }  
 }
 \details{
-  Method \sQuote{additive} adds noise completely random to each variable depending on there size and standard error. \sQuote{correlated}
+  Method \sQuote{additive} adds noise completely random to each variable depending on there size and standard standard deviation. \sQuote{correlated}
    and method \sQuote{correlated2} adds noise and preserves the covariances as descriped in R. Brand (2001) or in the reference given below.
    \sQuote{restr} takes the 
    sample size into account when adding noise. Method \sQuote{ROMM} should be the implementation of the first algorithm of Fienberg (2004).

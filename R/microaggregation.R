@@ -210,10 +210,10 @@ microaggregation <- function (x, method = "pca", aggr = 3, nc = 8, clustermethod
             Y <- A %*% P %*% t(X)
             if (sca == "mad")
                 s <- apply(Y, 1, mad)
-            if (sca == "tau")
-                s <- apply(Y, 1, scale.tau)
-            if (sca == "A")
-                s <- apply(Y, 1, scale.a)
+            #if (sca == "tau")
+            #    s <- apply(Y, 1, scale.tau)
+            #if (sca == "A")
+            #    s <- apply(Y, 1, scale.a)
             j <- order(s)[n]
             S[k] <- s[j]
             V[, k] <- A[j, ]
@@ -593,7 +593,7 @@ microaggregation <- function (x, method = "pca", aggr = 3, nc = 8, clustermethod
         y[w, ] <- rep(colMeans(y[w, ]), each = length(w))
         for (i in 1:dim(x)[2]) {
             y[,i] <- as.numeric((y[, i] * csd[i]) + cm[i])
-            # eventuell C-Code ausführen: Bringt aber nicht viel und Probleme beim Vergleich mit der bisherigen Version
+            # eventuell C-Code ausfï¿½hren: Bringt aber nicht viel und Probleme beim Vergleich mit der bisherigen Version
             #y[,i] <- as.numeric(.C("restandardise", erg=as.double(y[,i]), as.integer(nrow(x)), as.double(cm[i]), as.double(csd[i]))$erg)
         }
 

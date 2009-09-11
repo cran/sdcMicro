@@ -2,7 +2,8 @@
 \alias{summary.freqCalc}
 \title{ Summary method for objects from class freqCalc }
 \description{
-Summary method for objects from class freqCalc to provide information about local suppressions.
+Summary method for objects of class \sQuote{freqCalc} to provide information 
+about local suppressions.
 }
 \usage{
 \method{summary}{freqCalc}(object, ...)
@@ -15,7 +16,7 @@ Summary method for objects from class freqCalc to provide information about loca
   Shows the amount of local suppressions on each variable in which local suppression was applied.
 }
 \value{
-information about local suppression in each variable (if there is already a local suppression done).
+Information about local suppression in each variable (only if a local suppression is already done).
 }
 \author{Matthias Templ }
 \seealso{ \code{\link{freqCalc}} }

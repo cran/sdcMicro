@@ -2,7 +2,7 @@
 \alias{dRiskRMD}
 \title{ RMD based disclosure risk }
 \description{
-  Distance-based disclosure risk estimation via robust Mahalanobis Distances
+  Distance-based disclosure risk estimation via robust Mahalanobis Distances.
 }
 \usage{
 dRiskRMD(x, xm, k = 0.01, k2=0.05)
@@ -10,12 +10,15 @@ dRiskRMD(x, xm, k = 0.01, k2=0.05)
 \arguments{
   \item{x}{ original data  }
   \item{xm}{ masked data }
-  \item{k}{ weight for adjusting the influence of the robust Mahalanobis distances, i.e. to increase or decrease each of the disclosure risk intervals. }
+  \item{k}{ weight for adjusting the influence of the robust Mahalanobis distances, 
+        i.e. to increase or decrease each of the disclosure risk intervals. }
   \item{k2}{parameter for method RMDID2 to choose a small interval around each masked observation.}
 }
 \details{
-  This method is an extension of method SDID because it account for the \dQuote{outlyingness} of each observations. This is a quite natural
-  approach since outliers do have a higher risk of re-identification and therefore these outliers needs to be larger disclosure risk intervals
+  This method is an extension of method SDID because it accounts 
+  for the \dQuote{outlyingness} of each observations. This is a quite natural
+  approach since outliers do have a higher risk of re-identification and 
+  therefore these outliers should have larger disclosure risk intervals
   as observations in the center of the data cloud.
    
   The algorithm works as follows:
@@ -46,6 +49,19 @@ The disclosure risk.
   \item{wrisk2}{RMDID2 measure}
   \item{indexRisk1}{index of observations with high risk according to risk1 measure}
   \item{indexRisk2}{index of observations with high risk according to wrisk2 measure}
+}
+\references{ Templ, M. and Meindl, B., 
+               \emph{Robust Statistics Meets {SDC}: New Disclosure Risk Measures for 
+               Continuous Microdata Masking}, 
+               Lecture Notes in Computer Science, Privacy in Statistical Databases, 
+               vol. 5262, pp. 113-126, 2008.    
+               
+  Templ, M. 
+\emph{New Developments in Statistical Disclosure Control and Imputation:
+Robust Statistics Applied to Official Statistics}, Suedwestdeutscher Verlag fuer Hochschulschriften, 
+2009, ISBN: 3838108280, 264 pages. 
+    
+        
 }
 \author{Matthias Templ }
 \seealso{ \code{\link{dRisk}} }

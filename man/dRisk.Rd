@@ -14,8 +14,8 @@ dRisk(x, xm, k = 0.01)
 }
 \details{
 An interval is built around each value of the perturbed value with the help of the standard deviation. 
-Then we look if the original values are in these intervals or not.
-With parameter k one can enlarge or down scaling the interval.
+Then we look if the original values lay in these intervals or not.
+With parameter k one can enlarge or down scale the interval.
 }
 \value{
 The disclosure risk.

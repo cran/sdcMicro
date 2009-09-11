@@ -3,7 +3,8 @@
 \docType{data}
 \title{ Census data set }
 \description{
-The test data set was obtained on July 27, 2000 using the Data Extraction System of the U. S. Bureau of the Census.
+This test data set was obtained on July 27, 2000 using the Data Extraction System 
+of the U. S. Bureau of the Census.
 }
 \usage{data(CASCrefmicrodata)}
 \format{

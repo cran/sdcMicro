@@ -2,25 +2,31 @@
 \alias{addNoise}
 \title{ Adding noise for the perturbation of data }
 \description{
-  Various adding noise methods for the perturbation of data can be used.
+  Various adding noise methods for the perturbation of continuous scaled variables can be used.
 }
 \usage{
 addNoise(x, noise = 150, method = "additive", p = 0.001, delta=0.1)
 }
 \arguments{
   \item{x}{ data frame or matrix which should be perturbed }
-  \item{noise}{ amount of noise }
+  \item{noise}{ amount of noise (in percentages)}
   \item{method}{ choose between \sQuote{additive}, \sQuote{correlated}, \sQuote{correlated2}, \sQuote{restr}, \sQuote{ROMM}, \sQuote{outdect}  }
   \item{p}{ multiplication factor for method \sQuote{ROMM} }
-  \item{delta}{ parmeter for method \sQuote{correlated2}, see in the reference below }  
+  \item{delta}{ parameter for method \sQuote{correlated2}, details can be found
+   in the reference below. }  
 }
 \details{
-  Method \sQuote{additive} adds noise completely random to each variable depending on there size and standard standard deviation. \sQuote{correlated}
-   and method \sQuote{correlated2} adds noise and preserves the covariances as descriped in R. Brand (2001) or in the reference given below.
-   \sQuote{restr} takes the 
-   sample size into account when adding noise. Method \sQuote{ROMM} should be the implementation of the first algorithm of Fienberg (2004).
-   Method \sQuote{outdect} adds noise only to outliers. This outliers are idedentified with univariate and robust multivariate procedures 
-   based on a robust mahalanobis distancs calculated with the MCD estimator.
+  Method \sQuote{additive} adds noise completely at random to each variable 
+  depending on there size and standard deviation. \sQuote{correlated}
+   and method \sQuote{correlated2} adds noise and preserves the covariances as descriped in 
+   R. Brand (2001) or in the reference given below.
+   Method \sQuote{restr} takes the 
+   sample size into account when adding noise. 
+   Method \sQuote{ROMM} is an implementation of the algorithm ROMM (Random Orthogonalized 
+   Matrix Masking) (Fienberg, 2004).
+   Method \sQuote{outdect} adds noise only to outliers. 
+   The outliers are idedentified with univariate and robust multivariate procedures 
+   based on a robust mahalanobis distancs calculated by the MCD estimator.
 }
 \value{
   An object of class \dQuote{micro} with following entities:
@@ -38,7 +44,20 @@ addNoise(x, noise = 150, method = "additive", p = 0.001, delta=0.1)
                
               Ting and Fienberg, \dQuote{ROMM Methodology for Microdata Release} 
               Joint UNECE/Eurostat work session on statistical data confidentiality, Geneva, Switzerland, 2005, 
-              \url{http://www.niss.org/dgii/TR/wp.11.e(ROMM).pdf} }
+              \url{http://www.niss.org/dgii/TR/wp.11.e(ROMM).pdf} 
+              
+  Templ, M. and Meindl, B., 
+               \emph{Robustification of Microdata Masking Methods and the Comparison 
+               with Existing Methods}, 
+               Lecture Notes in Computer Science, Privacy in Statistical Databases, 
+               vol. 5262, pp. 177-189, 2008.  
+               
+  Templ, M. 
+\emph{New Developments in Statistical Disclosure Control and Imputation:
+Robust Statistics Applied to Official Statistics}, Suedwestdeutscher Verlag fuer Hochschulschriften, 
+2009, ISBN: 3838108280, 264 pages. 
+             
+}
 \author{ Matthias Templ }
 \seealso{  \code{\link{summary.micro}} }
 \examples{

@@ -2,7 +2,7 @@
 \alias{dUtility}
 \title{ data utility }
 \description{
-  IL1s data utility
+  IL1s data utility.
 }
 \usage{
 dUtility(x, xm, method="IL1")
@@ -13,14 +13,23 @@ dUtility(x, xm, method="IL1")
   \item{method}{ method IL1 or eigen. More methods are implemented in summary.micro() }
 }
 \details{
-Here we measure standardised distances of the perturbed data values to the original ones. Measure IL1 measures the distances between 
-the original values and the perturbed ones, scaled by the standard deviation. Method \sQuote{eigen} and \sQuote{robeigen} compares the 
+The standardised distances of the perturbed data values to the original ones are measured. 
+Measure IL1 measures the distances between 
+the original values and the perturbed ones, scaled by the standard deviation. 
+Method \sQuote{eigen} and \sQuote{robeigen} compares the 
 eigenvalues and robust eigenvalues form the original data and the perturbed data.
 }
 \value{
 data utility
 }
-\references{ look e.g. in \url{http://vneumann.etse.urv.es/publications/sci/lncs3050Outlier.pdf} }
+\references{for IL1s: see \url{http://vneumann.etse.urv.es/publications/sci/lncs3050Outlier.pdf},
+ 
+ Templ, M. and Meindl, B., 
+               \emph{Robust Statistics Meets {SDC}: New Disclosure Risk Measures for 
+               Continuous Microdata Masking}, 
+               Lecture Notes in Computer Science, Privacy in Statistical Databases, 
+               vol. 5262, pp. 113-126, 2008.          
+}
 \author{ Matthias Templ }
 \seealso{  \code{\link{dRisk}}, \code{\link{dRiskRMD}} }
 \examples{

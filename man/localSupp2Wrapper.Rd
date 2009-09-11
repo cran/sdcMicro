@@ -30,7 +30,13 @@ importance includes too much zeros) the function breaks after a sub-optimal solu
     \item{importance}{weight vector for key variables}
     \item{kAnon }{k for k-anoymity}
 }
-\references{  }
+\references{ 
+Templ, M.  
+               \emph{Statistical Disclosure Control for Microdata Using the R-Package sdcMicro}, 
+               Transactions on Data Privacy, 
+               vol. 1, number 2, pp. 67-85, 2008. 
+  url = {http://www.tdp.cat/issues/abs.a004a08.php}
+ }
 \author{ Bernhard Meindl, Matthias Templ }
 \note{ fix me: Implementation in C and interface to R.
 }

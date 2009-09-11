@@ -2,7 +2,7 @@
 \alias{summary.micro}
 \title{ Summary method for objects from class micro }
 \description{
-Summary method for objects from class micro.
+Summary method for objects from class \sQuote{micro}.
 }
 \usage{
 \method{summary}{micro}(object, ...)
@@ -12,7 +12,7 @@ Summary method for objects from class micro.
   \item{\dots}{  }
 }
 \details{
-This function computes several measures of information loss, like 
+This function computes several measures of information loss, such as 
 }
 \value{
   \item{meanx }{A conventional summary of the original data}
@@ -35,10 +35,14 @@ This function computes several measures of information loss, like
   \item{pmtotals  }{average relative deviation of totals  }
    
 }
-\author{ Matthias Templ }
-\note{ 
-Additional measures of information loss will be included soon.
+\references{
+Templ, M. 
+               \emph{Statistical Disclosure Control for Microdata Using the R-Package sdcMicro}, 
+               Transactions on Data Privacy, 
+               vol. 1, number 2, pp. 67-85, 2008. 
+  url = {http://www.tdp.cat/issues/abs.a004a08.php}
 }
+\author{ Matthias Templ }
 \seealso{\code{\link{microaggregation}}, \code{\link{valTable}}}
 \examples{
 data(Tarragona)

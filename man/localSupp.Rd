@@ -2,7 +2,7 @@
 \alias{localSupp}
 \title{ Local Suppression }
 \description{
-A simple algorithm to perfom local suppression.
+A simple method to perfom local suppression.
 }
 \usage{
 localSupp(x, keyVar, indivRisk, threshold = 0.15)
@@ -14,15 +14,20 @@ localSupp(x, keyVar, indivRisk, threshold = 0.15)
   \item{threshold}{ threshold for individual risk }
 }
 \details{
-Have a look at the link given below.
+Values of high risk (above the threshold) of a certain variable (parameter keyVar) 
+are suppressed.
 }
 \value{
-Manipulated data
+Manipulated data with suppressions
 }
-\references{  }
+\references{ 
+Templ, M.  
+               \emph{Statistical Disclosure Control for Microdata Using the R-Package sdcMicro}, 
+               Transactions on Data Privacy, 
+               vol. 1, number 2, pp. 67-85, 2008. 
+  url = {http://www.tdp.cat/issues/abs.a004a08.php}
+ }
 \author{ Matthias Templ }
-\note{ fix me: Implementation of a advanced algorithm for local suppression.
-}
 \seealso{  \code{\link{freqCalc}}, \code{\link{indivRisk}} }
 \examples{
 ## example from Capobianchi, Polettini and Lucarelli:

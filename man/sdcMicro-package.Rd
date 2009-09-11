@@ -6,25 +6,37 @@
 Statistical Disclosure Control (SDC) for the generation of protected microdata for researchers and for public use.
 }
 \description{
-This package includes most of the methods of the popular software mu-Argus and includes additional methods which are not included in mu-Argus.
-The first version of this package does not include the PRAM method nor Adding Noise methods nor synthetic data generation methods like LHS. 
-Since the code is already written, Adding Noise methods (also ROMM) and LHS
-will be included in the next version of the package.
-In comparison with mu-Argus the advantages of this package are that the results are reproducible, that the package can be used in batch-mode 
-from other software, that the functions can be used in a very flexible way, that everybody could look at the source code and that there are no time-consuming meta-data management is necessary.
+This package includes all methods of the popular software mu-Argus plus several new methods.
+In comparison with mu-Argus the advantages of this package are that the results are 
+fully reproducible even with the included GUI, that the package can be used in batch-mode 
+from other software, that the functions can be used in a very flexible way, 
+that everybody could look at the source code and that there are no time-consuming 
+meta-data management is necessary.
 However, the user should have a detailed knowledge about SDC when applying the methods on data.
-Since, it is quite natural for R users to deal with a CLI, there is no GUI implemented till now. Nevertheless, via Rtcltk it will be
-feasible to implement a GUI if there will be a large demand for a GUI like in mu-Argus.
 
-Please note, that methods \dQuote{shuffling}, \dQuote{robShuffle} (robust shuffling), \dQuote{gadp} and \dQuote{robgadp} are not included 
-in the package because method \dQuote{shuffling} is under a US-patent by other authors, even shuffling consits only of 8 lines of code \ldots
+The implemented graphical user interface (GUI) for microdata protection
+serves as an easy-to-handle tool for users who want to use the sdcMicro
+package for statistical disclosure control but are not
+used to the native R command line interface.  
+In addition to that,
+interactions between objects which results from the anonymization process
+are provided within the GUI. This allows an automated recalculation and
+displaying information of the frequency counts, individual risk, information loss and data utility
+after each anonymization step. In addition to that, the code for every anonymization step carried out
+within the GUI is saved in a script which can then be easily modified and
+reloaded. 
+
+Please note, that methods \dQuote{shuffling}, \dQuote{robShuffle} (robust shuffling), 
+\dQuote{gadp} and \dQuote{robgadp} are not included 
+in the package because method \dQuote{shuffling} is under a US-patent by other authors, 
+even shuffling consits only of 8 lines of code \ldots
 }
 \details{
 \tabular{ll}{
 Package: \tab sdcMicro\cr
 Type: \tab Package\cr
-Version: \tab 1.2\cr
-Date: \tab 2007-06-08\cr
+Version: \tab 2.5.9\cr
+Date: \tab 2009-07-22\cr
 License: \tab GPL 2.0 \cr
 }
 
@@ -35,7 +47,18 @@ Matthias Templ
 Maintainer: Matthias Templ <templ@statistik.tuwien.ac.at>
 }
 \references{
-http://www.springerlink.com/content/4t0h5123v1436342/?p=4437dbfb85844df8842f7a73d92b54b2&pi=28
+Templ, M.  
+               \emph{Statistical Disclosure Control for Microdata Using the R-Package sdcMicro}, 
+               Transactions on Data Privacy, 
+               vol. 1, number 2, pp. 67-85, 2008. 
+  url = {http://www.tdp.cat/issues/abs.a004a08.php}
+  
+  Templ, M. 
+\emph{New Developments in Statistical Disclosure Control and Imputation:
+Robust Statistics Applied to Official Statistics}, Suedwestdeutscher Verlag fuer Hochschulschriften, 
+2009, ISBN: 3838108280, 264 pages. 
+    
+    
 }
 \keyword{ package }
 \seealso{

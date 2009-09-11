@@ -29,10 +29,14 @@ function(x, w=1:(dim(x)[2]), p){
       }
       z
 #    }
-    z[r]  ## rückordnen
+    z[r]  ## rÃ¼ckordnen
   }
+  # Univariat
+  if(length(w)==1)
+	  x[,w] <- swapping(xx)
   ### Multivariate:
-  x[,w] <- apply(xx, 2, swapping)
+  else
+  	x[,w] <- apply(xx, 2, swapping)
   res <- list(x=y, xm=x, method="swappNum", p=p)
   class(res) <- "micro"
   res

@@ -1,10 +1,16 @@
 `freqCalc` <-
 function(x, keyVars=1:3 , w=4){
-	x <- as.matrix(x)
+    classInfo <- character()
+    for(i in 1:ncol(x)){
+		classInfo[i] <- class(x[,i])
+	}
+	dfInfo <- is.data.frame(x)
+	x <- apply(x, 2, function(x) { as.integer(as.factor(x))})
+    x <- as.matrix(x)
 	y <- x	
 	
 	x <- x[,keyVars]
-	x <- apply(x, 2, function(x) { as.integer(as.factor(x))})
+	#x <- apply(x, 2, function(x) { as.integer(as.factor(x))})
 	x <- apply(x, 1, rbind)
 	
 	N <- dim(y)[1]
@@ -16,7 +22,13 @@ function(x, keyVars=1:3 , w=4){
 			as.numeric(rep(0.0, N)),
 			as.numeric(if(length(w)==0) rep(1,N) else y[,w]),
 			PACKAGE="sdcMicro", NUOK=TRUE)
-	
+	if(dfInfo) y <- data.frame(y)
+	if(any(classInfo == "factor")){
+		a <- which(classInfo=="factor")
+		for(i in a){
+			y[,i] <- as.factor(y[,i])
+		}
+	}
 	z <- list(freqCalc=y, keyVars=keyVars, w=w, indexG=NULL, fk=res[[3]], Fk=res[[4]], n1=length(which(res[[3]]==1)), n2=length(which(res[[3]]==2)))
 	class(z) <- "freqCalc"
 	invisible(z)

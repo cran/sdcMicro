@@ -14,8 +14,9 @@ indivRisk(x, method = "approx", qual = 1, survey=TRUE)
   \item{survey}{ TRUE, if one have survey data and FALSE if one deal with the whole population. } 
 }
 \details{
-Determines the risk for each observation. After the risk is computed one can use e.g. the function
-localSuppr() for the protection of values of high risk. Further details can be found at the link given below.
+Estimation of the risk for each observation. After the risk is computed one can use e.g. the function
+localSuppr() for the protection of values of high risk. 
+Further details can be found at the link given below.
 }
 \value{
   \item{rk }{ base individual risk }
@@ -25,7 +26,8 @@ localSuppr() for the protection of values of high risk. Further details can be f
   \item{knames }{colnames of the key variables}  
 }
 \references{ have a look at: \url{http://neon.vb.cbs.nl/casc/Deliv/12d1.pdf} or
-\url{http://www.istat.it/dati/pubbsci/contributi/Contributi/contr_2003/2003_14.pdf} }
+\url{http://www.istat.it/dati/pubbsci/contributi/Contributi/contr_2003/2003_14.pdf}  
+}
 \author{ Matthias Templ }
 \note{ The base individual risk method was developed by Benedetti, Capobianchi and Franconi 
 }

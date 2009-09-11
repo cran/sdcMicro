@@ -22,31 +22,46 @@ microaggregation(x, method = "pca", aggr = 3, nc = 8, clustermethod = "clara", o
   \item{blowxm}{ the microaggregated data with the same dimension as the original one. }
 }
 \details{
-On \url{http://neon.vb.cbs.nl/casc/Glossary.htm} we can find the \dQuote{official} definition of microaggregation:
+On \url{http://neon.vb.cbs.nl/casc/Glossary.htm} one can found the 
+\dQuote{official} definition of microaggregation:
 
 Records are grouped based on a proximity measure of variables of interest, and the same small groups of records are used in calculating aggregates
  for those variables. The aggregates are released instead of the individual record values.
  
-While for the proximity measure very different concepts can be used, microaggregation is naturally done with the mean. Nevertheless, other 
-measures of location can be used for aggregation, especially when the group size for aggregation has been taken higher than 3. Since the median
-seems to be unsuitable for microaggregation due to it's rather high breakdown point, other mesures which are included can be chosen.
+While for the proximity measure very different concepts can be used, 
+the aggregation itself is naturally done with the arithmetic mean. 
+Nevertheless, other 
+measures of location can be used for aggregation, 
+especially when the group size for aggregation has been taken higher than 3. 
+Since the median
+seems to be unsuitable for microaggregation because of being highly robust, 
+other mesures which are included can be chosen.
 
-This function contains also a method with which the data can be clustered with a variety of different clustering algorithms. Clustering 
-observations before applying microaggregation might be useful. Note, that the data are automatically log-transformed and standardised before
-clustering because most of the clustering algorithms performs better on log-transformed and standardised data.
+This function contains also a method with which the data can be clustered 
+with a variety of different clustering algorithms. Clustering 
+observations before applying microaggregation might be useful. 
+Note, that the data are automatically standardised before
+clustering.
 
-The usage of clustering method \sQuote{Mclust} requires package mclust02, which must be loaded first.
-The package is not loaded automatically, since the package is not under GPL but on a differnt licence. 
+The usage of clustering method \sQuote{Mclust} requires package mclust02, 
+which must be loaded first.
+The package is not loaded automatically, since the package is not under GPL 
+but comes with a different licence. 
 
-The are some projection methods for microaggregation included. The robust version \sQuote{pppca} or 
+The are also some projection methods for microaggregation included. 
+The robust version \sQuote{pppca} or 
 \sQuote{clustpppca} (clustering at first)
 are fast implementations and provide almost everytime the best results.
 
-Univariate statistics are preserved best with the individual ranking method (we called them \sQuote{onedims}), but multivariate statistics 
+Univariate statistics are preserved best with the individual 
+ranking method (we called them \sQuote{onedims}, however, often this method is 
+named \sQuote{individual ranking}), but multivariate statistics 
 are strong affected. 
 
-With method simple one can apply microaggregation directly on the (unsorted) data and is useful for the comparison with other methods, i.e.
-reply the question how much better is a sorting of the data before aggregation.
+With method \sQuote{simple} one can apply microaggregation 
+directly on the (unsorted) data. It is useful for the comparison with other methods
+as a benchmark, i.e.
+replies the question how much better is a sorting of the data before aggregation.
 
 If blow is set to FALSE, the result will be a data set with dimension n divided by aggr. 
 }
@@ -67,7 +82,27 @@ If blow is set to FALSE, the result will be a data set with dimension n divided 
   \item{blowxm  }{ microaggregated data with the same dimension as the original data set }  
   \item{fot  }{ correction factor, necessary if totals calculated and n divided by aggr is not an integer. }   
 }
-\references{ \url{http://www.springerlink.com/content/v257655u88w2/?sortorder=asc&p\_o=20} }
+\references{ \url{http://www.springerlink.com/content/v257655u88w2/?sortorder=asc&p\_o=20} 
+
+Templ, M. and Meindl, B., 
+               \emph{Robust Statistics Meets {SDC}: New Disclosure Risk Measures for 
+               Continuous Microdata Masking}, 
+               Lecture Notes in Computer Science, Privacy in Statistical Databases, 
+               vol. 5262, pp. 113-126, 2008.       
+ 
+Templ, M.  
+               \emph{Statistical Disclosure Control for Microdata Using the R-Package sdcMicro}, 
+               Transactions on Data Privacy, 
+               vol. 1, number 2, pp. 67-85, 2008. 
+  url = {http://www.tdp.cat/issues/abs.a004a08.php}
+  
+  Templ, M. 
+\emph{New Developments in Statistical Disclosure Control and Imputation:
+Robust Statistics Applied to Official Statistics}, Suedwestdeutscher Verlag fuer Hochschulschriften, 
+2009, ISBN: 3838108280, 264 pages. 
+    
+    
+}
 \author{ Matthias Templ }
 \seealso{ \code{\link{summary.micro}}, \code{\link{plotMicro}}, \code{\link{valTable}} }
 \examples{

@@ -17,7 +17,14 @@
   chosen threshold) are also moved based on the individual risk threshold. This plot is very similar to the individual risk plot of
   the software mu-Argus.
 }
-\references{ look e.g. on the mu-Argus manuals available at \url{http://neon.vb.cbs.nl/casc/Software/MuManual4.1.pdf}}
+\references{ look e.g. on the mu-Argus manuals available at \url{http://neon.vb.cbs.nl/casc/Software/MuManual4.1.pdf}
+
+Templ, M.  
+               \emph{Statistical Disclosure Control for Microdata Using the R-Package sdcMicro}, 
+               Transactions on Data Privacy, 
+               vol. 1, number 2, pp. 67-85, 2008. 
+  url = {http://www.tdp.cat/issues/abs.a004a08.php}
+}
 \author{ Matthias Templ }
 \seealso{ \code{\link{indivRisk}} }
 \examples{

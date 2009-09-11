@@ -29,6 +29,12 @@ Measures of information loss splitted for the comparison of different methods.
 Methods for adding noise should be named via \dQuote{addNoise: method}, e.g. \dQuote{addNoise: correlated}, i.e. the term \sQuote{at first}
 then followed by a \sQuote{:} and a blank and then followed by the name of the method as described in function \sQuote{addNoise}.
 }
+\references{
+  Templ, M. and Meindl, B., 
+               \emph{Software Development for SDC in R}, 
+               Lecture Notes in Computer Science, Privacy in Statistical Databases, 
+               vol. 4302, pp. 347-359, 2006.  
+}
 \author{ Matthias Templ }
 \seealso{ \code{\link{microaggregation}}, \code{\link{summary.micro}} }
 \examples{

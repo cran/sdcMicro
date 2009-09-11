@@ -3,7 +3,7 @@
 \docType{data}
 \title{ Small Artificial Data set }
 \description{
-  Small Example Data set from Sanz-Mateo et.al.
+  Small Example Data set which was used by Sanz-Mateo et.al.
 }
 \usage{data(casc1)}
 \format{

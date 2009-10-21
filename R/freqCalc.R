@@ -5,11 +5,12 @@ function(x, keyVars=1:3 , w=4){
 		classInfo[i] <- class(x[,i])
 	}
 	dfInfo <- is.data.frame(x)
-	x <- apply(x, 2, function(x) { as.integer(as.factor(x))})
-    x <- as.matrix(x)
+	#x <- apply(x[,keyVars], 2, function(x) { as.integer(as.factor(x))})
+    #x <- as.matrix(x)
 	y <- x	
 	
 	x <- x[,keyVars]
+	x <- apply(x, 2, function(x) { as.integer(as.factor(x))})
 	#x <- apply(x, 2, function(x) { as.integer(as.factor(x))})
 	x <- apply(x, 1, rbind)
 	

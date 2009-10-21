@@ -51,7 +51,7 @@ Templ, M.
                \emph{Statistical Disclosure Control for Microdata Using the R-Package sdcMicro}, 
                Transactions on Data Privacy, 
                vol. 1, number 2, pp. 67-85, 2008. 
-  url = {http://www.tdp.cat/issues/abs.a004a08.php}
+  \url{http://www.tdp.cat/issues/abs.a004a08.php}
 }
 \author{ Matthias Templ, Bernhard Meindl }
 \note{ fix me: Implementation in C and interface to R.

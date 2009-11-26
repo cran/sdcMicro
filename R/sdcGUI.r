@@ -1033,10 +1033,19 @@ sdcGUI <- function() {
 	
 		dispose(xprogress)
 	}
-	
-	# Variable selection window
 	selVar <- function(...) {
-		ft <- function(f, t, h, ...) {
+		putd("keyLen", 0)
+		putd("numLen", 0)
+		putd("wLen", 0)
+		ft <- function(f, t, h, var, pm, ...) {
+			# pm: 1 for +, 0 for -
+			count = getd(var)
+			if( pm == 1 ) {
+				count <- count + length(h);
+			} else {
+				count <- count - length(h);
+			}
+			putd(var, count)
 			if( length(h)>0 ) {
 				if( length(f[])==1 ) {
 					if( is.na(f[]) ) {
@@ -1080,8 +1089,8 @@ sdcGUI <- function() {
 		tmp = gframe("categorical", cont=rtmp)
 		btmp = ggroup(cont=tmp, horizontal=FALSE)
 		addSpring(btmp)
-		gbutton(">>", cont=btmp, handler=function(h,...) { ft(catTab, varTab, svalue(varTab)) })
-		gbutton("<<", cont=btmp, handler=function(h,...) { ft(varTab, catTab, svalue(catTab)) })
+		gbutton(">>", cont=btmp, handler=function(h,...) { ft(catTab, varTab, svalue(varTab), "keyLen", 1) })
+		gbutton("<<", cont=btmp, handler=function(h,...) { ft(varTab, catTab, svalue(catTab), "keyLen", 0) })
 		addSpring(btmp)
 		catTab = gtable(data.frame(vars=character(0), stringsAsFactors=FALSE), multiple=TRUE)
 		size(catTab) <- c(120,100)
@@ -1090,8 +1099,8 @@ sdcGUI <- function() {
 		tmp = gframe("numerical", cont=rtmp)
 		btmp = ggroup(cont=tmp, horizontal=FALSE)
 		addSpring(btmp)
-		gbutton(">>", cont=btmp, handler=function(h,...) { ft(numTab, varTab, svalue(varTab)) })
-		gbutton("<<", cont=btmp, handler=function(h,...) { ft(varTab, numTab, svalue(numTab)) })
+		gbutton(">>", cont=btmp, handler=function(h,...) { ft(numTab, varTab, svalue(varTab), "numLen", 1) })
+		gbutton("<<", cont=btmp, handler=function(h,...) { ft(varTab, numTab, svalue(numTab), "numLen", 0) })
 		addSpring(btmp)
 		numTab = gtable(data.frame(vars=character(0), stringsAsFactors=FALSE), multiple=TRUE)
 		size(numTab) <- c(120,100)
@@ -1100,8 +1109,8 @@ sdcGUI <- function() {
 		tmp = gframe("weight", cont=rtmp)
 		btmp = ggroup(cont=tmp, horizontal=FALSE)
 		addSpring(btmp)
-		gbutton(">>", cont=btmp, handler=function(h,...) { ft(wTab, varTab, svalue(varTab)) })
-		gbutton("<<", cont=btmp, handler=function(h,...) { ft(varTab, wTab, svalue(wTab)) })
+		gbutton(">>", cont=btmp, handler=function(h,...) { ft(wTab, varTab, svalue(varTab), "wLen", 1) })
+		gbutton("<<", cont=btmp, handler=function(h,...) { ft(varTab, wTab, svalue(wTab), "wLen", 0) })
 		addSpring(btmp)
 		wTab = gtable(data.frame(vars=character(0), stringsAsFactors=FALSE), multiple=TRUE)
 		size(wTab) <- c(120,50)
@@ -1113,6 +1122,7 @@ sdcGUI <- function() {
 		gbutton("Ok", cont=selVar_windowButtonGroup,
 				handler=function(h,...) {
 					# check if firstrun - if not reset script and dataset to original one
+					cat(paste(getd("keyLen"), getd("numLen"), getd("wLen"), "\n"))
 					fr_do <- TRUE
 					if( !getd("firstRun") ) {
 						fr_do <- gconfirm("If you reselect vars, script and dataset will reset.\nAre you sure?", title="Attention",
@@ -1120,8 +1130,9 @@ sdcGUI <- function() {
 						if( fr_do ) {
 							Script.new()
 							if( existd("oldDataSet") ) {
-								xtmp <- getd("oldDataSet")
-								updateActiveDataSet(xtmp)
+								putd("activeDataSet", getd("oldDataSet"))
+								#xtmp <- getd("oldDataSet")
+								#updateActiveDataSet(xtmp)
 							}
 						}
 					} else {
@@ -1130,8 +1141,8 @@ sdcGUI <- function() {
 					# check if enough is selected
 					if( fr_do ) {
 						# min selection must be 1 in each category
-						if( length(catTab[])>=2  & length(numTab[])>=1 &
-								length(wTab[])==1 ) {
+						if( getd("keyLen")>=2  & getd("numLen")>=1 &
+								getd("wLen")==1 ) {
 							confirmSelection_tmp(catTab[], numTab[], wTab[])
 							dispose(selVar_window)
 						} else {
@@ -1142,6 +1153,7 @@ sdcGUI <- function() {
 				})
 		gbutton("Cancel", cont=selVar_windowButtonGroup, handler=function(h,...) { dispose(selVar_window) })
 	}
+	
 	
   # function for gb1 (confirm selection)
 	# needed sub functions

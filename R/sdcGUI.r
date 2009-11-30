@@ -538,13 +538,13 @@ sdcGUI <- function() {
 		if( !redo ) {
 			Script.add(paste("addNoise_tmp(", parseVar(noise), ", ",
 						parseVarStr(method), ", ", parseVarStr(vars), ", redo=TRUE)", sep=""))
-			putd("oldCols", ActiveDataSet()[,vars])
+			putd("oldCols", ActiveDataSet()[,vars,drop=FALSE])
 		}
 		# with just 1 var, create fake-matrix, execute function and delete fake
 		if( length(vars)==1 ) {
 			xtmp <- ActiveDataSet()
 			x1tmp <- cbind(0, xtmp[,vars])
-			xtmp[, vars] <- addNoise(x1tmp, noise=noise, method=method)$xm[,2]
+			xtmp[, vars] <- addNoise(x1tmp, noise=noise, method=method)$xm[,2,drop=FALSE]
 			updateActiveDataSet(xtmp)
 			freqCalcIndivRisk()
 		} else {
@@ -659,7 +659,7 @@ sdcGUI <- function() {
 						} else {
 							addNoise_tmp(noise, svalue(methodSel), selTab[])
 							dispose(nm1_window)
-						}
+						} 
 					}
 				})
 		gbutton("Cancel", cont=nm1_windowButtonGroup, handler=function(h,...) { dispose(nm1_window) })

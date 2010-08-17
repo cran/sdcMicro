@@ -13,7 +13,7 @@ microaggregation(x, method = "pca", aggr = 3, nc = 8, clustermethod = "clara", o
   \item{aggr}{ aggregation level (default=3)}
   \item{nc}{ number of cluster, if the chosen method performs cluster analysis }
   \item{clustermethod}{ clustermethod, if necessary }
-  \item{opt}{  }
+  \item{opt}{ experimental }
   \item{measure}{ aggregation statistic, mean, median, trim, onestep (default = mean) }
   \item{trim}{ trimming percentage, if measure=trim }
   \item{varsort}{ variable for sorting, if method= single }

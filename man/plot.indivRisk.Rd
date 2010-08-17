@@ -9,7 +9,7 @@
 }
 \arguments{
   \item{x}{ object of class \sQuote{indivRisk} }
-  \item{\dots}{ }
+  \item{\dots}{ Additional arguments passed through. }
 }
 \details{
   With the sliders one can move the individual risk threshold. By this movement the threshold 

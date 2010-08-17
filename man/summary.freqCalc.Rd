@@ -10,7 +10,7 @@ about local suppressions.
 }
 \arguments{
   \item{object}{object from class freqCalc }
-  \item{\dots}{  }
+  \item{\dots}{ Additional arguments passed through.  }
 }
 \details{
   Shows the amount of local suppressions on each variable in which local suppression was applied.

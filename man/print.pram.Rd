@@ -9,7 +9,7 @@ Print method for objects from class \sQuote{pram}.
 }
 \arguments{
   \item{x}{ object from class \sQuote{pram} }
-  \item{\dots}{  }
+  \item{\dots}{ Additional arguments passed through.  }
 }
 \value{
 Short information about the method and the parameters used.

@@ -16,12 +16,13 @@ function(x, method="approx", qual=1, survey=TRUE){
       (fk-1-i)^2 / ((i+1)*(fk-2-i)) * (pk^(i+2-fk)-1)/(pk^(i+1-fk)-1)
     }
     BB <- function(fk, pk){
-      b <- bb <- 0
+      bb <- 0
       for(m in 0:(fk-3)) {
+		b <- 1
         for(m2 in 0:m){
           b <- b * B(fk, pk, m2)
         }
-        bb <- (-1)^(m+1)*b
+        bb <- bb+(-1)^(m+1)*b
       }
       bb
     }
@@ -31,7 +32,7 @@ function(x, method="approx", qual=1, survey=TRUE){
     rk <- rep(0, N)
     for(k in 1:N){
       if( fk[k] > 2 ){
-        rk[k] <- eins[k] * (A[k] * (1 + BB(fk[k], pk[k]) )) + drei[k]
+        rk[k] <- eins[k] * ((A[k] * (1 + BB(fk[k], pk[k]) )) + drei[k])
       }
       if( fk[k] == 2 ){
         rk[k] <- (pk[k]/(1-pk[k])) - (((pk[k]/(1-pk[k]))^2) * log(1/pk[k]))

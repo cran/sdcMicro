@@ -9,7 +9,7 @@ Summary method for objects from class \sQuote{pram} to provide information about
 }
 \arguments{
   \item{object}{object from class \sQuote{pram} }
-  \item{\dots}{  }
+  \item{\dots}{ Additional arguments passed through.  }
 }
 \details{
   Shows various information about the transitions.

@@ -9,7 +9,7 @@
 }
 \arguments{
   \item{x}{ object from class indivRisk }
-  \item{\dots}{ }
+  \item{\dots}{ Additional arguments passed through. }
 }
 \value{
 few information about the method and the final correction factor for objects of class \sQuote{indivRisk}.

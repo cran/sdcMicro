@@ -9,7 +9,7 @@ Print method for objects from class freqCalc.
 }
 \arguments{
   \item{x}{ object from class freqCalc }
-  \item{\dots}{  }
+  \item{\dots}{ Additional arguments passed through. }
 }
 \value{
 information about the frequency counts for key variables for object of class \sQuote{freqCalc}.

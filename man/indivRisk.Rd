@@ -28,7 +28,7 @@ Further details can be found at the link given below.
 \references{ have a look at: \url{http://neon.vb.cbs.nl/casc/Deliv/12d1.pdf} or
 \url{http://www.istat.it/dati/pubbsci/contributi/Contributi/contr_2003/2003_14.pdf}  
 }
-\author{ Matthias Templ }
+\author{ Matthias Templ. Bug in method \dQuote{exact} fixed since version 2.6.5. by Youri Baeyens.}
 \note{ The base individual risk method was developed by Benedetti, Capobianchi and Franconi 
 }
 \seealso{  \code{\link{freqCalc}} }

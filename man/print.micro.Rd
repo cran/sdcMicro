@@ -9,7 +9,7 @@ Print method for objects from class micro.
 }
 \arguments{
   \item{x}{ object from class micro }
-  \item{\dots}{  }
+  \item{\dots}{ Additional arguments passed through.  }
 }
 \value{
 information about method and aggregation level from objects of class micro.

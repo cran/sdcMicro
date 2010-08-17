@@ -1,5 +1,6 @@
 addNoise <- function (x, noise = 150, method = "additive", p = 0.001, delta = 0.1)
 {
+	 
     N <- dim(x)[1]
     P <- dim(x)[2]
     y = x

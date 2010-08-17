@@ -632,7 +632,6 @@ microaggregation <- function (x, method = "pca", aggr = 3, nc = 8, clustermethod
         a <- findNearest(x, d)
         b <- a$sk
         while (dim(a$x)[1] > 2 * aggr) {
-            dim(a$x)[1]
             a <- findNearest(a$x, a$d)
             b <- rbind(b, a$sk)
         }
@@ -652,6 +651,7 @@ microaggregation <- function (x, method = "pca", aggr = 3, nc = 8, clustermethod
     }
     res$x <- res$x[order(as.numeric(rownames(res$x))),]
     res$blowxm <- res$blowxm[order(as.numeric(rownames(res$blowxm))),]
+	res$blowxm <- res$blowxm[1:nrow(x),]
     class(res) <- "micro"
     res
 }

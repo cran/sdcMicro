@@ -1,5 +1,5 @@
 #should be in zzz.R
-#require(gWidgetsRGtk2)
+#require(gWidgetsRGtk2)localSupp1_tmp
 #sdcGUIenv <- new.env() starts in gui function
 
 # just for test case while not in sdcMicro package
@@ -34,7 +34,7 @@ sdcGUI <- function() {
     exists(x, envir=sdcGUIenv, mode=mode, inherits=FALSE) # add () to sdcGUIenv
   }
   
-  # ActiveDataSet
+  # 
   ActiveDataSet <- function(name) {
     if( missing(name) ) {
       getd("activeDataSet")
@@ -281,6 +281,18 @@ sdcGUI <- function() {
 		dispose(xprogressFQ)
   }
 	
+  # TODO: var to factor tmp
+  varToFactor_tmp <- function(var){
+	  Script.add(paste("varToFactor_tmp(", 
+					parseVarStr(var), 
+					")", sep=""))  
+	Var <- getIndex(var)
+#	print(Var)
+	xtmp <- ActiveDataSet()
+	xtmp[,Var] <- as.factor(xtmp[,Var])
+#	print(head(xtmp))
+    updateActiveDataSet(xtmp)
+  }
   # localSupp1_tmp - localSupp()
 	# TODO: done - save localSupp for script/history
   localSupp1_tmp <- function(keyVar, threshold, redo=FALSE) {
@@ -767,6 +779,10 @@ sdcGUI <- function() {
 			gseparator(cont=gr3_windowGroup)
 			gr3_windowButtonGroup = ggroup(cont=gr3_windowGroup)
 			addSpring(gr3_windowButtonGroup)
+			## TODO: summaryOfG
+			tmp = gframe("Summary of selected Variable", 
+					horizontal=FALSE, cont=gr3_windowGroup)
+			gr1_summary = gtext("", cont=tmp, height=100, width=250)
 			gbutton("Ok", cont=gr3_windowButtonGroup, handler=function(h,...) { 
 						dispose(gr3_window)
 						freqCalcIndivRisk()
@@ -831,10 +847,12 @@ sdcGUI <- function() {
 		add(tmp, x, expand=TRUE)
 		gbutton("var to factor", cont=tmp, handler=function(k,...) {
 					var = svalue(x)
-					gconfirm("Converts variable to datatype factor.", title="Information", icon="info",
+					gconfirm("Converts variable to datatype factor.", 
+							title="Information", icon="info",
 							parent=gr1_window, handler=function(h, ...) {
-								try(xtmp[,var] <- as.factor(xtmp[,var]), silent=TRUE)
-								updateActiveDataSet(xtmp)
+								#try(xtmp[,var] <- as.factor(xtmp[,var]), silent=TRUE)
+								#updateActiveDataSet(xtmp)
+								varToFactor_tmp(var)
 								dispose(gr1_window)
 							})
 					

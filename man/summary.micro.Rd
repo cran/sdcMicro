@@ -9,7 +9,7 @@ Summary method for objects from class \sQuote{micro}.
 }
 \arguments{
   \item{object}{ objects from class micro }
-  \item{\dots}{  }
+  \item{\dots}{ Additional arguments passed through.  }
 }
 \details{
 This function computes several measures of information loss, such as 

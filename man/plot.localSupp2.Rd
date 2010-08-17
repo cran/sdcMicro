@@ -9,7 +9,7 @@
 }
 \arguments{
   \item{x}{ object of class \sQuote{localSupp2} }
-  \item{\dots}{ }
+  \item{\dots}{ Additional arguments passed through. }
 }
 \details{
   Just look at the resulting plot.

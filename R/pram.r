@@ -2,10 +2,19 @@ pram <- function(x, pd=0.8, alpha=0.5){
   fac <- FALSE
   recoding <- FALSE
   xpramed <- x
+  if(class(x) != "factor") warning("pram makes only sense for categorical variables stored as factors")
+
   if(class(x) == "factor"){ 
-	  xpramed <- as.numeric(as.character(xpramed)); 
-	  fac=TRUE
-  }
+	  fac <- TRUE
+  } else{
+	  fac <- FALSE
+	  xpramed <- as.factor(xpramed)
+  }	  
+  lev <- levels(xpramed)
+#	  xpramed <- as.numeric(as.character(xpramed))
+	  xpramed <- as.integer(as.factor(xpramed))
+
+
   
   # Recoding necessary if factors != 1:...
   recodeNAS <- FALSE
@@ -72,7 +81,8 @@ pram <- function(x, pd=0.8, alpha=0.5){
 	  }	  	  
   }
   
-  if(fac == TRUE) xpramed <- as.factor(xpramed)
+  if(fac == TRUE) xpramed <- factor(xpramed, labels=lev)
+  if(fac == FALSE & class(x) == "character") xpramed <- as.character(factor(xpramed, labels=lev))
   res <- list(x=x, xpramed=xpramed, pd=pd, P=P, Rs=Rs, alpha=alpha)
   class(res) <- "pram"
   invisible(res)

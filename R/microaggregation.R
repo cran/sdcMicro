@@ -1,8 +1,66 @@
-microaggregation <- function (x, method = "pca", aggr = 3, nc = 8, clustermethod = "clara",
+microaggregation <- function (x, method = "pca", aggr = 3, weights=NULL, nc = 8, clustermethod = "clara",
     opt = FALSE, measure = "mean", trim = 0, varsort = 1, transf = "log",
     blow = TRUE, blowxm = 0)
 {
-    rownames(x) <- 1:nrow(x)
+    
+	weightedQuantile <- function (x, weights = NULL, probs = seq(0, 1, 0.25), sorted = FALSE, na.rm = FALSE) {
+		if (!is.numeric(x)) 
+			stop("'x' must be a numeric vector")
+		n <- length(x)
+		if (n == 0 || (!isTRUE(na.rm) && any(is.na(x)))) {
+			return(rep.int(NA, length(probs)))
+		}
+		if (!is.null(weights)) {
+			if (!is.numeric(weights)) 
+				stop("'weights' must be a numeric vector")
+			else if (length(weights) != n) {
+				stop("'weights' must have the same length as 'x'")
+			}
+			else if (!all(is.finite(weights))) 
+				stop("missing or infinite weights")
+			if (any(weights < 0)) 
+				warning("negative weights")
+			if (!is.numeric(probs) || all(is.na(probs)) || isTRUE(any(probs < 
+									0 | probs > 1))) {
+				stop("'probs' must be a numeric vector with values in [0,1]")
+			}
+			if (all(weights == 0)) {
+				warning("all weights equal to zero")
+				return(rep.int(0, length(probs)))
+			}
+		}
+		if (isTRUE(na.rm)) {
+			indices <- !is.na(x)
+			x <- x[indices]
+			if (!is.null(weights)) 
+				weights <- weights[indices]
+		}
+		if (!isTRUE(sorted)) {
+			order <- order(x)
+			x <- x[order]
+			weights <- weights[order]
+		}
+		if (is.null(weights)) 
+			rw <- (1:n)/n
+		else rw <- cumsum(weights)/sum(weights)
+		q <- sapply(probs, function(p) {
+					if (p == 0) 
+						return(x[1])
+					else if (p == 1) 
+						return(x[n])
+					select <- min(which(rw >= p))
+					if (rw[select] == p) 
+						mean(x[select:(select + 1)])
+					else x[select]
+				})
+		return(unname(q))
+	}
+	weightedMedian <- function (x, weights = NULL, sorted = FALSE, na.rm = FALSE) {
+		weightedQuantile(x, weights, probs = 0.5, sorted = sorted, 
+				na.rm = na.rm)
+	}
+	
+	rownames(x) <- 1:nrow(x)
     stopifnot(method %in% c("simple", "single", "onedims", "pca",
         "mcdpca", "pppca", "clustmcdpca", "clustpppca", "clustpca",
         "rmd", "mdav", "influence"))
@@ -45,16 +103,26 @@ microaggregation <- function (x, method = "pca", aggr = 3, nc = 8, clustermethod
     }
     means <- function(x, index, measure, trim = 0) {
         m <- matrix(ncol = ncol(x), nrow = length(index))
-        if (measure == "mean") {
+        if (measure == "mean" & is.null(weights)) {
             for (i in 1:length(index)) {
                 m[i, ] <- colMeans(x[index[[i]], ])
             }
         }
-        if (measure == "median") {
+        if (measure == "median" & is.null(weights)) {
             for (i in 1:length(index)) {
                 m[i, ] <- apply(x[index[[i]], ], 2, median)
             }
         }
+		if (measure == "mean" & !is.null(weights)) {
+			for (i in 1:length(index)) {
+				m[i, ] <- apply(x[index[[i]], ], 2, function(x) weighted.mean(x, w=weights[index[[i]]]))
+			}
+		}
+		if (measure == "median" & !is.null(weights)) {
+			for (i in 1:length(index)) {
+				m[i, ] <- apply(x[index[[i]], ], 2, function(x) weightedMedian(x, weights=weights[index[[i]]]))
+			}
+		}
         if (measure == "trim") {
             for (i in 1:length(index)) {
                 for (j in 1:length(index[[i]])) {
@@ -165,6 +233,7 @@ microaggregation <- function (x, method = "pca", aggr = 3, nc = 8, clustermethod
             clustresult <- a$cluster
         }
         if (clustermethod == "Mclust" && opt == FALSE) {
+			if(!exists("lm",  mode="function")) stop("library(mclust) have to be installed and loaded first") 
             a <- Mclust(x, nc, nc)
             centers <- t(a$mu)
             groesse <- rep(0, nc)
@@ -176,6 +245,7 @@ microaggregation <- function (x, method = "pca", aggr = 3, nc = 8, clustermethod
             clustresult <- a$classification
         }
         if (clustermethod == "Mclust" && opt == TRUE) {
+			if(!exists("lm",  mode="function")) stop("library(mclust) have to be installed and loaded first")
             a <- Mclust(x, 2, nc)
             centers <- t(a$mu)
             nc <- a$G

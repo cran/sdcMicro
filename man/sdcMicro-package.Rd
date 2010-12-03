@@ -61,8 +61,6 @@ Robust Statistics Applied to Official Statistics}, Suedwestdeutscher Verlag fuer
     
 }
 \keyword{ package }
-\seealso{
-}
 \examples{
 ## example from Capobianchi, Polettini and Lucarelli:
 data(francdat)

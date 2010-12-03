@@ -5,13 +5,14 @@
   Function to perform various methods of microaggregation.
 }
 \usage{
-microaggregation(x, method = "pca", aggr = 3, nc = 8, clustermethod = "clara", opt = FALSE, measure = "mean", trim = 0, varsort = 1, transf = "log", blow = TRUE, blowxm = 0)
+microaggregation(x, method = "pca", aggr = 3, weights=NULL, nc = 8, clustermethod = "clara", opt = FALSE, measure = "mean", trim = 0, varsort = 1, transf = "log", blow = TRUE, blowxm = 0)
 }
 \arguments{
   \item{x}{ data frame or matrix }
-  \item{method}{ pca, onedims, single, simple, clustpca, pppca, clustpppca, mdav, clustmcdpca, influence, mcdpca }
+  \item{method}{ pca, rmd, onedims, single, simple, clustpca, pppca, clustpppca, mdav, clustmcdpca, influence, mcdpca }
   \item{aggr}{ aggregation level (default=3)}
   \item{nc}{ number of cluster, if the chosen method performs cluster analysis }
+  \item{weights}{ sampling weights. If determined, a weighted version of the aggregation measure is chosen automatically, e.g. weighted median or weighted mean. }
   \item{clustermethod}{ clustermethod, if necessary }
   \item{opt}{ experimental }
   \item{measure}{ aggregation statistic, mean, median, trim, onestep (default = mean) }
@@ -25,8 +26,13 @@ microaggregation(x, method = "pca", aggr = 3, nc = 8, clustermethod = "clara", o
 On \url{http://neon.vb.cbs.nl/casc/Glossary.htm} one can found the 
 \dQuote{official} definition of microaggregation:
 
-Records are grouped based on a proximity measure of variables of interest, and the same small groups of records are used in calculating aggregates
+Records are grouped based on a proximity measure of variables of interest, and the same small groups of 
+records are used in calculating aggregates
  for those variables. The aggregates are released instead of the individual record values.
+ 
+The recommended method is \dQuote{rmd} which forms the proximity using multivariate distances based on robust methods.
+It is an extension of the well-known method \dQuote{mdav}. 
+Whenever computational speed is important, method \dQuote{pca} is fast and gives reasonable results when no outliers are in the data. 
  
 While for the proximity measure very different concepts can be used, 
 the aggregation itself is naturally done with the arithmetic mean. 
@@ -36,6 +42,8 @@ especially when the group size for aggregation has been taken higher than 3.
 Since the median
 seems to be unsuitable for microaggregation because of being highly robust, 
 other mesures which are included can be chosen.
+If a complex sample survey is microaggregated, the corresponding sampling weights should be determined to either
+aggregate the values by the weighted arithmetic mean or the weighted median.
 
 This function contains also a method with which the data can be clustered 
 with a variety of different clustering algorithms. Clustering 

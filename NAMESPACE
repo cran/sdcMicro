@@ -1,13 +1,10 @@
 useDynLib(sdcMicro)
 
-import(robustbase, gWidgetsRGtk2, tcltk)
-importsFrom(car, scatterplotMatrix, box.cox.powers, box.cox)
-importsFrom(robustbase, covMcd)
-importsFrom(cluster, clara, pam, fanny)
-importsFrom(stats, kmeans)
-importsFrom(mclust, Mclust)
-importsFrom(MASS, princomp)
-importsFrom(e1071, impute)
+import(robustbase, tcltk)
+importFrom(car, scatterplotMatrix, box.cox.powers, box.cox)
+importFrom(cluster, clara, pam, fanny)
+importFrom(stats, kmeans, princomp)
+importFrom(e1071, impute)
 
 export(
     addNoise,
@@ -31,7 +28,6 @@ export(
     print.localSupp2,
     print.micro,
     print.pram,
-    sdcGUI,
     summary.freqCalc,
     summary.micro,
     summary.pram,

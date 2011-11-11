@@ -185,7 +185,7 @@ microaggregation <- function (x, method = "pca", aggr = 3, weights=NULL, nc = 8,
         rownames(xx) <- rownames(x)
         xx
     }
-    clust <- function(x, nc, clustermethod = "Mclust", opt = FALSE,
+    clust <- function(x, nc, clustermethod = "clara", opt = FALSE,
         transf = "log") {
         if (transf == "none") {
             y <- x
@@ -232,31 +232,31 @@ microaggregation <- function (x, method = "pca", aggr = 3, weights=NULL, nc = 8,
             size <- groesse
             clustresult <- a$cluster
         }
-        if (clustermethod == "Mclust" && opt == FALSE) {
-			if(!exists("lm",  mode="function")) stop("library(mclust) have to be installed and loaded first") 
-            a <- Mclust(x, nc, nc)
-            centers <- t(a$mu)
-            groesse <- rep(0, nc)
-            for (i in seq(nc)) {
-                groesse[i] <- length(which(a$classification ==
-                  i))
-            }
-            size <- groesse
-            clustresult <- a$classification
-        }
-        if (clustermethod == "Mclust" && opt == TRUE) {
-			if(!exists("lm",  mode="function")) stop("library(mclust) have to be installed and loaded first")
-            a <- Mclust(x, 2, nc)
-            centers <- t(a$mu)
-            nc <- a$G
-            groesse <- rep(0, nc)
-            for (i in seq(nc)) {
-                groesse[i] <- length(which(a$classification ==
-                  i))
-            }
-            size <- groesse
-            clustresult <- a$classification
-        }
+ #       if (clustermethod == "Mclust" && opt == FALSE) {
+#			if(!exists("lm",  mode="function")) stop("library(mclust) have to be installed and loaded first") 
+#            a <- Mclust(x, nc, nc)
+#            centers <- t(a$mu)
+#            groesse <- rep(0, nc)
+#            for (i in seq(nc)) {
+#                groesse[i] <- length(which(a$classification ==
+#                  i))
+#            }
+#            size <- groesse
+#            clustresult <- a$classification
+#        }
+#        if (clustermethod == "Mclust" && opt == TRUE) {
+#			if(!exists("lm",  mode="function")) stop("library(mclust) have to be installed and loaded first")
+#            a <- Mclust(x, 2, nc)
+#            centers <- t(a$mu)
+#            nc <- a$G
+#            groesse <- rep(0, nc)
+#            for (i in seq(nc)) {
+#                groesse[i] <- length(which(a$classification ==
+#                  i))
+#            }
+#            size <- groesse
+#            clustresult <- a$classification
+#        }
         list(centers = centers, clustresult = clustresult, nc = nc)
     }
     prcompRob <- function(X, k = 0, sca = "mad", scores = TRUE) {

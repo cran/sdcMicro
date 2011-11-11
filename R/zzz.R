@@ -15,11 +15,12 @@
   #            paste("Matthias Templ",
   #                  " (2008). Statistical Disclosure Control for Microdata Using the R-Package sdcMicro. Transactions on Data Privacy, 1(2),67-85 ",
   #                  ".", sep="")))
-   cat("\n--------\n\n")   
-   cat("for references have a look at\n")
-   cat("citation('sdcMicro')    \n")                 
-   cat("\n Note that since version 2.6.6. the graphical user-interface is provided by package sdcMicroGUI.\n")
-   cat("--------\n\n")   
+	packageStartupMessage("\n--------\n\n")   
+	packageStartupMessage("for references have a look at\n")
+	packageStartupMessage("citation('sdcMicro')    \n")                 
+	packageStartupMessage("\n Note that since version 2.6.6. the graphical user-interface is provided by package sdcMicroGUI.\n")
+	packageStartupMessage("--------\n\n")  
+   
 }
 
 

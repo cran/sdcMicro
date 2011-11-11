@@ -36,15 +36,19 @@ addNoise(x, noise = 150, method = "additive", p = 0.001, delta=0.1)
   \item{noise }{ amount of noise}
 }
 \references{  Domingo-Ferrer, J. and Sebe, F. and Castella, J., 
-               \dQuote{On the security of noise aliition for privacy in statistical databases}, 
+               \dQuote{On the security of noise addition for privacy in statistical databases}, 
                Lecture Notes in Computer Science, vol. 3050, pp. 149-161, 2004. 
                ISSN 0302-9743. Vol. Privacy in Statistical Databases, 
                eds. J. Domingo-Ferrer and V. Torra, Berlin: Springer-Verlag. 
                \url{http://vneumann.etse.urv.es/publications/sci/lncs3050OntheSec.pdf},
                
-              Ting and Fienberg, \dQuote{ROMM Methodology for Microdata Release} 
+              Ting, D. Fienberg, S.E. and Trottini, M. \dQuote{ROMM Methodology for Microdata Release} 
               Joint UNECE/Eurostat work session on statistical data confidentiality, Geneva, Switzerland, 2005, 
               \url{http://www.niss.org/dgii/TR/wp.11.e(ROMM).pdf} 
+              
+				Ting, D., Fienberg, S.E., Trottini, M. 
+ 				\dQuote{Random orthogonal matrix masking methodology for microdata release}, 
+				International Journal of Information and Computer Security, vol. 2, pp. 86-105, 2008. 
               
   Templ, M. and Meindl, B., 
                \emph{Robustification of Microdata Masking Methods and the Comparison 
@@ -56,6 +60,11 @@ addNoise(x, noise = 150, method = "additive", p = 0.001, delta=0.1)
 \emph{New Developments in Statistical Disclosure Control and Imputation:
 Robust Statistics Applied to Official Statistics}, Suedwestdeutscher Verlag fuer Hochschulschriften, 
 2009, ISBN: 3838108280, 264 pages. 
+
+Templ, M. and Meindl, B.: 
+\emph{Practical Applications in Statistical Disclosure Control Using R},  
+Privacy and Anonymity in Information Management Systems New Techniques for New Practical Problems, 
+Springer, 31-62, 2010, ISBN: 978-1-84996-237-7.
              
 }
 \author{ Matthias Templ }

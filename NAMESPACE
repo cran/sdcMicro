@@ -2,6 +2,7 @@ useDynLib(sdcMicro)
 
 import(robustbase, tcltk)
 importFrom(car, scatterplotMatrix, box.cox.powers, box.cox)
+importFrom(robustbase, covMcd)
 importFrom(cluster, clara, pam, fanny)
 importFrom(stats, kmeans, princomp)
 importFrom(e1071, impute)

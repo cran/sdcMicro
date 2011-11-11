@@ -42,7 +42,10 @@ Templ, M.
 Robust Statistics Applied to Official Statistics}, Suedwestdeutscher Verlag fuer Hochschulschriften, 
 2009, ISBN: 3838108280, 264 pages. 
     
-  
+Templ, M. and Meindl, B.: 
+\emph{Practical Applications in Statistical Disclosure Control Using R},  
+Privacy and Anonymity in Information Management Systems New Techniques for New Practical Problems, 
+Springer, 31-62, 2010, ISBN: 978-1-84996-237-7.  
 
 }
 \author{ Bernhard Meindl and Matthias Templ }

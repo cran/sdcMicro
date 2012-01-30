@@ -26,11 +26,8 @@
     \item{\code{TOTSALES}}{SALES TO ALL CONSUMERS}
   }
 }
-\details{
-Further details can be found on the link given below.
-}
 \source{
-  \url{http://neon.vb.cbs.nl/casc/testsets.html}
+  Public use file from the CASC project.
 }
 \references{
 Brand, R. and

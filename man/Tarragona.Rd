@@ -25,7 +25,7 @@ A real data set comprising figures of 834 companies in the Tarragona area. Data 
   }
 }
 \source{
-  \url{http://neon.vb.cbs.nl/casc/testsets.html}
+  Public use data from the CASC project. 
 }
 \references{
 Brand, R. and

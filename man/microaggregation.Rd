@@ -5,7 +5,7 @@
   Function to perform various methods of microaggregation.
 }
 \usage{
-microaggregation(x, method = "pca", aggr = 3, weights=NULL, nc = 8, clustermethod = "clara", opt = FALSE, measure = "mean", trim = 0, varsort = 1, transf = "log", blow = TRUE, blowxm = 0)
+microaggregation(x, method = "pca", aggr = 3, weights=NULL, nc = 8, clustermethod = "clara", opt = FALSE, measure = "mean", trim = 0, varsort = 1, transf = "log")%, blow = TRUE, blowxm = 0)
 }
 \arguments{
   \item{x}{ data frame or matrix }
@@ -19,8 +19,8 @@ microaggregation(x, method = "pca", aggr = 3, weights=NULL, nc = 8, clustermetho
   \item{trim}{ trimming percentage, if measure=trim }
   \item{varsort}{ variable for sorting, if method= single }
   \item{transf}{ transformation for data x }
-  \item{blow}{ if TRUE, the microaggregated data will have the same dimension as the original data set }
-  \item{blowxm}{ the microaggregated data with the same dimension as the original one. }
+  %\item{blow}{ if TRUE, the microaggregated data will have the same dimension as the original data set }
+  %\item{blowxm}{ the microaggregated data with the same dimension as the original one. }
 }
 \details{
 On \url{http://neon.vb.cbs.nl/casc/Glossary.htm} one can found the 
@@ -71,23 +71,24 @@ directly on the (unsorted) data. It is useful for the comparison with other meth
 as a benchmark, i.e.
 replies the question how much better is a sorting of the data before aggregation.
 
-If blow is set to FALSE, the result will be a data set with dimension n divided by aggr. 
+%If blow is set to FALSE, the result will be a data set with dimension n divided by aggr. 
 }
 \value{
+  \item{mx  }{ aggregated data set }
   \item{x }{original data}
   \item{method  }{method  }
-  \item{clustering  }{ TRUE, if a clustering is done before microaggregation }
+  %\item{clustering  }{ TRUE, if a clustering is done before microaggregation }
   \item{aggr  }{aggregation level  }
-  \item{nc  }{ number of clusters, if a clustering method is chosen }
-  \item{xm  }{ aggregated data set }
-  \item{roundxm  }{ rounded aggregated data set (to integers) }
-  \item{clustermethod  }{ clustermethod, if a cluster method is chosen }
+  %\item{nc  }{ number of clusters, if a clustering method is chosen }
+  %\item{xm  }{ aggregated data set }
+  %\item{roundxm  }{ rounded aggregated data set (to integers) }
+  %\item{clustermethod  }{ clustermethod, if a cluster method is chosen }
   \item{measure  }{ proximity measure for aggregation }   
-  \item{trim  }{ trimming, if proximity measure \sQuote{trim} is chosen }   
-  \item{varsort  }{ information about the variable which is chosen when using method \sQuote{single} }   
-  \item{transf  }{ transformation used, when clustering is applied first }   
-  \item{blow  }{ TRUE, blowxm is calculated }   
-  \item{blowxm  }{ microaggregated data with the same dimension as the original data set }  
+  %\item{trim  }{ trimming, if proximity measure \sQuote{trim} is chosen }   
+  %\item{varsort  }{ information about the variable which is chosen when using method \sQuote{single} }   
+  %\item{transf  }{ transformation used, when clustering is applied first }   
+  %\item{blow  }{ TRUE, blowxm is calculated }   
+  %\item{blowxm  }{ microaggregated data with the same dimension as the original data set }  
   \item{fot  }{ correction factor, necessary if totals calculated and n divided by aggr is not an integer. }   
 }
 \references{ \url{http://www.springerlink.com/content/v257655u88w2/?sortorder=asc&p\_o=20} 
@@ -120,5 +121,8 @@ Springer, 31-62, 2010, ISBN: 978-1-84996-237-7.
 data(Tarragona)
 m1 <- microaggregation(Tarragona, method="onedims", aggr=3)
 ## summary(m1)
+data(testdata)
+m2 <- microaggregation(testdata[1:100,c("expend","income","savings")], method="mdav", aggr=4)
+summary(m2)
 }
 \keyword{ manip}

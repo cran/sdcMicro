@@ -5,7 +5,7 @@ plot.indivRisk <- function (x, ...)
     if (!exists("slider.env"))
         #slider.env <<- new.env()
 		slider.env <- new.env()
-    library(tcltk)
+    #library(tcltk)
     method = "histogram"
     mu <- 0.0025
     assign("mu", tclVar(mu), env = slider.env)

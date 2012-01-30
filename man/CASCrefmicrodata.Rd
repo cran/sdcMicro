@@ -3,7 +3,7 @@
 \docType{data}
 \title{ Census data set }
 \description{
-This test data set was obtained on July 27, 2000 using the Data Extraction System 
+This test data set was obtained on July 27, 2000 using the public use Data Extraction System 
 of the U. S. Bureau of the Census.
 }
 \usage{data(CASCrefmicrodata)}
@@ -25,11 +25,9 @@ of the U. S. Bureau of the Census.
     \item{\code{ERNVAL}}{Business or Farm net earnings}
   }
 }
-\details{
-Further details are given in the link below.
-}
 \source{
-  \url{http://neon.vb.cbs.nl/casc/testsets.html}
+  Public use file from the CASC project. 
+  More information on this test data can be found in the paper listed below.
 }
 \references{
 Brand, R. and

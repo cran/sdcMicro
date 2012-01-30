@@ -73,6 +73,5 @@ Springer, 31-62, 2010, ISBN: 978-1-84996-237-7.
 data(Tarragona)
 a1 <- addNoise(Tarragona)
 a1
-valTable(Tarragona[100:200,], method=c("addNoise: additive", "addNoise: correlated2"))
 }
 \keyword{ manip }

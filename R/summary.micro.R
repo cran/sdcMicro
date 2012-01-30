@@ -43,7 +43,7 @@ function (X, k = 0, sca = "mad", scores = TRUE)
 }
 
     x1 <- as.data.frame(object$x)
-    x2 <- if( length(as.data.frame(object$blowxm)) > 0 ) as.data.frame(object$blowxm) else as.data.frame(object$xm)
+    x2 <- if( length(as.data.frame(object$mx)) > 0 ) as.data.frame(object$mx) else as.data.frame(object$mx)
     colnames(x2) <- colnames(x1)
     amx <- mapply(mean, x1)
     amxn <- mapply(mean, x2)

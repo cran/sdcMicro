@@ -1,5 +1,5 @@
-\name{swappNum}
-\alias{swappNum}
+\name{swappNum-deprecated}
+\alias{swappNum-deprecated}
 \title{ Rank Swapping }
 \description{
 Rank Swapping.

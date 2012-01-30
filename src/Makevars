@@ -1,0 +1,2 @@
+PKG_LIBS = /Library/Frameworks/R.framework/Versions/2.14/Resources/library/Rcpp/lib/x86_64/libRcpp.a
+PKG_CPPFLAGS = -I/Library/Frameworks/R.framework/Versions/2.14/Resources/library/Rcpp/include

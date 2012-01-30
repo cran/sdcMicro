@@ -1,6 +1,6 @@
 useDynLib(sdcMicro)
 
-import(robustbase, tcltk)
+import(robustbase)
 importFrom(car, scatterplotMatrix, box.cox.powers, box.cox)
 importFrom(robustbase, covMcd)
 importFrom(cluster, clara, pam, fanny)
@@ -29,12 +29,15 @@ export(
     print.localSupp2,
     print.micro,
     print.pram,
+    print.suda2,
     summary.freqCalc,
     summary.micro,
     summary.pram,
     swappNum,
     topBotCoding,
-    valTable
+    valTable,
+    rankSwap,
+    suda2
 )
 
 S3method(print, indivRisk)
@@ -42,6 +45,7 @@ S3method(print, freqCalc)
 S3method(print, localSupp2)
 S3method(print, micro)
 S3method(print, pram)
+S3method(print, suda2)
 S3method(summary, freqCalc)
 S3method(summary, micro)
 S3method(summary, pram)

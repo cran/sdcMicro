@@ -11,7 +11,7 @@ function (y, p)
 }
 
     x1 <- bct(x$x, p)
-    x2 <- bct(x$xm, p)
+    x2 <- bct(x$mx, p)
     if (length(which.plot) > 1) 
         par(ask = TRUE)
     if (1 %in% which.plot) {
@@ -70,9 +70,9 @@ function (y, p)
             xaxt = "n", yaxt = "n", col = "orange")
         legend("topright", legend = c("original data", "microaggr. data"), 
             pch = c(15, 15), col = c("yellow", "orange"))
-        if (dim(x$xm)[1] > dim(x$xm)[2]) {
+        if (dim(x$mx)[1] > dim(x$mx)[2]) {
             pc1 <- princomp(scale(x$x))
-            xm <- x$xm
+            xm <- x$mx
             colnames(xm) <- colnames(x$x)
             pc2 <- princomp(scale(xm))
             biplot(pc1)
@@ -90,7 +90,7 @@ function (y, p)
         Zunahme <- c(0, 0, 0, 0, 1.64, 0.81, 0, 0, 0, 6.46, 0, 
             0, 0, 2.48, 0, 0)
         x1 <- as.data.frame(x$x)
-        x2 <- as.data.frame(x$xm)
+        x2 <- as.data.frame(x$mx)
         colnames(x2) <- colnames(x1)
         totx <- apply(x1, 2, sum)
         totxm <- apply(x2, 2, sum) * x$fot

@@ -3,7 +3,7 @@
 \docType{data}
 \title{ microData }
 \description{
-Small aritficial data set for demonstration.
+Small aritificial data set for demonstration.
 }
 \usage{data(microData)}
 \format{

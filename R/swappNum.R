@@ -1,5 +1,6 @@
 `swappNum` <-
 function(x, w=1:(dim(x)[2]), p){
+.Deprecated("rankSwap")
   xx <- x[,w]
   y=x
   if( class(xx) == "matrix" || class(xx) == "data.frame" ){

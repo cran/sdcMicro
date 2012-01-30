@@ -36,10 +36,10 @@ data utility
 data(free1)
 m1 <- microaggregation(free1[, 31:34], method="onedims", aggr=3)
 m2 <- microaggregation(free1[, 31:34], method="pca", aggr=3)
-dRisk(x=free1[, 31:34], xm=m1$blowxm)
-dRisk(x=free1[, 31:34], xm=m2$blowxm)
-dUtility(x=free1[, 31:34], xm=m1$blowxm)
-dUtility(x=free1[, 31:34], xm=m2$blowxm)
+dRisk(x=free1[, 31:34], xm=m1$mx)
+dRisk(x=free1[, 31:34], xm=m2$mx)
+dUtility(x=free1[, 31:34], xm=m1$mx)
+dUtility(x=free1[, 31:34], xm=m2$mx)
 data(Tarragona)
 x <- Tarragona[, 5:7]
 y <- addNoise(x)$xm

@@ -123,7 +123,7 @@ topBotCoding(free1[,"DEBTS"], value=9000, replacement=9100, kind="top")
 ## Numerical Rank Swapping:
 ## do not use the mu-Argus test data set (free1) since the numerical variables are (probably) faked.
 data(Tarragona)
-Tarragona1 <- swappNum(Tarragona, p=10) 
+Tarragona1 <- rankSwap(Tarragona, P=10) 
 
 ## Microaggregation:
 m1 <- microaggregation(Tarragona, method="onedims", aggr=3)
@@ -143,10 +143,10 @@ plotMicro(microaggregation(free1[,31:34], method="onedims"), 0.1, which.plot=1)
 ## disclosure risk (interval) and data utility:
 data(free1)
 m1 <- microaggregation(Tarragona, method="onedims", aggr=3)
-dRisk(x=Tarragona, xm=m1$blowxm)
-dRisk(x=Tarragona, xm=m2$blowxm)
-dUtility(x=Tarragona, xm=m1$blowxm)
-dUtility(x=Tarragona, xm=m2$blowxm)
+dRisk(x=Tarragona, xm=m1$mx)
+dRisk(x=Tarragona, xm=m2$mx)
+dUtility(x=Tarragona, xm=m1$mx)
+dUtility(x=Tarragona, xm=m2$mx)
 
 ## S4 class code for Adding Noise methods will be included in the next version of sdcMicro.
 

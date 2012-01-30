@@ -54,7 +54,7 @@ function (X, k = 0, sca = "mad", scores = TRUE)
             measure = measure, clustermethod = clustermethod, 
             aggr = aggr, nc = nc, transf = transf)
         }
-        if( method[i] == "swappNum" ){ m[[i]] <- swappNum(x, p=p) }
+        if( method[i] == "swappNum" ){ m[[i]] <- rankSwap(x, P=p) }
         if( substring(method[i],1,8) == "addNoise" ){
           m[[i]] <- addNoise(x, noise=noise, method=substring(method[i],11,nchar(method[i])))
         }

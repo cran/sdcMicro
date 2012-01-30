@@ -1,8 +1,9 @@
 microaggregation <- function (x, method = "pca", aggr = 3, weights=NULL, nc = 8, clustermethod = "clara",
-    opt = FALSE, measure = "mean", trim = 0, varsort = 1, transf = "log",
-    blow = TRUE, blowxm = 0)
+    opt = FALSE, measure = "mean", trim = 0, varsort = 1, transf = "log"
+)
+#,blow = TRUE, blowxm = 0)
 {
-    
+    blow=TRUE
 	weightedQuantile <- function (x, weights = NULL, probs = seq(0, 1, 0.25), sorted = FALSE, na.rm = FALSE) {
 		if (!is.numeric(x)) 
 			stop("'x' must be a numeric vector")
@@ -63,7 +64,7 @@ microaggregation <- function (x, method = "pca", aggr = 3, weights=NULL, nc = 8,
 	rownames(x) <- 1:nrow(x)
     stopifnot(method %in% c("simple", "single", "onedims", "pca",
         "mcdpca", "pppca", "clustmcdpca", "clustpppca", "clustpca",
-        "rmd", "mdav", "influence"))
+        "rmd", "mdav", "influence","mdavold"))
     #if (method == "rmd") {
     #    blow = FALSE
     #    warning("object$blow have been set to TRUE and \n
@@ -316,8 +317,7 @@ microaggregation <- function (x, method = "pca", aggr = 3, weights=NULL, nc = 8,
             aggr = aggr, nc = nc, xm = m, roundxm = mr, clustermethod = clustermethod,
             measure = measure, trim = trim, varsort = varsort,
             transf = transf, blow = blow, blowxm = blowxm, fot = fot)
-    }
-    if (method == "single") {
+    }else if (method == "single") {
         sortvec <- sort(x[, varsort], index.return = TRUE)$ix
         xx <- x[sortvec, ]
         index <- indexMicro(xx, aggr)
@@ -332,8 +332,7 @@ microaggregation <- function (x, method = "pca", aggr = 3, weights=NULL, nc = 8,
             aggr = aggr, nc = nc, xm = m, roundxm = mr, clustermethod = clustermethod,
             measure = measure, trim = trim, varsort = varsort,
             transf = transf, blow = blow, blowxm = blowxm, fot = fot)
-    }
-    if (method == "onedims") {
+    }else if (method == "onedims") {
         i <- dim(x)[2]
         xx <- sapply(1:i, function(i) {
             x[order(x[, i]), i]
@@ -355,8 +354,7 @@ microaggregation <- function (x, method = "pca", aggr = 3, weights=NULL, nc = 8,
             aggr = aggr, nc = nc, xm = m, roundxm = mr, clustermethod = clustermethod,
             measure = measure, trim = trim, varsort = varsort,
             transf = transf, blow = blow, blowxm = y, fot = fot)
-    }
-    if (method == "pca") {
+    }else if (method == "pca") {
         p <- princomp(scale(x))
         s1 <- sort(p$scores[, 1], index.return = TRUE)$ix
         xx <- x[s1, ]
@@ -372,8 +370,7 @@ microaggregation <- function (x, method = "pca", aggr = 3, weights=NULL, nc = 8,
             aggr = aggr, nc = nc, xm = m, roundxm = mr, clustermethod = clustermethod,
             measure = measure, trim = trim, varsort = varsort,
             transf = transf, blow = blow, blowxm = blowxm, fot = fot)
-    }
-    if (method == "mcdpca") {
+    }else if (method == "mcdpca") {
         x.mcd <- cov.mcd(x, cor = TRUE)
         x.scale <- scale(x, x.mcd$center, sqrt(diag(x.mcd$cor)))
         p <- princomp(x.scale, covmat = x.mcd)
@@ -392,8 +389,7 @@ microaggregation <- function (x, method = "pca", aggr = 3, weights=NULL, nc = 8,
             measure = measure, trim = trim, varsort = varsort,
             transf = transf, blowup = blowup, blowxm = blowxm,
             fot = fot)
-    }
-    if (method == "pppca") {
+    }else if (method == "pppca") {
         p <- prcompRob(x)
         s1 <- sort(p$scores[, 1], index.return = TRUE)$ix
         xx <- x[s1, ]
@@ -410,8 +406,7 @@ microaggregation <- function (x, method = "pca", aggr = 3, weights=NULL, nc = 8,
             measure = measure, trim = trim, varsort = varsort,
             transf = transf, blowup = blowup, blowxm = blowxm,
             fot = fot)
-    }
-    if (method == "influence") {
+    }else if (method == "influence") {
         ac.scale <- clust(x = x, nc = nc, clustermethod = clustermethod,
             opt = FALSE, transf = "log")
         cent <- matrix(ac.scale$centers, ncol = nc, byrow = TRUE)
@@ -452,8 +447,7 @@ microaggregation <- function (x, method = "pca", aggr = 3, weights=NULL, nc = 8,
             clustermethod = clustermethod, measure = measure,
             trim = trim, varsort = varsort, transf = transf,
             blowup = blowup, blowxm = blowxm, fot = fot)
-    }
-    if (method == "clustpca") {
+    }else if (method == "clustpca") {
         ac.scale <- clust(x = x, nc = nc, clustermethod = clustermethod,
             opt = FALSE, transf = "log")
         cent <- matrix(ac.scale$centers, ncol = nc, byrow = TRUE)
@@ -496,8 +490,7 @@ microaggregation <- function (x, method = "pca", aggr = 3, weights=NULL, nc = 8,
             clustermethod = clustermethod, measure = measure,
             trim = trim, varsort = varsort, transf = transf,
             blowup = blowup, blowxm = blowxm, fot = fot)
-    }
-    if (method == "clustmcdpca") {
+    }else if (method == "clustmcdpca") {
         ac.scale <- clust(x = x, nc = nc, clustermethod = clustermethod,
             opt = FALSE, transf = "log")
         cent <- matrix(ac.scale$centers, ncol = nc, byrow = TRUE)
@@ -542,8 +535,7 @@ microaggregation <- function (x, method = "pca", aggr = 3, weights=NULL, nc = 8,
             clustermethod = clustermethod, measure = measure,
             trim = trim, varsort = varsort, transf = transf,
             blowup = blowup, blowxm = blowxm, fot = fot)
-    }
-    if (method == "clustpppca") {
+    }else if (method == "clustpppca") {
         ac.scale <- clust(x = x, nc = nc, clustermethod = clustermethod,
             opt = FALSE, transf = transf)
         cent <- matrix(ac.scale$centers, ncol = nc, byrow = TRUE)
@@ -585,45 +577,7 @@ microaggregation <- function (x, method = "pca", aggr = 3, weights=NULL, nc = 8,
             clustermethod = clustermethod, measure = measure,
             trim = trim, varsort = varsort, transf = transf,
             blowup = blowup, blowxm = blowxm, fot = fot)
-    }
-#    if (method == "rmd") {
-#        y <- x
-#        cm <- colMeans(x, na.rm = TRUE)
-#        csd <- sd(x, na.rm = TRUE)
-#        y <- apply(y, 2, function(x) (x - mean(x, na.rm = TRUE))/sd(x,
-#            na.rm = TRUE))
-#        d <- as.matrix(dist(y))
-#        rr <- covMcd(y)
-#        md <- mahalanobis(y, center = rr$center, cov = rr$cov)
-#        diag(d) <- 0
-#        kn <- function(d, s, ne) {
-#            w <- rep(0, ne)
-#            for (i in 1:ne) {
-#                w[i] <- which.min(d[, s])
-#                d[w, ] <- NA
-#            }
-#            return(list(w = w, d = d))
-#        }
-#        for (i in 1:(floor(dim(x)[1]/aggr) - 1)) {
-#            s <- which.max(md)
-#            tmp <- kn(d, s, aggr)
-#            w <- tmp$w
-#            d <- tmp$d
-#            md[w] <- NA
-#            y[w, ] <- rep(colMeans(y[w, ]), each = aggr)
-#        }
-#        w <- which(!is.na(d[, 1]))
-#        y[w, ] <- rep(colMeans(y[w, ]), each = length(w))
-#        for (i in 1:dim(x)[2]) {
-#            y[, i] <- (y[, i] * csd[i]) + cm[i]
-#        }
-#        res <- list(x = x, method = method, clustering = clustering,
-#            aggr = aggr, nc = nc, xm = y, roundxm = round(y),
-#            clustermethod = clustermethod, measure = measure,
-#            trim = trim, varsort = varsort, transf = transf,
-#            blow = TRUE, blowxm = y, fot = fot)
-#    }
-     if (method == "rmd") {
+    } else if (method == "rmd") {
 	  #dyn.load("functionsRMD.dll")
         y <- x
         cm <- colMeans(x, na.rm = TRUE)
@@ -672,56 +626,72 @@ microaggregation <- function (x, method = "pca", aggr = 3, weights=NULL, nc = 8,
             clustermethod = clustermethod, measure = measure,
             trim = trim, varsort = varsort, transf = transf,
             blow = TRUE, blowxm = y, fot = fot)
-    }
-    if (method == "mdav") {
-        maxDistinct <- function(d, j) {
-            return(which(d == max(d), arr.ind = TRUE)[1, j])
-        }
-        distToVec <- function(x) {
-            b <- as.matrix(dist(rbind(x, maxD)))[1, -1]
-            return(b)
-        }
+    }else if (method == "mdav") {
+########R method mdav - deprecated, because faster c++ is available		
+    resX <- mdav(x,variables=NULL,weights=NULL,K=aggr,missing=-999)
+    res <- list(x = x, method = method, clustering = NULL,
+      aggr = aggr, nc = NULL, xm = NULL, roundxm = NULL, clustermethod = NULL,
+      measure = "mean", trim = NULL, varsort = NULL,
+      transf = NULL, blow = NULL, blowxm = resX, fot = fot)
+    }else if(method=="mdavold"){
+########R method mdavold - deprecated, because faster c++ is available      
+      maxDistinct <- function(d, j) {
+        return(which(d == max(d), arr.ind = TRUE)[1, j])
+      }
+      distToVec <- function(x) {
+        b <- as.matrix(dist(rbind(x, maxD)))[1, -1]
+        return(b)
+      }
+      d <- as.matrix(dist(x))
+      maxD <- matrix(ncol = ncol(x), nrow = 1)
+      distVecs <- matrix(ncol = dim(x)[1], nrow = 1)
+      maxD <- x[maxDistinct(d, 1), ]
+      findNearest <- function(x, d) {
+        ind1 <- which(d == max(d), arr.ind = TRUE)[1, 1]
+        distVecs1 <- d[ind1, ]
+        maxD1 <- x[ind1, ]
+        ind2 <- as.vector(which.max(d[ind1, ]))
+        maxD2 <- x[ind2, ]
+        distVecs2 <- d[ind2, ]
+        s1 <- sort(distVecs1, index.return = TRUE)$ix[1:aggr]
+        s2 <- sort(distVecs2, index.return = TRUE)$ix[1:aggr]
+        sk <- rbind(x[s1, , drop = FALSE], x[s2, , drop = FALSE])
+        x <- x[-c(s1, s2), , drop = FALSE]
         d <- as.matrix(dist(x))
-        maxD <- matrix(ncol = ncol(x), nrow = 1)
-        distVecs <- matrix(ncol = dim(x)[1], nrow = 1)
-        maxD <- x[maxDistinct(d, 1), ]
-        findNearest <- function(x, d) {
-            ind1 <- which(d == max(d), arr.ind = TRUE)[1, 1]
-            distVecs1 <- d[ind1, ]
-            maxD1 <- x[ind1, ]
-            ind2 <- as.vector(which.max(d[ind1, ]))
-            maxD2 <- x[ind2, ]
-            distVecs2 <- d[ind2, ]
-            s1 <- sort(distVecs1, index.return = TRUE)$ix[1:aggr]
-            s2 <- sort(distVecs2, index.return = TRUE)$ix[1:aggr]
-            sk <- rbind(x[s1, , drop = FALSE], x[s2, , drop = FALSE])
-            x <- x[-c(s1, s2), , drop = FALSE]
-            d <- as.matrix(dist(x))
-            list(sk = sk, x = x, d = d)
-        }
-        a <- findNearest(x, d)
-        b <- a$sk
-        while (dim(a$x)[1] > 2 * aggr) {
-            a <- findNearest(a$x, a$d)
-            b <- rbind(b, a$sk)
-        }
-        if (dim(a$x)[1] <= 2 * aggr) {
-            b <- rbind(b, a$x)
-        }
-        index <- indexMicro(b, aggr)
-        m <- means(x = b, index = index, measure = measure, trim = trim)
-        mr <- round(m)
-        if (blow == TRUE) {
-            blowxm <- blowup(b, m, aggr)
-        }
-        res <- list(x = b, method = method, clustering = clustering,
-            aggr = aggr, nc = nc, xm = m, roundxm = mr, clustermethod = clustermethod,
-            measure = measure, trim = trim, varsort = varsort,
-            transf = transf, blow = blow, blowxm = blowxm, fot = fot)
+        list(sk = sk, x = x, d = d)
+      }
+      a <- findNearest(x, d)
+      b <- a$sk
+      while (dim(a$x)[1] > 2 * aggr) {
+        a <- findNearest(a$x, a$d)
+        b <- rbind(b, a$sk)
+      }
+      if (dim(a$x)[1] <= 2 * aggr) {
+        b <- rbind(b, a$x)
+      }
+      index <- indexMicro(b, aggr)
+      m <- means(x = b, index = index, measure = measure, trim = trim)
+      mr <- round(m)
+      if (blow == TRUE) {
+        blowxm <- blowup(b, m, aggr)
+      }
+      res <- list(x = b, method = method, clustering = clustering,
+          aggr = aggr, nc = nc, xm = m, roundxm = mr, clustermethod = clustermethod,
+          measure = measure, trim = trim, varsort = varsort,
+          transf = transf, blow = blow, blowxm = blowxm, fot = fot)
     }
+      
     res$x <- res$x[order(as.numeric(rownames(res$x))),]
     res$blowxm <- res$blowxm[order(as.numeric(rownames(res$blowxm))),]
-	res$blowxm <- res$blowxm[1:nrow(x),]
+	  res$blowxm <- res$blowxm[1:nrow(x),]
     class(res) <- "micro"
-    res
+    res$mx <- res$blowxm
+	resv <- c("mx","x","method", "aggr","measure","fot")
+	res1 <- list()
+	for(v in resv)
+		res1[[v]]<-res[[v]]
+#            measure = measure, trim = trim, varsort = varsort,
+#            transf = transf, blow = blow, blowxm = blowxm, fot = fot
+  class(res1) <- "micro"  
+  invisible(res1)
 }

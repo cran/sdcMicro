@@ -30,9 +30,9 @@ Records are grouped based on a proximity measure of variables of interest, and t
 records are used in calculating aggregates
  for those variables. The aggregates are released instead of the individual record values.
  
-The recommended method is \dQuote{rmd} which forms the proximity using multivariate distances based on robust methods.
-It is an extension of the well-known method \dQuote{mdav}. 
-Whenever computational speed is important, method \dQuote{pca} is fast and gives reasonable results when no outliers are in the data. 
+The recommended method is \dQuote{rmd} which forms the proximity using multivariate distances 
+based on robust methods. It is an extension of the well-known method \dQuote{mdav}. 
+However, when computational speed is important, method \dQuote{mdav} is the preferable choice. 
  
 While for the proximity measure very different concepts can be used, 
 the aggregation itself is naturally done with the arithmetic mean. 
@@ -115,7 +115,14 @@ Robust Statistics Applied to Official Statistics}, Suedwestdeutscher Verlag fuer
 Privacy and Anonymity in Information Management Systems New Techniques for New Practical Problems, 
 Springer, 31-62, 2010, ISBN: 978-1-84996-237-7.   
 }
-\author{ Matthias Templ }
+\author{ Matthias Templ 
+
+For method \dQuote{mdav}: This work is being supported by the International Household 
+Survey Network (IHSN) and funded by a DGF Grant provided by the World Bank to the 
+PARIS21 Secretariat at the Organisation for Economic Co-operation and Development (OECD). 
+This work builds on previous work which is elsewhere acknowledged. 
+
+Author for the integration of the code for mdav in R: Alexander Kowarik.}
 \seealso{ \code{\link{summary.micro}}, \code{\link{plotMicro}}, \code{\link{valTable}} }
 \examples{
 data(Tarragona)

@@ -338,7 +338,7 @@ microaggregation <- function (x, method = "pca", aggr = 3, weights=NULL, nc = 8,
             x[order(x[, i]), i]
         })
         xxx <- sapply(1:i, function(i) {
-            rank(x[, i], ties = "min")
+            rank(x[, i], ties.method = "min")
         })
         index <- indexMicro(xx, aggr)
         m <- means(x = xx, index = index, measure = measure,

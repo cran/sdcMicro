@@ -1313,3 +1313,221 @@ void CRandom :: SetSeed(uint a, uint b, uint c)
 }
 
 
+// For measure_risk
+#define MAX_SENSITIVE_VAR 5       // Max number of l-diversity sensitive variables (don't go over 9....)
+
+struct SCategory
+{
+  double value;
+  int freq;           //< the total frequency for this category
+  int group_freq;       //< the frequency for a specific group/block (used by l-diversity)
+  SCategory *pPrev;         // pointer to next category (NULL if first in the list)
+  SCategory *pNext;         // pointer to previous category (NULL if last in the list)
+};
+
+typedef struct
+{
+  int position;             //< Stata variable position
+
+  // missing values
+  int Nb_Missing_Value;       //< the number of missing values
+  int Nb_Missing_Value_In_Group;  //< the number of missing values for current group
+
+  // categories
+  int Nb_Category;            //< number of categories
+  SCategory *pFirstCategory;        //< pointer to the first category in the list
+  SCategory *pLastCategory;       //< pointer to the last category in the list
+
+  // l-diversity (input)
+  int Require_Ldiversity;       //< level of l-diversity required or not
+  int ldiv_do_entropy;          //< flag to compute l-diversity entropy
+  int ldiv_do_recursivity;      //< flag to compute l-diversity recursivity
+
+  // l-divserity output variables
+  int Ldiversity_Distinct_Pos;    //< Stata variable position for Distinct output
+  int Ldiversity_Entropy_Pos;     //< Stata variable position for Entropy output
+  int Ldiversity_Recursive_Pos;   //< Stata variable position for Recursivity output
+
+  // l-diversity (output)
+  int Group_Distinct_Ldiversity;  //< Computed distinct l-diversity for current group
+  double Group_Entropy_Ldiversity;  //< Computed entropy l-diversity entropy for current group
+  int Group_Recursive_Ldiversity; //< Computed recursive l-diversity entropy for current group
+
+} SVariable;
+
+/*=========*/
+/* GLOBALS */
+/*=========*/
+
+struct SConfig
+{
+  char is_weighted;         //< indicates if the data is weighted
+  int Nb_QuasiId_Var;       //< number of quasi-identifier variables
+  int weight_var_pos;       //< position of weight variable (0 if unweighted)
+  int group_var_pos;        //< position of group variable
+  int risk_var_pos;         //< position of risk variable
+  int Nb_Sensitive_Var;     //< Number of sensitive variables
+  SVariable Sensitive_Var[5]; //< config for up to 5 l-diversity variables (unweighted only)
+  float Ldiversity_Recursivity_Constant;
+
+  int Ldiversity_MultiEntropy_Pos;    //< Stata variable position
+  int Ldiversity_MultiRecursive_Pos;  //< Stata variable position
+
+  float Group_MultiEntropy_Ldiversity;  //< Computed multi entropy l-diversity entropy for current group
+  int Group_MultiRecursive_Ldiversity;  //< Computed multi recursive l-diversity entropy for current group
+
+  double missing_value;       // vlaue of the missing value
+};
+
+SConfig g_Config;
+
+
+// Function to compare against missing value
+BOOL SF_IsMissing(double value) {
+  return g_Config.missing_value == value;
+}
+
+/*=====================*/
+/* CATEGORY MANAGEMENT */
+/*=====================*/
+/**
+ * Finds a variable category by value
+ */
+SCategory *find_var_cat(SVariable var, double value)
+{
+  SCategory *pCat;
+
+  pCat = var.pFirstCategory;
+  while (pCat != NULL)
+  {
+    if (pCat->value == value)
+      return pCat;
+    pCat = pCat->pNext;
+  }
+
+  return NULL;
+}
+
+/**
+ * Adds a value to a variable category
+ */
+void add_var_cat_value(SVariable *p_var, double value)
+{
+  SCategory *pCat;
+
+  if (!SF_IsMissing(value))
+  {
+    pCat = find_var_cat(*p_var, value);
+    if (pCat == NULL)
+    {
+      // create a new category
+      pCat = (SCategory *)malloc(sizeof(SCategory));
+      pCat->value = value;
+      pCat->freq = 0;
+      pCat->group_freq = 0;
+      pCat->pPrev = p_var->pLastCategory;
+      pCat->pNext = NULL;
+
+      // update variable
+      if (p_var->pFirstCategory == NULL)
+        p_var->pFirstCategory = pCat;
+      if (p_var->pLastCategory != NULL)
+        p_var->pLastCategory->pNext = pCat;
+      p_var->pLastCategory = pCat;
+      p_var->Nb_Category++;
+    }
+
+    pCat->freq++;
+    pCat->group_freq++;
+  }
+  else
+  {
+    p_var->Nb_Missing_Value++;
+    p_var->Nb_Missing_Value_In_Group++;
+  }
+}
+
+/**
+ * Frees variable memory
+ */
+void free_var(SVariable *p_var)
+{
+  SCategory *pCat, *pNext;
+
+  if (p_var->pFirstCategory != NULL)
+  {
+    pCat = p_var->pFirstCategory;
+    do
+    {
+      pNext = pCat->pNext;
+      free(pCat);
+      pCat = pNext;
+    }
+    while (pCat != NULL);
+  }
+}
+
+/**
+ * Initialize a variable
+ */
+void init_var(SVariable *p_var)
+{
+  p_var->position = 0;
+  p_var->Nb_Category = 0;
+  p_var->pFirstCategory = NULL;
+  p_var->pLastCategory = NULL;
+  p_var->Nb_Missing_Value = 0;
+  p_var->Require_Ldiversity = FALSE;
+  p_var->ldiv_do_entropy = 0;
+  p_var->ldiv_do_recursivity = 0;
+}
+
+/**
+ * Initialize a variable category
+ */
+void init_var_cat(SCategory *pCat)
+{
+  pCat->value = 0.0f;//MISSING;
+  pCat->freq = -1;
+  pCat->pPrev = NULL;
+  pCat->pNext = NULL;
+}
+
+/**
+ * Resets a variable category group frequencies to zero
+ */
+void reset_var_cat_group_freq(SVariable *p_var)
+{
+  SCategory *pCat;
+
+  p_var->Nb_Missing_Value_In_Group = 0;
+  pCat = p_var->pFirstCategory;
+  while (pCat != NULL)
+  {
+    pCat->group_freq = 0;
+    pCat = pCat->pNext;
+  }
+}
+
+/**
+ * Compares two keys and returns 1 if they are equal
+ */
+int is_same_key_Risk(double key1[], double key2[], int key_size)
+{
+  int i;
+  int rc = 1;
+
+  for (i = 0; i < key_size; i++)
+  {
+    if (key1[i] != key2[i] && !(SF_IsMissing(key1[i]) && SF_IsMissing(key2[i])))
+    {
+      //              if(key1[i]!=key2[i]) {
+      rc = 0;
+      break;
+    }
+  }
+
+  return rc;
+}
+
+

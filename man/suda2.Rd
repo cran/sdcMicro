@@ -54,6 +54,13 @@ A recursive search algorithm for statistical disclosure assessment.
 \author{
 Alexander Kowarik based on the C++  code from the 
 Organisation For Economic Co-Operation And Development.  
+
+For the C++ code: 
+This work is being supported by the International Household
+Survey Network and funded by a DGF Grant provided by
+the World Bank to the PARIS21 Secretariat at the Organisation for Economic
+Co-operation and Development (OECD). This work builds on previous work which
+is elsewhere acknowledged.
 }
 \examples{
 data(testdata)

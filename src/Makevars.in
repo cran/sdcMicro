@@ -1,2 +1,14 @@
-PKG_LIBS = @PKG_LIBS@
-PKG_CPPFLAGS = @PKG_CPPFLAGS@
+GLPK_LIBS = -lglpk
+
+PKG_CPPFLAGS = @GLPK_INCLUDE_PATH@ `$(R_HOME)/bin/Rscript -e 'Rcpp:::CxxFlags()'`
+PKG_LIBS = @GLPK_LIB_PATH@ $(GLPK_LIBS) `$(R_HOME)/bin/Rscript -e 'Rcpp:::LdFlags()'`
+
+.PHONY: all @GLPK_TS@
+
+all: $(SHLIB)
+$(OBJECTS): @GLPK_TS@ 
+
+GLPK.ts:
+	@(cd GLPK && make)
+	touch $@
+	

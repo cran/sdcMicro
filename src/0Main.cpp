@@ -13,16 +13,19 @@
  *
  *  The full text of the license is available at http://www.gnu.org/copyleft/lesser.html
  */
- #include <Rcpp.h>
- #include <stdlib.h>
- #include <stdarg.h>
- #include <string.h>
- #include <math.h>
- #include <stdio.h>
- #include <float.h>
- #include <limits.h>
- #include <time.h>
- #include "Framework.h"
+#include <Rcpp.h>
+#include <stdlib.h>
+#include <stdarg.h>
+#include <string.h>
+#include <math.h>
+#include <stdio.h>
+#include <float.h>
+#include <limits.h>
+#include <time.h>
+#if !defined(__APPLE__)
+#include <malloc.h>
+#endif
+#include "Framework.h"
 
 // //RankSwapping
 enum{
@@ -44,5 +47,12 @@ enum{
 //Suda2
 #include "Suda2.h"
 
-//#include "Pram_Bernd.h"
+#include "Pram.h"
+
+#include "freqCalc.h"
+#include "Measure_Risk.h"
+#include "Measure_Hierarchical.h"
+
+#include "Measure_Threshold.h"
+
 

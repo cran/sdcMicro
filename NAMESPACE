@@ -37,7 +37,12 @@ export(
     topBotCoding,
     valTable,
     rankSwap,
-    suda2
+    suda2,
+    pram_strata,
+    measure_risk,
+    measure_hier,
+    measure_thres
+    
 )
 
 S3method(print, indivRisk)
@@ -45,6 +50,10 @@ S3method(print, freqCalc)
 S3method(print, localSupp2)
 S3method(print, micro)
 S3method(print, pram)
+S3method(print, pram_strata)
+S3method(print, measure_risk)
+S3method(print, measure_hier)
+S3method(print, measure_thres)
 S3method(print, suda2)
 S3method(summary, freqCalc)
 S3method(summary, micro)

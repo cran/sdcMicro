@@ -1521,7 +1521,25 @@ int is_same_key_Risk(double key1[], double key2[], int key_size)
   {
     if (key1[i] != key2[i] && !(SF_IsMissing(key1[i]) && SF_IsMissing(key2[i])))
     {
-      //              if(key1[i]!=key2[i]) {
+       // if(key1[i]!=key2[i]) {
+      rc = 0;
+      break;
+    }
+  }
+
+  return rc;
+}
+int is_same_key_Risk1(double key1[], double key2[], int key_size)
+{
+  int i;
+  int rc = 1;
+
+  for (i = 0; i < key_size; i++)
+  {
+    //if (key1[i] != key2[i] && !(SF_IsMissing(key1[i]) && SF_IsMissing(key2[i])))
+    if (key1[i] != key2[i] || (SF_IsMissing(key1[i]) || SF_IsMissing(key2[i])) )
+    {
+       // if(key1[i]!=key2[i]) {
       rc = 0;
       break;
     }
@@ -1530,4 +1548,18 @@ int is_same_key_Risk(double key1[], double key2[], int key_size)
   return rc;
 }
 
+int is_same_key_Risk2(double key1[], double key2[], int key_size) {
+  int i;
+  int rc = 1;
+
+  for (i = 0; i < key_size; i++)
+  {
+    if (key1[i] != key2[i] && (!(SF_IsMissing(key1[i]) || SF_IsMissing(key2[i]))))
+    {
+      rc = 0;
+      break;
+    }
+  }
+  return rc;
+}
 

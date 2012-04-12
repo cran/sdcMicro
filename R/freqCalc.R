@@ -47,6 +47,7 @@
 }
 
 ffc <- function(x, keyVars = 1:3, w = 4) {
+  treatmissing <- -999
   dataX <- x[,keyVars,drop=FALSE]
   weighted <- 0
   if(!is.null(w)){
@@ -58,15 +59,21 @@ ffc <- function(x, keyVars = 1:3, w = 4) {
       dataX[,i] <- as.numeric(dataX[,i])
   }
   dataX <- as.matrix(dataX)
+  while(any(dataX==treatmissing,na.rm=TRUE)){
+	  treatmissing <- -sample(999:999999,1)
+  }  
+  dataX[is.na(dataX)] <- treatmissing
   ind <- do.call(order,data.frame(dataX))
   dataX <- dataX[ind,,drop=FALSE]
   ind <- order(c(1:nrow(dataX))[ind])
+
+  
   if(weighted==1){
-    Res <- .Call("ffc",dataX,1,length(keyVars),-999)$Res[ind,]
+    Res <- .Call("ffc",dataX,1,length(keyVars),treatmissing)$Res[ind,]
     Fk <- Res[,2]
     fk <- Res[,1]
   }else
-    Fk <- fk <- .Call("ffc",dataX,0,length(keyVars),-999)$Res[ind,1]
+    Fk <- fk <- .Call("ffc",dataX,0,length(keyVars),treatmissing)$Res[ind,1]
   res <- list(
       freqCalc = x,
       keyVars = keyVars,

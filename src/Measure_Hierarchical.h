@@ -178,25 +178,6 @@ RcppExport SEXP measure_hierachical(SEXP data)
     while (is_same_key(group_key, obs_key, n_key_vars));
     // compute risk for this household
     group_risk = boole(obs_risk, group_size);
-    // debug
-    /*
-						sprintf( buf_hierachical , "Group %d, Size %d, Risk %12.10lf\n" , (int) group_count , group_size, group_risk );
-					    OS_Printf(buf_hierachical);
-					    OS_Printf("KEY:");
-						for(i=0; i<n_key_vars; i++) {
-							sprintf( buf_hierachical , "%d=%.2f " ,i, group_key[i] );
-						    OS_Printf(buf_hierachical);
-						}
-					    OS_Printf("\n");
-					    OS_Printf("OBS RISKS:");
-						for(i=0; i<group_size; i++) {
-							sprintf( buf_hierachical , "%d=%.2f " ,i, obs_risk[i] );
-						    OS_Printf(buf_hierachical);
-						}
-					    OS_Printf("\n");
-						sprintf( buf_hierachical ,"GROUP RISK %.2f " ,group_risk );
-					    OS_Printf(buf_hierachical);
-     */
     // UPDATE STATA
     for (i = current_obs - group_size; i < current_obs; i++)
     {

@@ -154,11 +154,6 @@ void compute_group_ldiversity(int group_size, SVariable *pSensitive_Var, int NbV
 
 		free(ppUsedCat);
 
-		/*OS_Printf("; Var %d (%d): Ldiv-D: %d; Ldiv-E: %g; Ldiv-R: %d\n",
-								i, NbUsedCategory,
-								Var.Group_Distinct_Ldiversity,
-								Var.Group_Entropy_Ldiversity,
-								Var.Group_Recursive_Ldiversity);*/
 	}
 }
 
@@ -279,7 +274,6 @@ void Compute_Multi_LDiversity(int Obs, int GroupSize)
 			}
 		}
 
-//		printf("==> %d SubGroup\n", NbSubGroup);
 
 			//=== Compute Entropy & Recursive for each SubGroup
 		SVariable Var;
@@ -301,13 +295,6 @@ void Compute_Multi_LDiversity(int Obs, int GroupSize)
 			int Index2 = pSetIndex[j];
 			Index1 = pSetIndex[i1];
 
-			/*OS_Printf("Var %d-%02d:", i, j);
-			ForLoop (l, NbVar)
-			{
-				if (l != i)		// ignore current VarI
-					OS_Printf(" %g", pSet[pSetIndex[j-1] * NbVar + l]);
-			}
-			OS_Printf("; Sensitive => %g\n", pSet[pSetIndex[j-1] * NbVar + i]);*/
 
 			if (j < GroupSize)
 			{
@@ -336,12 +323,9 @@ void Compute_Multi_LDiversity(int Obs, int GroupSize)
 				i1 = j;
 				reset_var_cat_group_freq(&Var);
 				++NbSubGroup;
-				//OS_Printf("Done SubGroup %d : %g Entropy / %d Recurs\n", NbSubGroup, Var.Group_Entropy_Ldiversity,
-				//																		Var.Group_Recursive_Ldiversity);
 			}
 		}
 
-//		ASSERT(NbSubGroupBak == NbSubGroup);
 
 		float MultiEntropy = pSubEntropy[0];
 		int MultiRecursive = pSubRecursive[0];
@@ -352,8 +336,6 @@ void Compute_Multi_LDiversity(int Obs, int GroupSize)
 			MultiRecursive = Min(pSubRecursive[j], MultiRecursive);
 		}
 
-		//OS_Printf("===> Var%d : %g Entropy / %d Recurs\n", i, MultiEntropy, MultiRecursive);
-		//OS_Printf("...\n");
 
 		if (First)
 		{
@@ -430,56 +412,7 @@ double compute_risk(int freq, double weight)
 
 }
 
-/*===========*/
-/* UTILITIES */
-/*===========*/
 
-/**
- * Displays a key (for debug purposes)
- */
-//void display_key(double key[], int key_size)
-//{
-////	printf("KEY:");
-//
-//	int i;
-//
-//	for (i = 0; i < key_size; i++)
-//	{
-//		if (!SF_IsMissing(key[i]))
-//			sprintf(g_TxtBuffer, " %.2f", key[i]);
-//		else
-//			sprintf(g_TxtBuffer, " .");
-////		printf(g_TxtBuffer);
-//	}
-//
-////	printf("\n");
-//}
-
-/**
- * Displays g_Config (for debug purposes)
- */
-//void display_config(void)
-//{
-//	int i;
-//
-////	printf("CONFIG\n");
-//	sprintf(g_TxtBuffer, "Weighted:%d #key_vars:%d #sens_vars:%d weight_var:%d group_var:%d risk_var:%d \n",
-//			  g_Config.is_weighted, g_Config.Nb_QuasiId_Var, g_Config.Nb_Sensitive_Var, g_Config.weight_var_pos,
-//			  g_Config.group_var_pos, g_Config.risk_var_pos);
-////	printf(g_TxtBuffer);
-//
-//	for (i = 0; i < MAX_SENSITIVE_VAR; i++)
-//	{
-//		sprintf(g_TxtBuffer,
-//				  "l-diversity%d: position:%d dist_pos:%d entr_pos:%d level:%d entropy:%d recursive:%d\n",
-//				  i, g_Config.Sensitive_Var[i].position, g_Config.Sensitive_Var[i].Ldiversity_Distinct_Pos,
-//				  g_Config.Sensitive_Var[i].Ldiversity_Entropy_Pos, g_Config.Sensitive_Var[i].Require_Ldiversity,
-//				  g_Config.Sensitive_Var[i].ldiv_do_entropy, g_Config.Sensitive_Var[i].ldiv_do_recursivity);
-////		printf(g_TxtBuffer);
-//	}
-//
-////	printf("\n");
-//}
 
 /*======*/
 /* MAIN */
@@ -542,7 +475,6 @@ RcppExport SEXP measure_risk(SEXP data, SEXP weighted_R, SEXP n_key_vars_R, SEXP
 
 	if (!g_Config.Ldiversity_Recursivity_Constant)
 	{
-		//				printf("Warning: Wrong value for l-recursity Contanst; Reset to 1\n");
 		g_Config.Ldiversity_Recursivity_Constant = 1.0f;
 	}
 	// }
@@ -554,7 +486,6 @@ RcppExport SEXP measure_risk(SEXP data, SEXP weighted_R, SEXP n_key_vars_R, SEXP
 	if(ldiv_index_RR(0)>0){
 		ForLoopD(ll, length_ldiv_index){
 			int index_run = ldiv_index_RR(ll)-1;
-			//      printf("SENSIVITY VAR %d \n",index_run);
 			g_Config.Sensitive_Var[index_run].Require_Ldiversity = TRUE;
 		}
 	}
@@ -572,7 +503,6 @@ RcppExport SEXP measure_risk(SEXP data, SEXP weighted_R, SEXP n_key_vars_R, SEXP
 	//			{
 	//				// g_Config.Sensitive_Var[ldiv_index].Require_Ldiversity = TRUE;
 	//				g_Config.Sensitive_Var[ldiv_index].Require_Ldiversity = ldiv_lvl;
-	////				Printf("Need Ldiversity for Var %d\n", ldiv_index + 1);
 	//			}
 
 	// ldiv?_var
@@ -608,7 +538,6 @@ RcppExport SEXP measure_risk(SEXP data, SEXP weighted_R, SEXP n_key_vars_R, SEXP
 		// if (g_pDataset->GetNbVar() < 4)
 		if (NbCol < 2)
 		{
-			//			printf("Error: you should have at least 4 variables in the DataSet ( => 1 QuasiID + Weight + Group + Risk)\n");
 			return Rcpp::wrap(-1);
 		}
 	}
@@ -643,7 +572,6 @@ RcppExport SEXP measure_risk(SEXP data, SEXP weighted_R, SEXP n_key_vars_R, SEXP
 		// if (ldiv_pos > g_pDataset->GetNbVar())
 		//		if (ldiv_pos-7> NbCol)
 		//		{
-		//			printf("Error: you should have at least %d variables in the DataSet (only %d provided ; need Distinct + Entropy + Recursive output Variables for each Variable requiring Ldiversity)\n", ldiv_pos, NbCol);
 		//			return Rcpp::wrap(-2);
 		//		}
 	}
@@ -654,8 +582,6 @@ RcppExport SEXP measure_risk(SEXP data, SEXP weighted_R, SEXP n_key_vars_R, SEXP
 	//if (g_pDataset->GetNbVar() < 2)
 	if (NbCol < 2)
 	{
-		sprintf(g_TxtBuffer, "Invalid number of parameters %d\n", NbCol);
-		//		printf(g_TxtBuffer);
 	}
 	else
 	{
@@ -714,9 +640,6 @@ RcppExport SEXP measure_risk(SEXP data, SEXP weighted_R, SEXP n_key_vars_R, SEXP
 				// CASE 1: ALL MISSING VALUES IN KEY (risk is zero)
 				//
 				// all the key variables are missing, the risk is zero
-				sprintf(g_TxtBuffer, "WARNING: all variables are MISSING for group starting at %ld\n",
-						current_obs);
-				//				printf(g_TxtBuffer);
 				group_risk = 0;
 
 				// UPDATE STATA
@@ -747,8 +670,6 @@ RcppExport SEXP measure_risk(SEXP data, SEXP weighted_R, SEXP n_key_vars_R, SEXP
 				//
 				// CASE 2: SOME MISSING VALUES IN KEY
 				//
-				sprintf(g_TxtBuffer, "WARNING: %ld variable(s) MISSING for Observation %ld", group_missing, current_obs);
-				//				printf(g_TxtBuffer);
 				//				display_key(group_key, g_Config.Nb_QuasiId_Var);
 
 				// The weights and count of the observations with the same
@@ -826,9 +747,6 @@ RcppExport SEXP measure_risk(SEXP data, SEXP weighted_R, SEXP n_key_vars_R, SEXP
 					}
 				}
 
-				sprintf(g_TxtBuffer, "         --> frequency: %d weight: %.2f risk: %.7f\n", group_size,
-						group_weight, group_risk);
-				//				printf(g_TxtBuffer);
 
 				// UPDATE STATA
 				do
@@ -990,16 +908,6 @@ RcppExport SEXP measure_risk(SEXP data, SEXP weighted_R, SEXP n_key_vars_R, SEXP
 				// add this group contribution to the global risk
 				global_risk_ER += group_size * group_risk;
 			}
-			//=== debug display
-			/*if (group_count <= 20)
-			{
-			   OS_Printf("Group %d; KEY: ", i);
-
-				for(i = 0; i < g_Config.Nb_QuasiId_Var; ++i)
-					OS_Printf(" %.1f", group_key[i]);
-
-				OS_Printf("; FREQ:%d WGT:%.2f RISK:%.6f\n", group_size, group_weight, group_risk);
-			} */
 		}
 		while (current_obs < NbRow);
 		// compute global risk and store in stata scalars
@@ -1016,10 +924,6 @@ RcppExport SEXP measure_risk(SEXP data, SEXP weighted_R, SEXP n_key_vars_R, SEXP
 			if (g_Config.Sensitive_Var[i].Require_Ldiversity)
 				free_var(&g_Config.Sensitive_Var[i]);
 		}
-		// display statistics
-		//		time(&end);
-		//		printf("Processed %ld groups / %ld observations in %.1f second(s)\n",
-		//											group_count, obs_count, difftime(end, start));
 
 		delete[] group_key;
 		delete[] obs_key;

@@ -66,6 +66,11 @@ RcppExport SEXP ffc(SEXP data, SEXP weighted_R, SEXP n_key_vars_R, SEXP missing_
   g_Config.risk_var_pos = 0;
   g_Config.missing_value = Rcpp::as<double>(missing_value_R);
 
+  Rcpp::NumericVector indMiss;
+
+  double weightSum = Rcpp::sum(MatX(Rcpp::_,MatX.cols()-1));
+
+
 //  for (i = 0; i < MAX_SENSITIVE_VAR; i++)
 //    init_var(&g_Config.Sensitive_Var[i]);
 
@@ -94,6 +99,7 @@ RcppExport SEXP ffc(SEXP data, SEXP weighted_R, SEXP n_key_vars_R, SEXP missing_
 
     double *group_key = new double[g_Config.Nb_QuasiId_Var];  //< the current group identification key
     double *obs_key = new double[g_Config.Nb_QuasiId_Var];
+	double *miss_key = new double[g_Config.Nb_QuasiId_Var];
 
     long current_obs;
     long obs_count = 0;         // total number of observations
@@ -101,9 +107,9 @@ RcppExport SEXP ffc(SEXP data, SEXP weighted_R, SEXP n_key_vars_R, SEXP missing_
 //    double obs_value;         //< generic value
     long group_count = 0;       //< total number of groups
     long group_missing;         //< used to detect missing values in group key
-    int group_size;
+    int group_size, group_size2;
     double group_weight;        //< the sum of the weights for this group
-    double group_risk;
+    //double group_risk;
 
 
     // get first observation
@@ -123,22 +129,23 @@ RcppExport SEXP ffc(SEXP data, SEXP weighted_R, SEXP n_key_vars_R, SEXP missing_
       {
         group_key[i] = MatX(current_obs, i);
         //g_pDataset->GetValue(i, current_obs, &group_key[i]);
-        if (SF_IsMissing(group_key[i]))
+        if (SF_IsMissing(group_key[i])) {
           group_missing++;
+        }
       }
       if (group_missing == g_Config.Nb_QuasiId_Var)
       {
+      	indMiss.push_back(current_obs);
         //
         // CASE 1: ALL MISSING VALUES IN KEY (risk is zero)
         //
-        group_risk = 0;
+        //group_risk = 0;
 
         // UPDATE STATA
         do
         {
-          Res(current_obs, 0) = group_size;
-          Res(current_obs, 1) = group_size;
-
+        	Res(current_obs, 0) = NbRow;
+			Res(current_obs, 1) = weightSum;
           obs_count++;
           current_obs++;
 
@@ -150,10 +157,11 @@ RcppExport SEXP ffc(SEXP data, SEXP weighted_R, SEXP n_key_vars_R, SEXP missing_
             obs_key[i] = MatX(current_obs, i);
             //g_pDataset->GetValue(i, current_obs, &obs_key[i]);
         }
-        while (is_same_key_Risk(group_key, obs_key, g_Config.Nb_QuasiId_Var));
+        while (is_same_key_Risk1(group_key, obs_key, g_Config.Nb_QuasiId_Var));
       }
       else if (group_missing > 0)
       {
+      	indMiss.push_back(current_obs);
         //
         // CASE 2: SOME MISSING VALUES IN KEY
         //
@@ -172,17 +180,25 @@ RcppExport SEXP ffc(SEXP data, SEXP weighted_R, SEXP n_key_vars_R, SEXP missing_
             // compare partial keys
             for (j = 0; j < g_Config.Nb_QuasiId_Var; j++)
             {
+            	value = MatX(i, j);
+            	//printf("i|j|groupKey|value:%d|%d|%f|%f ... ", i,j,group_key[j], value);
               // if this variable is a missing component of the current key, ignore it
-              if (SF_IsMissing(group_key[j]))
+              if (SF_IsMissing(group_key[j])) {
                 continue;
+               }
 
               // read this variable value
-              value = MatX(i, j);
+              //value = MatX(i, j);
               // g_pDataset->GetValue(j, i, &value);
 
+              if (SF_IsMissing(value)) {
+                continue;
+               }
+
               // if not equal to the current key, this is not a match
-              if (value != group_key[j])
+              if (value != group_key[j]) {
                 break;
+               }
             }
 
             if (j == g_Config.Nb_QuasiId_Var)
@@ -226,7 +242,7 @@ RcppExport SEXP ffc(SEXP data, SEXP weighted_R, SEXP n_key_vars_R, SEXP missing_
             //g_pDataset->GetValue(i, current_obs, &obs_key[i]);
 
         }
-        while (is_same_key_Risk(group_key, obs_key, g_Config.Nb_QuasiId_Var));
+        while (is_same_key_Risk1(group_key, obs_key, g_Config.Nb_QuasiId_Var));
       }
       else
       {
@@ -259,15 +275,28 @@ RcppExport SEXP ffc(SEXP data, SEXP weighted_R, SEXP n_key_vars_R, SEXP missing_
             obs_key[i] = MatX(current_obs, i);
 
         }
-        while (is_same_key_Risk(group_key, obs_key, g_Config.Nb_QuasiId_Var));
+        while (is_same_key_Risk1(group_key, obs_key, g_Config.Nb_QuasiId_Var));
+        
+        group_size2 = group_size;
+        for ( int k=0; k < indMiss.size(); k++) {
+        
+        	for (i = 0; i < g_Config.Nb_QuasiId_Var; i++)
+            	miss_key[i] = MatX(indMiss[k], i);
+        
+        	if ( is_same_key_Risk2(miss_key, group_key, g_Config.Nb_QuasiId_Var) ) {
+        		group_size2++;
+            	group_weight += MatX(indMiss[k], g_Config.weight_var_pos);       		
+        	}	
+        }
+        
         for (i = current_obs - group_size; i < current_obs; i++)
         {
           if (g_Config.is_weighted){
-            Res(i, 0) = group_size;
+            Res(i, 0) = group_size2;
             Res(i, 1) = group_weight;
           }else{
-            Res(i, 0) = group_size;
-            Res(i, 1) = group_size;
+            Res(i, 0) = group_size2;
+            Res(i, 1) = group_size2;
           }
         }
 

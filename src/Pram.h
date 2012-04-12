@@ -121,22 +121,6 @@ void Sort(int FirstVarIndex, int NbVar, int *pSubsetRow = NULL, int NbSubsetRow 
 
   qsort(g_pSorted, NbSubsetRow, sizeof(g_pSorted[0]), QsortCompare);
 
-  if (g_Debug_Pram)
-  {
-    ForLoopD (i, NbSubsetRow)
-    {
-      //TData *pRow = g_pLocalDataSet->m_pSet + g_pLocalDataSet->m_NbVar * g_pSorted[i] + g_1stSortVarIndex;
-
-//      TData *pRow = m_pSet + g_NbVar_Pram * g_pSorted[i] + g_1stSortVarIndex;
-
-//      printf("%d -> %d: ", i, g_pSorted[i]);
-
-//      ForLoopD (j, g_NbSortVar)
-//        printf(" %g", pRow[j]);
-
-//      printf("\n");
-    }
-  }
 }
 
 
@@ -172,7 +156,6 @@ int Strata(SAttribute *pAttribute)
   }
 
   int NbStrata = pAttribute[g_pSorted[g_NbRow_Pram-1]].Strata + 1;
-//  printf("%d Strata found\n", NbStrata);
   return NbStrata;
 }
 
@@ -224,7 +207,6 @@ int Frequency(int PramVarIndex, int NbPramVar, SAttribute *pAttribute,
 
   pPram[NbPram-1].Frequency = Frequency;
 
-//  printf("%d PramValue found\n", NbPram);
   return NbPram;
 }
 
@@ -319,21 +301,6 @@ TDist *ComputeWeightMatrix(SPram *pPram, int NbPram)
 
   }
 
-  if (g_Debug_Pram)
-  {
-//    printf("Weight Matrix:\n");
-
-    ForLoopD (i, NbPram)
-    {
-//      printf("%d: ", i);
-
-//      ForLoopD (j, NbPram)
-//        printf(" %g", pWeightMat[i * NbPram + j]);
-
-//      printf("\n");
-    }
-  }
-
   return pWeightMat;
 }
 
@@ -364,7 +331,6 @@ TDist *Invariant(TDist *pWeightMat, SPram *pPram, int NbPram)
     ForLoop (j, NbPram)
     {
       char Name[32];
-      snprintf(Name, sizeof(Name), "Col%06d_%06d", i, j);
       int ColIndex = i * NbPram + j + 1;
 
       glp_set_col_name(pProblem, ColIndex, Name);
@@ -379,7 +345,6 @@ TDist *Invariant(TDist *pWeightMat, SPram *pPram, int NbPram)
   ForLoop (i, NbPram)
   {
     char Name[32];
-//    snprintf(Name, sizeof(Name), "RowTotal%06d", i);
     glp_set_row_name(pProblem, i+1, Name);
     glp_set_row_bnds(pProblem, i+1, GLP_FX, 1.0, 1.0);
   }
@@ -390,7 +355,6 @@ TDist *Invariant(TDist *pWeightMat, SPram *pPram, int NbPram)
   ForLoop (i, NbPram)
   {
     char Name[32];
-//    snprintf(Name, sizeof(Name), "PramFreq%06d", i);
 
     int RowIndex = i + NbPram + 1;
     glp_set_row_name(pProblem, RowIndex, Name);
@@ -400,7 +364,6 @@ TDist *Invariant(TDist *pWeightMat, SPram *pPram, int NbPram)
 
     //=== Setting up coefficients in constraints #2
 //  if (g_Debug_Pram)
-//    printf("Invariant: Coefficients in Constraints #2:\n");
 
   ForLoop (i, NbPram)
   {
@@ -412,17 +375,10 @@ TDist *Invariant(TDist *pWeightMat, SPram *pPram, int NbPram)
       ja[ConstraintIndex] = i * NbPram + j + 1;
       ar[ConstraintIndex] = 1.0;
 
-//      if (g_Debug_Pram)
-//      {
-//        printf("ConstraintIndex %d: ia = %d, ja = %d, ar = %g\n",
-//              ConstraintIndex, ia[ConstraintIndex], ja[ConstraintIndex], ar[ConstraintIndex]);
-//      }
     }
   }
 
     //=== setting up coefficients in constraints #3
-//  if (g_Debug_Pram)
-//    printf("Invariant: Coefficients in constraints #3:\n");
 
   ForLoop (i, NbPram)
   {
@@ -433,23 +389,16 @@ TDist *Invariant(TDist *pWeightMat, SPram *pPram, int NbPram)
       ia[ConstraintIndex] = i + NbPram + 1;
       ja[ConstraintIndex] = j * NbPram + i + 1;
       ar[ConstraintIndex] = pPram[j].Frequency;
-//      if (g_Debug_Pram)
-//      {
-//        printf("ConstraintIndex %d: ia = %d, ja = %d, ar = %g\n",
-//                ConstraintIndex, ia[ConstraintIndex], ja[ConstraintIndex], ar[ConstraintIndex]);
-//      }
     }
   }
 
   glp_load_matrix(pProblem, NbConstraint, ia-1, ja-1, ar-1);    // -1 coz glp doesn't use the index 0..! 8-/
 
-//  printf("=== Calling glp_simplex()\n");
   glp_simplex(pProblem, NULL);
 
     //=== obtain the final result
 //  double z = glp_get_obj_val(pProblem);
 
-//  printf("===\nFinal Value of the Objective = %g\n", z);
 
   ForLoop (i, NbPram)
   {
@@ -461,21 +410,6 @@ TDist *Invariant(TDist *pWeightMat, SPram *pPram, int NbPram)
     }
   }
 
-  if (g_Debug_Pram)
-  {
-//    printf("Pram Matrix:\n");
-
-    ForLoopD (i, NbPram)
-    {
-//      printf("%d: ", i);
-
-//      ForLoopD (j, NbPram)
-//        printf(" %g", pWeightMat[i * NbPram + j]);
-//        printf(" %g", pPramMat[i * NbPram + j]);
-
-//      printf("\n");
-    }
-  }
 
   glp_delete_prob(pProblem);
 
@@ -494,7 +428,6 @@ TDist *Invariant(TDist *pWeightMat, SPram *pPram, int NbPram)
 //      int NbPram, int *pSubsetRow, int NbSubsetRow)
 //{
 //  int i, j;
-//  printf("1\n");
 //  Rcpp::NumericMatrix Mat(Mat_Pram_R.rows(), Mat_Pram_R.cols());
 //  ForLoop (i, Mat_Pram_R.rows()){
 //    ForLoop (j,Mat_Pram_R.cols()){
@@ -522,7 +455,6 @@ TDist *Invariant(TDist *pWeightMat, SPram *pPram, int NbPram)
 //    }
 //
 ////    if (g_Debug_Pram)
-////      printf("Pram: for %d, MaxPramRow = %d\n", i, MaxPramRow);
 //
 //    //TData *pPramRow = g_pLocalDataSet->m_pSet
 //    //            + g_pLocalDataSet->m_NbVar * pPram[MaxPramRow].Row
@@ -607,8 +539,6 @@ void FrequencyCheck(int IndexVarV, int IndexVarW, int NbVar)
       NbInvented += pPramW[i].Frequency;
   }
 
-//  printf("Number of rows disappeared in Pram : %d\n", NbDisappeared);
-//  printf("Number of rows invented in Pram : %d\n", NbInvented);
 
     //=== Clean
   CleanDeleteT(pAttributeV);
@@ -655,7 +585,6 @@ SEXP g_pPramVarWeight_R, SEXP seed_R)
 
   if (!g_NbRow_Pram || !g_NbVar_Pram)
   {
-//    printf("Error: empty data set\n");
     Uninit();
     return Rcpp::wrap(-1);
   }
@@ -684,24 +613,19 @@ SEXP g_pPramVarWeight_R, SEXP seed_R)
       g_NbPramVar = ((g_NbVar_Pram - g_NbStrataVar)/2) ;
 
       ForLoopD (j, g_NbPramVar){
-          //printf("g_NbPramVar %d Assigned weights %d\n",g_NbPramVar,j);
           g_pPramVarWeight[j] = g_pPramVarWeight_RR(j);
       }
 
 
     }
-//    else
-//      printf("Warning: Weights provided, but NbStrataVar is not specified\n");
   }
 
   g_pSorted = new int[g_NbRow_Pram];
   if (g_NbStrataVar <= 0) //============================ Check Frequency
   {
-//    printf("NbStrataVar not specified => Checking Frequency\n");
 
     if (g_NbVar_Pram & 1)
     {
-//      printf("Error: odd number of Vars, it should be even : %d\n", g_NbVar_Pram);
       Uninit();
       return Rcpp::wrap(-1);
     }
@@ -714,7 +638,6 @@ SEXP g_pPramVarWeight_R, SEXP seed_R)
     g_NbPramVar = g_NbVar_Pram - g_NbStrataVar;
     if (g_NbPramVar & 1)
     {
-//      printf("Error: odd number of Pram Vars, it should be even : %d (In + Out)\n", g_NbPramVar);
       Uninit();
       return Rcpp::wrap(-1);
     }
@@ -767,7 +690,6 @@ SEXP g_pPramVarWeight_R, SEXP seed_R)
             pSubsetRow[NbSubsetRow++] = j;
         }
 
-    //    printf("===> Strata %d has %d rows\n", i + 1, NbSubsetRow);
 
         int NbPram = Frequency(g_PramVarIndex, g_NbPramVar, pAttribute, pPram, pSubsetRow, NbSubsetRow);
         TDist *pWeightMat = ComputeWeightMatrix(pPram, NbPram);
@@ -807,7 +729,6 @@ SEXP g_pPramVarWeight_R, SEXP seed_R)
             }
 
         //    if (g_Debug_Pram)
-        //      printf("Pram: for %d, MaxPramRow = %d\n", i, MaxPramRow);
 
             //TData *pPramRow = g_pLocalDataSet->m_pSet
             //            + g_pLocalDataSet->m_NbVar * pPram[MaxPramRow].Row
@@ -834,11 +755,6 @@ SEXP g_pPramVarWeight_R, SEXP seed_R)
                         // + g_OutVarIndex;
             TData *pResultRow = m_pSet + g_NbVar_Pram * pPramResult[j].Row + g_OutVarIndex;
 
-    //        printf("Row %d - Values:", pPramResult[j].Row);
-
-    //        ForLoop (l, g_NbPramVar)
-    //          printf(" %g", pResultRow[l]);
-    //        printf("; ");
 
             ForLoop (k, NbPram)
             {
@@ -855,8 +771,6 @@ SEXP g_pPramVarWeight_R, SEXP seed_R)
 
               if (l == g_NbPramVar)   // Identical Rows ?
               {
-    //                printf("Original frequency: %d; Prammed frequency : %d\n",
-    //                      pPram[k].Frequency, pPramResult[k].Frequency);
                 break;
               }
             }
@@ -875,8 +789,6 @@ SEXP g_pPramVarWeight_R, SEXP seed_R)
     //============================ Uninit
   Uninit();
 
-//  int TotalTime = TimeGetMilliSecond() - StartTime;
-//  printf("Total Process Time: %.2f seconds\n", TotalTime / 1000.0f);
 
   return Rcpp::List::create(
     Rcpp::Named( "Mat" ) = Mat_Pram_R

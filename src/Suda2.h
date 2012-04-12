@@ -346,28 +346,8 @@ CItem *CItem :: New(int VarNum, TValue VarValue, int NbEntry, int NbEntryOut)
 //*                              SudaPrint
 //* ======================================================================== *
 
-#ifdef __SUDA2_LOG
-  int CSudaMsu::m_Total = 0;
-#endif
 
 int g_MaxK;
-
-int SudaPrint(int MaxK, char *Str, ...)
-{
-  //char TxtBuffer[4096];
-  //va_list ArgPtr;
-
-//  va_start(ArgPtr, Str);
-  //vsprintf(TxtBuffer, Str, ArgPtr);
-//  va_end(ArgPtr);
-
-  //int i;
-//  ForLoop (i, g_MaxK - MaxK)
-//    OS_Printf("  ");
-
-  return 0;//OS_Printf(TxtBuffer);
-}
-
 
 void CSudaMsu :: Print(CList<CItem> &ItemList, CItem *pItem)
 {
@@ -405,13 +385,6 @@ void AddCorrelatedMsu(CSudaMsu &Msu, CList<CSudaMsu> &MsuList,
         CSudaMsu *pCloneMsu = CSudaMsu::New(Msu);
         pCloneMsu->m_Var[k].FromItem = pCorrelated->m_ItemNumB;
 
-      #ifdef __SUDA2_LOG
-        SudaPrint(MaxK, "=> +Correlated Msu %02d (%3d): Item %d -> Item %d\n",
-                          MsuList.m_NbElement, pCloneMsu->m_Id,
-                          pCorrelated->m_ItemNumA + 1, pCorrelated->m_ItemNumB + 1);
-        //pCloneMsu->Print();
-      #endif
-
         MsuList.Add(pCloneMsu);
         AddCorrelatedMsu(*pCloneMsu, MsuList, CorrelationList, MaxK, k + 1);
       }
@@ -447,12 +420,6 @@ inline CCorrelation *CorrelateItem(CList<CItem> &ItemList, CList<CCorrelation> &
       CCorrelation *pCorrelation = CCorrelation::New(pItem->m_FromItem, FromItem, NbTotalEntry);
       CorrelationList.Add(pCorrelation);
 
-      #ifdef __SUDA2_LOG
-        SudaPrint(MaxK, "Correlated => %c%d + %c%d (%d <-> %d)\n",
-                'A' + ItemJ.m_VarNum, ItemJ.m_VarValue,
-                'A' + pItem->m_VarNum, pItem->m_VarValue,
-                j + 1, pItem->m_FromItem + 1);
-      #endif
 
       return pCorrelation;
     }
@@ -475,15 +442,6 @@ void FindMsu(CList<CSudaMsu> &MsuList, CList<CCorrelation> &CorrelationList, CLi
 
   ++g_NbCall;
 
-#ifdef __SUDA2_LOG
-  if (pFromItem)
-  {
-    SudaPrint(MaxK, "==> FindMsu %d <== by %c%d\n",
-              MaxK, 'A' + pFromItem->m_VarNum, pFromItem->m_VarValue);
-  }
-  else
-    SudaPrint(MaxK, "===> FindMsu %d <===\n", MaxK);
-#endif
 
     //=== Create ItemList Rank => Bubble sort by NbEntry, VarNum ( & VarValue)
   ForLoop (i, ItemList.m_NbElement - 1)
@@ -508,26 +466,6 @@ void FindMsu(CList<CSudaMsu> &MsuList, CList<CCorrelation> &CorrelationList, CLi
       break;
   }
 
-#ifdef __SUDA2_LOG
-  ForLoop (i, ItemList.m_NbElement)
-  {
-    CItem &Item = ItemList[i];
-    SudaPrint(MaxK, "Item %2d: %c%d - %d rows", i + 1, 'A' + Item.m_VarNum,
-                          Item.m_VarValue, Item.m_NbEntry);
-
-    if (Item.m_NbEntry <= 10)
-    {
-      //OS_Printf(" {");
-
-//      ForLoop (j, Item.m_NbEntry)
-//        OS_Printf("%s%d", j ? ", " : "", Item.m_pEntry[j] + 1);
-//
-//      OS_Printf("}");
-    }
-
-//    OS_Printf("\n");
-  }
-#endif
 
 //  int Progression = 0;
 
@@ -592,10 +530,6 @@ void FindMsu(CList<CSudaMsu> &MsuList, CList<CCorrelation> &CorrelationList, CLi
             pNewMsu->m_Var[0].FromItem = ItemI.m_FromItem;
             pNewMsu->m_Var[1].FromItem = ItemJ.m_FromItem;
 
-          #ifdef __SUDA2_LOG
-            SudaPrint(MaxK, "=> +Msu %02d (%3d <- %3d): ...\n", MsuList.m_NbElement, pNewMsu->m_Id, -1);
-            //Msu.Print(ItemList, &ItemI);
-          #endif
 
             MsuList.Add(pNewMsu);
 
@@ -636,10 +570,6 @@ void FindMsu(CList<CSudaMsu> &MsuList, CList<CCorrelation> &CorrelationList, CLi
             g_NbMsuN[1] += m;
             Entry.m_pNbMsu[1] += m;
 
-          #ifdef __SUDA2_LOG
-            SudaPrint(MaxK, "=> +%d Final MSUs => %3d : ...\n", 1 << m, g_NbMsu);
-            //Msu.Print(ItemList, &ItemI);
-          #endif
           }
         }
         else if (MaxK >= 3) // If MaxK == 2, then MaxK - 1 == 1, so no need to process
@@ -842,11 +772,6 @@ void FindMsu(CList<CSudaMsu> &MsuList, CList<CCorrelation> &CorrelationList, CLi
             ForLoop (k, Msu.m_NbVar)
               pNewMsu->m_Var[k+1].FromItem = ItemList[Msu.m_Var[k].FromItem].m_FromItem;
 
-          #ifdef __SUDA2_LOG
-            SudaPrint(MaxK, "=> +Msu %02d (%3d <- %3d): ", MsuList.m_NbElement, pNewMsu->m_Id, Msu.m_Id);
-            //pNewMsu->Print(ItemList);
-            Msu.Print(ItemList, &ItemI);
-          #endif
 
             MsuList.Add(pNewMsu);
 
@@ -905,19 +830,8 @@ void FindMsu(CList<CSudaMsu> &MsuList, CList<CCorrelation> &CorrelationList, CLi
             g_NbMsu += m;
             g_NbMsuN[Msu.m_NbVar] += m;
             Entry.m_pNbMsu[Msu.m_NbVar] += m;
-          #ifdef __SUDA2_LOG
-            SudaPrint(MaxK, "=> +%d Final MSUs => %3d : ", 1 << m, g_NbMsu);
-            Msu.Print(ItemList, &ItemI);
-          #endif
           }
         }
-      #ifdef __SUDA2_LOG
-        else
-        {
-          SudaPrint(MaxK, "=> -Msu %02d (%3d): ", j, Msu.m_Id);
-          Msu.Print(ItemList);
-        }
-      #endif
 
         CSudaMsu *pMsuNext = (CSudaMsu *) pMsu->m_pNext;
         delete pMsu;
@@ -925,13 +839,6 @@ void FindMsu(CList<CSudaMsu> &MsuList, CList<CCorrelation> &CorrelationList, CLi
       }
     }
 
-  #ifndef __SUDA2_LOG
-    if (MaxK == g_MaxK)
-    {
-//      if (ShowProgression("Suda2 (NbMsu found)", i, ItemList.m_NbElement - 1, Progression, 1))
-//        OS_Printf(" (%d)", g_NbMsu);
-    }
-  #endif
   }
 }
 
@@ -1073,14 +980,6 @@ CList<CItem> *Suda2(CEntry *pAllEntry, int NbEntry)
   g_pEntryCache = new int[g_BiggestSize];
   g_pEntryCacheOut = new int[g_BiggestSize];
 
-#ifdef __SUDA2_LOG
-  ForLoop (i, pItemList->m_NbElement)
-  {
-    CItem &Item = (*pItemList)[i];
-    SudaPrint(g_MaxK - 2, "Item %2d: %c%d - %d rows\n", i + 1, 'A' + Item.m_VarNum,
-                          Item.m_VarValue, Item.m_NbEntry);
-  }
-#endif
 
   FindMsu(MsuList, CorrelationList, *pItemList, NbEntry, g_MaxK);
 
@@ -1260,55 +1159,10 @@ RcppExport SEXP Suda2(SEXP data, SEXP g_MissingValueALEX_R, SEXP MaxK_R, SEXP Di
     ++g_NbPerHash[Entry.m_Hash];
   }
 
-//  if (g_Debug)
-//    OS_Printf("==> Max Value = %d\n", g_ValueMax);
-
-    //============================ Basic Find Uniques & Pairs
-  /*int NbUnique = 0, NbInPair = 0;
-
-  Progression = 0;
-
-  ForLoop (i, g_NbEntry)
-  {
-    ShowProgression("Basic Find Unique", i, g_NbEntry, Progression);
-    CEntry &Entry = g_pEntry[i];
-
-    int NbDuplicate = 0;
-
-    ForLoop (j, g_NbEntry)
-    {
-      if (j == i)
-        continue;
-
-      CEntry &Other = g_pEntry[j];
-
-      ForLoop (l, g_NbVarALEX)
-      {
-        if (Entry.m_pValue[l] != Other.m_pValue[l])
-          break;    // different
-      }
-
-      if (l == g_NbVarALEX)   // Not unique ?
-      {
-        if (++NbDuplicate > 2)
-          break;
-      }
-    }
-
-    if (!NbDuplicate)
-      ++NbUnique;
-    else if (NbDuplicate == 1)
-      ++NbInPair;
-  }
-
-  OS_Printf("Basic => NbUnique = %d; NbPair = %d\n", NbUnique, NbInPair);*/
 
     //============================ Find uniques & remove entries duplicated more than twice
   int NbUniqueTotal = 0, NbUniqueInHash = 0, NbEmptyHash = 0,
     NbTotalDuplicate = 0;
-//  int HashStartTime = TimeGetMilliSecond();
-
-//  Progression = 0;
 
   ForLoop (i, es_HashListSize)
   {
@@ -1333,11 +1187,8 @@ RcppExport SEXP Suda2(SEXP data, SEXP g_MissingValueALEX_R, SEXP MaxK_R, SEXP Di
       continue;
     }
 
-//    if (g_Debug)
-//      ShowProgression("Find Unique", NbNotEmpty, es_HashListSize - NbEmptyHash, Progression);
     ++NbNotEmpty;
 
-    //OS_Printf("Hash %d = %d\n", i, g_NbPerHash[i]);
 
     CEntry *pEntry1 = (CEntry *) List.m_pNext;
 
@@ -1405,9 +1256,6 @@ RcppExport SEXP Suda2(SEXP data, SEXP g_MissingValueALEX_R, SEXP MaxK_R, SEXP Di
           ASSERT(pEntry2 == NULL);
           ++NbUniqueTotal;
 
-          /*ForLoop (k, g_NbVarALEX)
-            OS_Printf("%d ", pEntry1->m_pValue[k]);
-          OS_Printf("\n");*/
         }
       }
       else if (pEntry1->m_Ignore == -1) // First Duplicate, we have to keep it,
@@ -1421,33 +1269,7 @@ RcppExport SEXP Suda2(SEXP data, SEXP g_MissingValueALEX_R, SEXP MaxK_R, SEXP Di
 
   ASSERT(NbProcessedEntry == g_NbEntry);
 
-//  int TotalHashTime = TimeGetMilliSecond() - HashStartTime;
-
-//  if (g_Debug)
-//    OS_Printf("NbUniqueTotal: %d; NbUniqueInHash: %d; NbEmptyHash: %d (used = %d); NbDuplicate = %d; NbDuplicateRemoved = %d\n",
-//            NbUniqueTotal, NbUniqueInHash, NbEmptyHash, es_HashListSize - NbEmptyHash, NbTotalDuplicate, NbDuplicateRemoved);
-
-    //============================ Suda2 process
-//  int MsuStartTime = TimeGetMilliSecond();
   CList<CItem> *pItemList = Suda2(g_pEntry, g_NbEntry);
-//  int EndMsuTime = TimeGetMilliSecond();
-
-    //============================ MSUs output
- // int TotalMsuTime = EndMsuTime - MsuStartTime;
-
-  //int TotalTime = TimeGetMilliSecond() - StartTime;
-
-//  OS_Printf("Total Process: %.3f sec; Find Unique Entries: %.3f sec; Find MSUs: %.3f sec\n",
-//                TotalTime / 1000.0f, TotalHashTime / 1000.0f, TotalMsuTime / 1000.0f);
-//  OS_Printf("=== NbMsu : %d\n", g_NbMsu);
-
-//  ForLoop (i, g_NbVarALEX)
-//  {
-//    OS_Printf("%6d Msu%02d; ", g_NbMsuN[i], i+1);
-//
-//    if (!((i+1) % 5) || i == g_NbVarALEX - 1)
-//      OS_Printf("\n");
-//  }
 
     //============================ Nb Msu Per Variable output
   ForLoop (i, g_NbVarALEX)
@@ -1462,22 +1284,12 @@ RcppExport SEXP Suda2(SEXP data, SEXP g_MissingValueALEX_R, SEXP MaxK_R, SEXP Di
     }
   }
 
-//  OS_Printf("=== NbMsu Per Variable :\n");
 
-//  ForLoop (i, g_NbVarALEX)
-//  {
-//    OS_Printf("Var%02d: %6d; ", g_pNbCorrelated[i]+1, g_pNbMsuPerVariable[g_pNbCorrelated[i]]);
-//
-//    if (!((i+1) % 5) || i == g_NbVarALEX - 1)
-//      OS_Printf("\n");
-//  }
 
     //============================ Dis risk
   float Dis = NbUniqueTotal * DisFraction
         / (NbUniqueTotal * DisFraction + NbDuplicatePair * (1.0f - DisFraction));
 
-//  OS_Printf("=== DIS-risk = %g (Dis Fraction = %g; Number of Uniques = %d; Number of Pairs = %d)\n",
-//                                      Dis, DisFraction, NbUniqueTotal, NbDuplicatePair);
 
     //============================ Suda Score
   if (1)//(DoSudaScore || DoDisSudaScore || CEntry::m_pContributionStack)
@@ -1551,7 +1363,6 @@ RcppExport SEXP Suda2(SEXP data, SEXP g_MissingValueALEX_R, SEXP MaxK_R, SEXP Di
       int *pOrder = new int[j];
 
         //=== Global Var Contribution
-//      OS_Printf("=== Global Variable Contribution :\n");
 
       ClearMemT(pContribution, g_NbVarALEX);
 
@@ -1573,9 +1384,6 @@ RcppExport SEXP Suda2(SEXP data, SEXP g_MissingValueALEX_R, SEXP MaxK_R, SEXP Di
         pContribution[j] = TotalVarContribution;
         pOrder[j] = j;
 
-//        OS_Printf("Var%02d: %.3f; ", j+1, TotalVarContribution);
-//        if (!((j+1) % 5) || j == g_NbVarALEX - 1)
-//          OS_Printf("\n");
       }
 
       ForLoop (i, g_NbVarALEX - 1)  // Bubble sort by Contribution
@@ -1587,31 +1395,6 @@ RcppExport SEXP Suda2(SEXP data, SEXP g_MissingValueALEX_R, SEXP MaxK_R, SEXP Di
         }
       }
 
-//      ForLoop (j, g_NbVarALEX)
-//      {
-//        OS_Printf("Var%02d: %2.3f; ", pOrder[j]+1, pContribution[pOrder[j]]);
-//        if (!((j+1) % 5) || j == g_NbVarALEX - 1)
-//          OS_Printf("\n");
-//      }
-
-        //=== Item Contribution
-//      OS_Printf("=== Global Item Contribution (VarNum-Value) :\n");
-
-      /*ForLoop (i, pItemList->m_NbElement - 1) // Bubble sort by VarNum & VarValue
-      {
-        for (j = i+1; j < pItemList->m_NbElement; ++j)
-        {
-          CItem &ItemI = (*pItemList)[i];
-          CItem &ItemJ = (*pItemList)[j];
-
-          if (ItemI.m_VarNum > ItemJ.m_VarNum
-            || (ItemI.m_VarNum == ItemJ.m_VarNum
-              && ItemI.m_VarValue > ItemJ.m_VarValue))
-          {
-            pItemList->Swap(i, j);
-          }
-        }
-      }  */
 
       ClearMemT(pContribution, pItemList->m_NbElement);
 
@@ -1630,9 +1413,6 @@ RcppExport SEXP Suda2(SEXP data, SEXP g_MissingValueALEX_R, SEXP MaxK_R, SEXP Di
         pContribution[i] = TotalItemContribution;
         pOrder[i] = i;
 
-//        OS_Printf("Item%02d-%-4d: %.3f; ", Item.m_VarNum+1, Item.m_VarValue, TotalItemContribution);
-//        if (!((i+1) % 5) || i == pItemList->m_NbElement - 1)
-//          OS_Printf("\n");
       }
 
       ForLoop (i, pItemList->m_NbElement - 1) // Bubble sort by Contribution
@@ -1643,15 +1423,6 @@ RcppExport SEXP Suda2(SEXP data, SEXP g_MissingValueALEX_R, SEXP MaxK_R, SEXP Di
             Swap(pOrder[i], pOrder[j]);
         }
       }
-//
-//      ForLoop (i, pItemList->m_NbElement)
-//      {
-//        CItem &Item = (*pItemList)[pOrder[i]];
-//
-//        OS_Printf("Item%02d-%-4d: %.3f; ", Item.m_VarNum+1, Item.m_VarValue, pContribution[pOrder[i]]);
-//        if (!((i+1) % 5) || i == pItemList->m_NbElement - 1)
-//          OS_Printf("\n");
-//      }
 
       CleanDeleteT(pContribution);
       CleanDeleteT(pOrder);

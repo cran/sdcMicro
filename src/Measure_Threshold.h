@@ -58,19 +58,11 @@ RcppExport SEXP measure_threshold(SEXP data, SEXP global_risk_R)
 
 		// read global risk argument
 		double global_risk = Rcpp::as<double>(global_risk_R);
-		//if (argv[0][0] == '.')
-		//	sprintf(buf_treshold, "0%s", argv[0]); // adds a 0 in front of '.01234' for atof() function
-		//else
-		//	sprintf(buf_treshold, "%s", argv[0]);
 
 		//double global_risk = atof(argv[0]);					//< the global risk
-		
-//		sprintf(buf_treshold, "global_risk=%0.6f\n", global_risk);
-//		printf(buf_treshold);
 
 		if (global_risk <= 0.0 || global_risk >= 1.0)
 		{
-//			printf("Invalid argument: Global risk argument must be between 0 and 1\n");
 			// rc = -1;
 			return NULL;
 		}
@@ -97,8 +89,6 @@ RcppExport SEXP measure_threshold(SEXP data, SEXP global_risk_R)
 			// compute ER (expected number of re-identification)
 			ER = global_risk * n_obs;
 
-			//sprintf(buf_treshold,"ER=%0.6f\n",ER);
-			//OS_Printf(buf_treshold);
  			// init current risk as value of first observation
 
 //			for (j = SF_GetRowStart(); j <= SF_GetRowEnd(); j++)
@@ -174,8 +164,6 @@ RcppExport SEXP measure_threshold(SEXP data, SEXP global_risk_R)
 		}
 		// // end
 		// time(&end);
-		// sprintf(buf_treshold, "Processed in %.0f second(s)\n", difftime(end, start));
-		// OS_Printf(buf_treshold);
 		
 	//}
 

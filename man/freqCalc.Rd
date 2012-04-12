@@ -12,7 +12,7 @@ freqCalc(x, keyVars = 1:3, w = 4, fast=TRUE)
   \item{x}{ data frame or matrix }
   \item{keyVars}{ key variables }
   \item{w}{ column index of the weight variable. Should be set to NULL if one deal with a population. }
-  \item{fast}{beta version of a faster algorithm}
+  \item{fast}{beta version of faster algorithm should not change the results in any way}
 }
 \details{
 The function considers the case of missing values in the data. 
@@ -66,16 +66,9 @@ x[5,6]  <- NA
 x[6,2]  <- NA
 f2 <- freqCalc(x,  keyVars=c(2,4,5,6),w=8)
 f2$Fk
-\dontrun{
 # time comparison freqCalc old version  vs. new version
 data(testdata)
-t <- Sys.time()
-f3 <- freqCalc(testdata,keyVars=c(1:4,7),w=14,fast=FALSE)
-t1 <- Sys.time()
-f3f <- freqCalc(testdata,keyVars=c(1:4,7),w=14,fast=TRUE)
-t2 <- Sys.time()
-t1-t
-t2-t1
-}
+system.time( f3 <-  freqCalc(testdata,keyVars=c(1:4,7),w=14,fast=FALSE) )
+system.time( f3f <- freqCalc(testdata,keyVars=c(1:4,7),w=14,fast=TRUE) )
 }
 \keyword{ manip }

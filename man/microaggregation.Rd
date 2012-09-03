@@ -5,10 +5,11 @@
   Function to perform various methods of microaggregation.
 }
 \usage{
-microaggregation(x, method = "pca", aggr = 3, weights=NULL, nc = 8, clustermethod = "clara", opt = FALSE, measure = "mean", trim = 0, varsort = 1, transf = "log")%, blow = TRUE, blowxm = 0)
+microaggregation(x, variables=colnames(x),method = "pca", aggr = 3, weights=NULL, nc = 8, clustermethod = "clara", opt = FALSE, measure = "mean", trim = 0, varsort = 1, transf = "log", strata_variables=NULL)%, blow = TRUE, blowxm = 0)
 }
 \arguments{
   \item{x}{ data frame or matrix }
+  \item{variables}{variables to microaggregate}
   \item{method}{ pca, rmd, onedims, single, simple, clustpca, pppca, clustpppca, mdav, clustmcdpca, influence, mcdpca }
   \item{aggr}{ aggregation level (default=3)}
   \item{nc}{ number of cluster, if the chosen method performs cluster analysis }
@@ -19,6 +20,7 @@ microaggregation(x, method = "pca", aggr = 3, weights=NULL, nc = 8, clustermetho
   \item{trim}{ trimming percentage, if measure=trim }
   \item{varsort}{ variable for sorting, if method= single }
   \item{transf}{ transformation for data x }
+  \item{strata_variables}{by-variables for applying microaggregation only within strata defined by the variables}
   %\item{blow}{ if TRUE, the microaggregated data will have the same dimension as the original data set }
   %\item{blowxm}{ the microaggregated data with the same dimension as the original one. }
 }

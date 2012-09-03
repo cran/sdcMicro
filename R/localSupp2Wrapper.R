@@ -1,4 +1,7 @@
 localSupp2Wrapper <- function(x, keyVars, w, importance=rep(1, length(keyVars)), method="minimizeSupp", kAnon=2) {
+
+  .Deprecated("localSuppression")	
+	
   tmp <- x
   w1 <- which( apply(tmp, 2, is.factor) )
   w2 <- which( apply(tmp, 2, is.character) )

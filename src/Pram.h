@@ -331,8 +331,8 @@ TDist *Invariant(TDist *pWeightMat, SPram *pPram, int NbPram)
     ForLoop (j, NbPram)
     {
       char Name[32];
+      snprintf(Name, sizeof(Name), "Col%06d_%06d", i, j);
       int ColIndex = i * NbPram + j + 1;
-
       glp_set_col_name(pProblem, ColIndex, Name);
       glp_set_col_bnds(pProblem, ColIndex, GLP_LO, 0.0, 0.0);
       glp_set_obj_coef(pProblem, ColIndex, pWeightMat[i * NbPram +  j]);
@@ -345,6 +345,7 @@ TDist *Invariant(TDist *pWeightMat, SPram *pPram, int NbPram)
   ForLoop (i, NbPram)
   {
     char Name[32];
+    snprintf(Name, sizeof(Name), "RowTotal%06d", i);
     glp_set_row_name(pProblem, i+1, Name);
     glp_set_row_bnds(pProblem, i+1, GLP_FX, 1.0, 1.0);
   }
@@ -355,6 +356,7 @@ TDist *Invariant(TDist *pWeightMat, SPram *pPram, int NbPram)
   ForLoop (i, NbPram)
   {
     char Name[32];
+    snprintf(Name, sizeof(Name), "PramFreq%06d", i);
 
     int RowIndex = i + NbPram + 1;
     glp_set_row_name(pProblem, RowIndex, Name);

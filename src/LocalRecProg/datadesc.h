@@ -47,9 +47,6 @@ int LoadData(int n, double na, CData *p, SEXP mat);
 TDist dist(CData *x, CData *y);
 void PrintData(CData *d);
 
-#define Log 				OS_Printf
-#define LogPrintf			OS_Printf
-
 extern TValue_LocalRec g_MissingValue_LocalRec;
 
 enum EOutput

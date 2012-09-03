@@ -7,10 +7,11 @@ rankSwap <- function(data,variables=NULL,TopPercent=5,BottomPercent=5,K0=-1,R0=.
   }
   dataX <- data[,variables]
   dataX <- as.matrix(dataX)
-  for(i in 1:ncol(dataX)){
-    if(!is.numeric(dataX[,i]))
-      dataX[,i] <- as.numeric(dataX[,i])
+  
+  if ( !all(apply(dataX, 2, is.numeric)) ) {
+    dataX <- apply(dataX, 2, as.numeric)
   }
+  
   data2 <- dataX                 
   dataX[is.na(dataX)] <- missing
   data2[,] <- NA                                                                   

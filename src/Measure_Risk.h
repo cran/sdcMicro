@@ -138,7 +138,6 @@ void compute_group_ldiversity(int group_size, SVariable *pSensitive_Var, int NbV
 		{
 			float c = g_Config.Ldiversity_Recursivity_Constant;
 			float Sum = 0.0f;
-
 			for (j = 1; j < NbUsedCategory; ++j)
 				Sum += ppUsedCat[j]->group_freq;
 
@@ -156,38 +155,6 @@ void compute_group_ldiversity(int group_size, SVariable *pSensitive_Var, int NbV
 
 	}
 }
-
-/**
- * Updates data in stata for l-diversity related output variables
- */
-//void stata_update_ldiversity(long obs)
-//{
-//	int i;
-//	Rcpp::NumericMatrix *Mat_Risk(Mat.rows(), Mat.cols()*3+2);
-//
-//	for (i = 0; i < MAX_SENSITIVE_VAR; i++)
-//	{
-//		SVariable &Var = g_Config.Sensitive_Var[i];
-//
-//		if (Var.Require_Ldiversity)
-//		{
-//			Mat(obs, i) = Var.Group_Distinct_Ldiversity;
-//			Mat(obs, i+1) = Var.Group_Entropy_Ldiversity;
-//			Mat(obs, i+2) = Var.Group_Recursive_Ldiversity;
-//			// g_pDataset->SetValue(Var.Ldiversity_Distinct_Pos, obs, Var.Group_Distinct_Ldiversity);
-//			// g_pDataset->SetValue(Var.Ldiversity_Entropy_Pos, obs, Var.Group_Entropy_Ldiversity);
-//			// g_pDataset->SetValue(Var.Ldiversity_Recursive_Pos, obs, Var.Group_Recursive_Ldiversity);
-//		}
-//	}
-//
-//	if (g_Config.Nb_Sensitive_Var >= 2)
-//	{
-//		Mat(obs, Mat.cols()) = g_Config.Group_MultiEntropy_Ldiversity;
-//		Mat(obs, Mat.cols()+1) = g_Config.Group_MultiRecursive_Ldiversity;
-//		// g_pDataset->SetValue(g_Config.Ldiversity_MultiEntropy_Pos, obs, g_Config.Group_MultiEntropy_Ldiversity);
-//		// g_pDataset->SetValue(g_Config.Ldiversity_MultiRecursive_Pos, obs, g_Config.Group_MultiRecursive_Ldiversity);
-//	}
-//}
 
 /*===================*/
 /* Multi L-DIVERSITY */
@@ -372,41 +339,55 @@ double compute_risk(int freq, double weight)
 	double risk;
 	double pk = freq / weight;
 	double qk = 1 - pk;
-
-	// compute risk (see micro-Argus 4.1 manual, p21+)
-	switch (freq)
-	{
-	case 1:
-		risk = -log(pk);
-		risk *= (pk / qk);
-		break;
-	case 2:
-		risk = (pk * log(pk)) + qk;
-		risk *= (pk) / (qk * qk);
-		break;
-	case 3:
-		risk = qk * ((3 * qk) - 2);
-		risk -= 2 * pk * pk * log(pk);
-		risk *= (pk / (2 * pow(qk, 3)));
-		break;
-	default:
-		risk = 1;
-		tmp = freq + 1;
-		risk += qk / tmp;
-		tmp *= freq + 2;
-		risk += (2 * pow(qk, 2)) / tmp;
-		tmp *= freq + 3;
-		risk += (6 * pow(qk, 3)) / tmp;
-		tmp *= freq + 4;
-		risk += (24 * pow(qk, 4)) / tmp;
-		tmp *= freq + 5;
-		risk += (120 * pow(qk, 5)) / tmp;
-		tmp *= freq + 6;
-		risk += (720 * pow(qk, 6)) / tmp;
-		tmp *= freq + 7;
-		risk += (5040 * pow(qk, 7)) / tmp;
-		risk *= pk / freq;
-		break;
+	if(1){//freq>weight){
+		pk=pk-0.0001;
+		risk=0;
+	      if( freq > 2 ){
+	    	  risk = pk / (freq - (1-pk));
+	      }
+	      if( freq == 2 ){
+	    	  risk = (pk/(1-pk)) - pow(pk/(1-pk),2) * log(1/pk);
+	      }
+	      if( freq == 1 ){
+	    	  risk = (pk/(1-pk)) * log(1/pk);
+	      }
+	  //printf("R Fun:freq: %d, weight %f, pk=%f, risk=%f\n",freq,weight,pk,risk);
+	}else{
+		// compute risk (see micro-Argus 4.1 manual, p21+)
+		switch (freq)
+		{
+		case 1:
+			risk = -log(pk);
+			risk *= (pk / qk);
+			break;
+		case 2:
+			risk = (pk * log(pk)) + qk;
+			risk *= (pk) / (qk * qk);
+			break;
+		case 3:
+			risk = qk * ((3 * qk) - 2);
+			risk -= 2 * pk * pk * log(pk);
+			risk *= (pk / (2 * pow(qk, 3)));
+			break;
+		default:
+			risk = 1;
+			tmp = freq + 1;
+			risk += qk / tmp;
+			tmp *= freq + 2;
+			risk += (2 * pow(qk, 2)) / tmp;
+			tmp *= freq + 3;
+			risk += (6 * pow(qk, 3)) / tmp;
+			tmp *= freq + 4;
+			risk += (24 * pow(qk, 4)) / tmp;
+			tmp *= freq + 5;
+			risk += (120 * pow(qk, 5)) / tmp;
+			tmp *= freq + 6;
+			risk += (720 * pow(qk, 6)) / tmp;
+			tmp *= freq + 7;
+			risk += (5040 * pow(qk, 7)) / tmp;
+			risk *= pk / freq;
+			break;
+		}
 	}
 	return risk;
 
@@ -421,17 +402,11 @@ double compute_risk(int freq, double weight)
 RcppExport SEXP measure_risk(SEXP data, SEXP weighted_R, SEXP n_key_vars_R, SEXP l_recurs_c_R, SEXP ldiv_index_R, SEXP missing_value_R)
 {
 	int i;//, j, k;
-	//	time_t start;
-	//	time_t end;
-
-	//	time(&start);
-
 	/*========*/
 	/* CONFIG */
 	/*========*/
 
 	Rcpp::NumericMatrix Mat(data);
-	Rcpp::NumericMatrix Mat_Risk(Mat.rows(), Mat.cols()*3+2);
 	// Result matrix for group_count and group_risk;
 	Rcpp::NumericMatrix Res(Mat.rows(), 3);
 	int NbRow = Mat.rows();
@@ -443,7 +418,6 @@ RcppExport SEXP measure_risk(SEXP data, SEXP weighted_R, SEXP n_key_vars_R, SEXP
 	g_Config.Nb_QuasiId_Var = Rcpp::as<int>(n_key_vars_R);
 	g_Config.Nb_Sensitive_Var = 0;
 	g_Config.weight_var_pos = 0;
-	g_Config.risk_var_pos = 0;
 	g_Config.missing_value = Rcpp::as<double>(missing_value_R);
 
 	for (i = 0; i < MAX_SENSITIVE_VAR; i++)
@@ -456,30 +430,10 @@ RcppExport SEXP measure_risk(SEXP data, SEXP weighted_R, SEXP n_key_vars_R, SEXP
 
 	g_Config.Ldiversity_Recursivity_Constant = Rcpp::as<float>(l_recurs_c_R);
 
-	// FIXME: input of settings
-
-	// for (i = 0; i < argc; i++)
-	// {
-	// if (!strncmp(argv[i], "weighted", 8))
-	// g_Config.is_weighted = 1;
-
-	// if (!strncmp(argv[i], "n_key_vars(", 11))
-	// {
-	// argv[i][strlen(argv[i]) - 1] = '\0';	// get rid of closing parenthesis
-	// g_Config.Nb_QuasiId_Var = atoi(argv[i] + 11);
-	// }
-
-	// if (!strncmp(argv[i], "l_recurs_c(", 11))
-	// {
-	// g_Config.Ldiversity_Recursivity_Constant = (float) strtod(argv[i]+11, NULL);
-
 	if (!g_Config.Ldiversity_Recursivity_Constant)
 	{
 		g_Config.Ldiversity_Recursivity_Constant = 1.0f;
 	}
-	// }
-	// }
-
 	// look for l-diversity arguments ldiv?
 	Rcpp::NumericVector ldiv_index_RR(ldiv_index_R);
 	int length_ldiv_index=ldiv_index_RR.length();
@@ -489,33 +443,7 @@ RcppExport SEXP measure_risk(SEXP data, SEXP weighted_R, SEXP n_key_vars_R, SEXP
 			g_Config.Sensitive_Var[index_run].Require_Ldiversity = TRUE;
 		}
 	}
-	//	int ldiv_index = Rcpp::as<int>(ldiv_index_R);
-	//	int ldiv_lvl = Rcpp:: as<int>(ldiv_lvl_R);
-
-	// for (i = 0; i < argc; i++)
-	// {
-	// if (strncmp(argv[i], "ldiv", 4) == 0)
-	// {
-	// // 0 based index in C
-	// int ldiv_index = atoi(argv[i] + 4) - 1;
-
-	//			if (ldiv_index >= 0)
-	//			{
-	//				// g_Config.Sensitive_Var[ldiv_index].Require_Ldiversity = TRUE;
-	//				g_Config.Sensitive_Var[ldiv_index].Require_Ldiversity = ldiv_lvl;
-	//			}
-
-	// ldiv?_var
-	//			if (strncmp(argv[i] + 6, "lvl(", 4) == 0)
-	//				g_Config.Sensitive_Var[ldiv_index].Require_Ldiversity = atoi(argv[i] + 10);
-
-	// ldiv?_lvl
-	// ldiv?_ent (entropy)
-	// ldiv?_recur (recursivity)
-	// }
-	// }
-
-	//TODO: return an error if Nb_QuasiId_Var(n) is not specified and there are ldiv vars..?
+	Rcpp::NumericMatrix Mat_Risk(Mat.rows(), length_ldiv_index*3+2);
 
 	// count number of l-diversity variables
 	// and initialize ldiv variable position
@@ -528,12 +456,8 @@ RcppExport SEXP measure_risk(SEXP data, SEXP weighted_R, SEXP n_key_vars_R, SEXP
 	if (g_Config.is_weighted)
 	{
 		// weighted
-		//g_Config.Nb_QuasiId_Var = g_pDataset->GetNbVar() - 3;			
-		//g_Config.Nb_QuasiId_Var = NbCol - 3; // all variables except weight, group and risk
 		g_Config.Nb_QuasiId_Var = NbCol-1; // all variables except weight, group and risk
 		g_Config.weight_var_pos = g_Config.Nb_QuasiId_Var + 0;
-		g_Config.group_var_pos = g_Config.Nb_QuasiId_Var + 1;
-		g_Config.risk_var_pos = g_Config.Nb_QuasiId_Var + 2;
 
 		// if (g_pDataset->GetNbVar() < 4)
 		if (NbCol < 2)
@@ -545,37 +469,20 @@ RcppExport SEXP measure_risk(SEXP data, SEXP weighted_R, SEXP n_key_vars_R, SEXP
 	{
 		// unweighted
 		g_Config.weight_var_pos = 0;
-		g_Config.group_var_pos = g_Config.Nb_QuasiId_Var + g_Config.Nb_Sensitive_Var + 0;
-		g_Config.risk_var_pos = g_Config.Nb_QuasiId_Var + g_Config.Nb_Sensitive_Var + 1;
 
 		// init ldiv variable positions
-		int var_pos = g_Config.Nb_QuasiId_Var + 0;	// the first ldiv input variable follows the identifiers
-		int ldiv_pos = g_Config.risk_var_pos + 1;		// the first ldiv output variable follows the risk variable
-
+		int llll=0;
+		int var_pos;
 		for (i = 0; i < MAX_SENSITIVE_VAR; i++)
 		{
 			if (g_Config.Sensitive_Var[i].Require_Ldiversity)
 			{
-				g_Config.Sensitive_Var[i].position = var_pos++;
-				g_Config.Sensitive_Var[i].Ldiversity_Distinct_Pos = ldiv_pos++;
-				g_Config.Sensitive_Var[i].Ldiversity_Entropy_Pos = ldiv_pos++;
-				g_Config.Sensitive_Var[i].Ldiversity_Recursive_Pos = ldiv_pos++;
+				var_pos=ldiv_index_RR(llll)-1;
+				g_Config.Sensitive_Var[i].position = var_pos;
+				llll++;
 			}
 		}
-
-		if (g_Config.Nb_Sensitive_Var >= 2)
-		{
-			g_Config.Ldiversity_MultiEntropy_Pos = ldiv_pos++;
-			g_Config.Ldiversity_MultiRecursive_Pos = ldiv_pos++;
-		}
-
-		// if (ldiv_pos > g_pDataset->GetNbVar())
-		//		if (ldiv_pos-7> NbCol)
-		//		{
-		//			return Rcpp::wrap(-2);
-		//		}
 	}
-	//display_config();
 	/*=========*/
 	/* PROCESS */
 	/*=========*/
@@ -648,8 +555,6 @@ RcppExport SEXP measure_risk(SEXP data, SEXP weighted_R, SEXP n_key_vars_R, SEXP
 					Res(current_obs, 0) = group_count;
 					Res(current_obs, 1) = group_risk;
 					Res(current_obs, 2) = group_size;
-					// g_pDataset->SetValue(g_Config.group_var_pos, current_obs, group_count);
-					// g_pDataset->SetValue(g_Config.risk_var_pos, current_obs, group_risk);
 
 					// l-diversity --> do not compute
 					obs_count++;
@@ -721,7 +626,6 @@ RcppExport SEXP measure_risk(SEXP data, SEXP weighted_R, SEXP n_key_vars_R, SEXP
 								{
 									// read value for this variable and add to category count
 									obs_value = Mat(current_obs, g_Config.Sensitive_Var[i].position);
-									//g_pDataset->GetValue(g_Config.Sensitive_Var[i].position, current_obs, &obs_value);
 									add_var_cat_value(&g_Config.Sensitive_Var[i], obs_value);
 								}
 							}
@@ -757,23 +661,20 @@ RcppExport SEXP measure_risk(SEXP data, SEXP weighted_R, SEXP n_key_vars_R, SEXP
 					Res(current_obs, 0) = group_count;
 					Res(current_obs, 1) = group_risk;
 					Res(current_obs, 2) = group_size;
-					// g_pDataset->SetValue(g_Config.group_var_pos, current_obs, group_count);
-					// g_pDataset->SetValue(g_Config.risk_var_pos, current_obs, group_risk);
 
 					// if unweighted data and sensitive variables exist
 					if (!g_Config.is_weighted && g_Config.Nb_Sensitive_Var > 0)
 					{
 						int ii;
+						int ind_sens=0;
 						for (ii = 0; ii < MAX_SENSITIVE_VAR; ii++)
 						{
 							if (g_Config.Sensitive_Var[ii].Require_Ldiversity)
 							{
-								Mat_Risk(i, (ii*3)) = g_Config.Sensitive_Var[ii].Group_Distinct_Ldiversity;
-								Mat_Risk(i, (ii*3)+1) = g_Config.Sensitive_Var[ii].Group_Entropy_Ldiversity;
-								Mat_Risk(i, (ii*3)+2) = g_Config.Sensitive_Var[ii].Group_Recursive_Ldiversity;
-								// g_pDataset->SetValue(Var.Ldiversity_Distinct_Pos, obs, Var.Group_Distinct_Ldiversity);
-								// g_pDataset->SetValue(Var.Ldiversity_Entropy_Pos, obs, Var.Group_Entropy_Ldiversity);
-								// g_pDataset->SetValue(Var.Ldiversity_Recursive_Pos, obs, Var.Group_Recursive_Ldiversity);
+								Mat_Risk(i, (ind_sens*3)) = g_Config.Sensitive_Var[ii].Group_Distinct_Ldiversity;
+								Mat_Risk(i, (ind_sens*3)+1) = g_Config.Sensitive_Var[ii].Group_Entropy_Ldiversity;
+								Mat_Risk(i, (ind_sens*3)+2) = g_Config.Sensitive_Var[ii].Group_Recursive_Ldiversity;
+								ind_sens++;
 							}
 						}
 
@@ -781,10 +682,7 @@ RcppExport SEXP measure_risk(SEXP data, SEXP weighted_R, SEXP n_key_vars_R, SEXP
 						{
 							Mat_Risk(i, Mat_Risk.cols()-2) = g_Config.Group_MultiEntropy_Ldiversity;
 							Mat_Risk(i, Mat_Risk.cols()-1) = g_Config.Group_MultiRecursive_Ldiversity;
-							// g_pDataset->SetValue(g_Config.Ldiversity_MultiEntropy_Pos, obs, g_Config.Group_MultiEntropy_Ldiversity);
-							// g_pDataset->SetValue(g_Config.Ldiversity_MultiRecursive_Pos, obs, g_Config.Group_MultiRecursive_Ldiversity);
 						}
-						//						stata_update_ldiversity(i);
 					}
 
 					obs_count++;
@@ -827,7 +725,7 @@ RcppExport SEXP measure_risk(SEXP data, SEXP weighted_R, SEXP n_key_vars_R, SEXP
 								if (g_Config.Sensitive_Var[i].Require_Ldiversity)
 								{
 									// read value for this variable and add to category count
-									obs_value = Mat(current_obs, i);//g_Config.Sensitive_Var[i].position);
+									obs_value = Mat(current_obs, g_Config.Sensitive_Var[i].position);
 									//g_pDataset->GetValue(g_Config.Sensitive_Var[i].position, current_obs, &obs_value);
 									add_var_cat_value(&g_Config.Sensitive_Var[i], obs_value);
 								}
@@ -872,7 +770,6 @@ RcppExport SEXP measure_risk(SEXP data, SEXP weighted_R, SEXP n_key_vars_R, SEXP
 						}
 					}
 				}
-				// UPDATE STATA
 				for (i = current_obs - group_size; i < current_obs; i++)
 				{
 					// Write value back to stata file for all observations in the group					
@@ -880,19 +777,18 @@ RcppExport SEXP measure_risk(SEXP data, SEXP weighted_R, SEXP n_key_vars_R, SEXP
 					Res(i, 1) = group_risk;
 					Res(i, 2) = group_size;
 
-					// g_pDataset->SetValue(g_Config.group_var_pos, i, group_count);
-					// g_pDataset->SetValue(g_Config.risk_var_pos, i, group_risk);
 
 					// l-diversity
 					if (!g_Config.is_weighted && g_Config.Nb_Sensitive_Var > 0){
-
+                        int ind_sens2=0;
 						for (int ii = 0; ii < MAX_SENSITIVE_VAR; ii++)
 						{
 							if (g_Config.Sensitive_Var[ii].Require_Ldiversity)
 							{
-								Mat_Risk(i, (ii*3)) = g_Config.Sensitive_Var[ii].Group_Distinct_Ldiversity;
-								Mat_Risk(i, (ii*3)+1) = g_Config.Sensitive_Var[ii].Group_Entropy_Ldiversity;
-								Mat_Risk(i, (ii*3)+2) = g_Config.Sensitive_Var[ii].Group_Recursive_Ldiversity;
+								Mat_Risk(i, (ind_sens2*3)) = g_Config.Sensitive_Var[ii].Group_Distinct_Ldiversity;
+								Mat_Risk(i, (ind_sens2*3)+1) = g_Config.Sensitive_Var[ii].Group_Entropy_Ldiversity;
+								Mat_Risk(i, (ind_sens2*3)+2) = g_Config.Sensitive_Var[ii].Group_Recursive_Ldiversity;
+								ind_sens2++;
 							}
 						}
 					}

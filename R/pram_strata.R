@@ -12,12 +12,18 @@
 pram_strata <- function(data,variables=NULL,strata_variables=NULL,weights=NULL,seed=NULL,missing=-999){
   if(is.null(seed))
     seed <- floor(rnorm(1)*1000)
-  if(is.null(variables)&&is.null(strata_variables))
+  if(is.null(variables))
     stop("Please define valid strata variables and variables to pram!")
-  else if(is.null(variables)&&!is.null(strata_variables))
-    variables <- colnames(data)[!colnames(data)%in%strata_variables]
-  else if(is.null(strata_variables))
-    stop("Please define strata variables!"            )
+  if(is.null(strata_variables)){
+    data$strata_variables <- 1
+    strata_variables <- "strata_variables"
+  }
+  if(length(variables)==1){
+    variables <- c(variables,"pram_dummy_var1","pram_dummy_var2")
+    data$pram_dummy_var1 <- 1
+    data$pram_dummy_var2 <- 1
+  }
+  
   if(is.null(weights))
     weights <- rep(1,length(variables))
   pvariables <- paste(variables,"_pram",sep="")
@@ -31,6 +37,9 @@ pram_strata <- function(data,variables=NULL,strata_variables=NULL,weights=NULL,s
   dataX <- as.matrix(dataX)
   res <- .Call("Pram",dataX,missing,length(strata_variables),weights,seed)$Mat
   class(res) <- "pram_strata"
+  if("pram_dummy_var1"%in%colnames(res)){
+    res <- res[,-which(colnames(res)%in%c("pram_dummy_var1","pram_dummy_var2","pram_dummy_var1_pram","pram_dummy_var2_pram"))]
+  }
   invisible(res)
 }
 

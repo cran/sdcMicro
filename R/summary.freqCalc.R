@@ -1,6 +1,6 @@
 `summary.freqCalc` <-
 function(object, ...){
-  a1 <- c(apply(object$freqCalc, 2, function(x){ length(which(is.na(x))) }))
+  a1 <- c(apply(object$freqCalc[,object$keyVars], 2, function(x){ sum(is.na(x)) }))
   P <- dim(object$freqCalc)[1]
   cat("\n Suppressions: \n")
   for(i in 1:length(a1)){

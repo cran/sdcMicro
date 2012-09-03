@@ -1,4 +1,4 @@
-print.localSupp2 <- function(x, ...){
+print.localSuppression <- function(x, ...){
   cat("\n -----------------------\n")
   print(paste("Total Suppressions in the key variables ", x$totalSupps, sep=""))
   print(paste("Number of suppressions in the key variables "))

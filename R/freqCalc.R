@@ -1,5 +1,6 @@
 `freqCalc` <-
-    function(x, keyVars=1:3 , w=4, fast=TRUE){
+    function(x, keyVars, w=NULL, fast=TRUE){
+
   classInfo <- character()
   for(i in 1:ncol(x)){
     classInfo[i] <- class(x[,i])
@@ -46,7 +47,7 @@
   invisible(z)
 }
 
-ffc <- function(x, keyVars = 1:3, w = 4) {
+ffc <- function(x, keyVars, w = NULL) {
   treatmissing <- -999
   dataX <- x[,keyVars,drop=FALSE]
   weighted <- 0

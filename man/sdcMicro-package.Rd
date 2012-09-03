@@ -95,22 +95,22 @@ ind <- indivRisk(f)
 ## Local suppression with localSupp2 and localSupp2Wrapper is more effective:
 ## example from Capobianchi, Polettini and Lucarelli:
 data(francdat)
-l1 <- localSupp2(francdat, keyVars=c(2,4,5,6), w=8)
+l1 <- localSuppression(francdat, keyVars=c(2,4,5,6), importance=c(1,3,2,4), w=8)
 l1
 l1$x
-l2 <- localSupp2(francdat, keyVars=c(2,4,5,6), w=8, k=2)
-l3 <- localSupp2(francdat, keyVars=c(2,4,5,6), w=8, k=4)
+l2 <- localSuppression(francdat, keyVars=c(2,4,5,6), w=8, k=2)
+l3 <- localSuppression(francdat, keyVars=c(2,4,5,6), w=8, k=4)
 ## long computation time:
 ## l = localSupp2(free1, keyVar=1:3, w=30, k=2, importance=c(0.1,1,0.8))
 
 ## we want to avoid missings in column 5:
-l1 <- localSupp2Wrapper(francdat, keyVars=c(2,4,5,6), importance=c(1,1,0,1), w=8, kAnon=1)
-l1$x
+#l1 <- localSupp2Wrapper(francdat, keyVars=c(2,4,5,6), importance=c(1,1,0,1), w=8, kAnon=1)
+#l1$x
 ## we want to avoid missings in column 5 and allow missings in 1 only if
 ## is really necessary:
-l1 <- localSupp2Wrapper(francdat, keyVars=c(2,4,5,6), importance=c(0.1,1,0,1), w=8, kAnon=1)
-l1$x
-plot(l1)
+#l1 <- localSupp2Wrapper(francdat, keyVars=c(2,4,5,6), importance=c(0.1,1,0,1), w=8, kAnon=1)
+#l1$x
+#plot(l1)
 
 ## Data from mu-Argus:
 ## Global recoding:

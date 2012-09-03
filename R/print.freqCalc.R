@@ -2,8 +2,8 @@
 function(x, ...){
   P <- dim(x)[2]
   cat("\n --------------------------\n")
-  cat(paste(x$n1, "observation with fk=1 \n"))
-  cat(paste(x$n2, "observation with fk=2 \n"))
+  cat(paste(x$n1, "obs. violate 2-anonymity \n"))
+  cat(paste(x$n2, "obs. violate 3-anonymity \n"))
   cat(" --------------------------\n")  
 }
 

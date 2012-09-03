@@ -19,16 +19,15 @@ extern float g_Epsilon;
 
 //extern TDist g_MinGreater, g_MinZero;
 
-#define greaterp(x, y)	(x > y + es_Epsilon)
+//#define greaterp(x, y)	(x > y + es_Epsilon)
 
-/*inline bool greaterp(TDist x, TDist y)
+inline bool greaterp(TDist x, TDist y)
 {
 //	if (x)
 //		g_MinGreater = Min(g_MinGreater, Abs(x));
 
 //	if (y)
 //		g_MinGreater = Min(g_MinGreater, Abs(y));
-
 	if (y > 0.0)
 		return (x / y) > 1.0 + g_Epsilon;
 
@@ -36,13 +35,12 @@ extern float g_Epsilon;
 		return (x / y) < 1.0 - g_Epsilon;
 
 	return x > y + g_Epsilon;
-}*/
+}
 
 inline BOOL zerop(TDist x)
 {
 //	if (x)
 //		g_MinZero = Min(g_MinZero, x);
-
 	return Abs(x) <= g_Epsilon;
 }
 

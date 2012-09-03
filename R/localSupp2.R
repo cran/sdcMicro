@@ -5,6 +5,9 @@ localSupp2 <- function(x, keyVars, w, importance=rep(1, length(keyVars)), method
   ## method ... "minimizeSupp", "minimizeRisk"
   ## k ... k-anonymity
   ## importance ... weights for key variables
+  
+  .Deprecated("localSuppression")
+  
 
   y <- x
   

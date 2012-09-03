@@ -1,4 +1,4 @@
-plot.localSupp2 <- function(x, ...){
+plot.localSuppression <- function(x, ...){
   checkCN <- function(x) {
         if (max(sapply(x, nchar)) > 11) {
             warning("Too long variable names are cutted")

@@ -1,6 +1,6 @@
 .onLoad <- function(lib,pkg)
 {
-  library.dynam("sdcMicro",pkg,lib)
+  #library.dynam("sdcMicro",pkg,lib)
   #cat("\n------------------------------\n\n")
   #print(citation("sdcMicro"))
   #print(citEntry(entry="Article",

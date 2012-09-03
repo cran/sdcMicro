@@ -2,10 +2,11 @@ useDynLib(sdcMicro)
 
 import(robustbase)
 importFrom(car, scatterplotMatrix, box.cox.powers, box.cox)
-importFrom(robustbase, covMcd)
+#importFrom(robustbase, covMcd)
 importFrom(cluster, clara, pam, fanny)
 importFrom(stats, kmeans, princomp)
 importFrom(e1071, impute)
+importFrom(MASS, loglm)
 
 export(
     addNoise,
@@ -16,17 +17,15 @@ export(
     freqCalc,
     globalRecode,
     indivRisk,
+    localSuppression,
     localSupp,
-    localSupp2,
-    localSupp2Wrapper,
     microaggregation,
-    plot.indivRisk,
-    plot.localSupp2,
+    plot.localSuppression,
     plotMicro,
     pram,
     print.freqCalc,
     print.indivRisk,
-    print.localSupp2,
+    print.localSuppression,
     print.micro,
     print.pram,
     print.suda2,
@@ -40,23 +39,24 @@ export(
     suda2,
     pram_strata,
     measure_risk,
-    measure_hier,
-    measure_thres
-    
+    ldiversity,
+    LocalRecProg, 
+    # deprecated functions
+    localSupp2,
+    localSupp2Wrapper,
+    LLmodGlobalRisk
 )
 
 S3method(print, indivRisk)
 S3method(print, freqCalc)
-S3method(print, localSupp2)
+S3method(print, localSuppression)
 S3method(print, micro)
 S3method(print, pram)
 S3method(print, pram_strata)
 S3method(print, measure_risk)
-S3method(print, measure_hier)
-S3method(print, measure_thres)
+S3method(print, ldiversity)
 S3method(print, suda2)
 S3method(summary, freqCalc)
 S3method(summary, micro)
 S3method(summary, pram)
-S3method(plot, indivRisk)
-S3method(plot, localSupp2)
+S3method(plot, localSuppression)

@@ -40,25 +40,8 @@ Templ, M.
 \author{ Bernhard Meindl, Matthias Templ }
 \note{ fix me: Implementation in C and interface to R.
 }
-\seealso{  \code{\link{freqCalc}}, \code{\link{localSupp}} }
+\seealso{  \code{\link{freqCalc}}, \code{\link{localSuppression}} }
 \examples{
-## example from Capobianchi, Polettini and Lucarelli:
-## same results as localSupp2
-data(francdat)
-localSupp2Wrapper(francdat, keyVars=c(2,4,5,6), w=8)
-localSupp2Wrapper(francdat, keyVars=c(2,4,5,6), w=8, k=2)
-localSupp2Wrapper(francdat, keyVars=c(2,4,5,6), w=8, k=4)
-
-## we want to avoid missings in column 5:
-l1 <- localSupp2Wrapper(francdat, keyVars=c(2,4,5,6), importance=c(1,1,0,1), w=8, kAnon=1)
-l1$x
-## we want to avoid missings in column 5 and allow missings in 1 only if
-## is really necessary:
-l1 <- localSupp2Wrapper(francdat, keyVars=c(2,4,5,6), importance=c(0.1,1,0,1), w=8, kAnon=1)
-l1$x
-
-## long computation time, wait some seconds to get an information
-## about the estimated computing time.
-## l = localSupp2(free1, keyVars=1:3, w=30, k=2, importance=c(0.1,1,0.8))
+print("this function is deprecated, please use localSuppression() instead")
 }
 \keyword{ manip }

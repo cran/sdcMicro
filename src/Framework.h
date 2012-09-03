@@ -1314,7 +1314,7 @@ void CRandom :: SetSeed(uint a, uint b, uint c)
 
 
 // For measure_risk
-#define MAX_SENSITIVE_VAR 5       // Max number of l-diversity sensitive variables (don't go over 9....)
+#define MAX_SENSITIVE_VAR 99       // Max number of l-diversity sensitive variables (don't go over 9....)
 
 struct SCategory
 {
@@ -1367,7 +1367,7 @@ struct SConfig
   int group_var_pos;        //< position of group variable
   int risk_var_pos;         //< position of risk variable
   int Nb_Sensitive_Var;     //< Number of sensitive variables
-  SVariable Sensitive_Var[5]; //< config for up to 5 l-diversity variables (unweighted only)
+  SVariable Sensitive_Var[99]; //< config for up to 5 l-diversity variables (unweighted only)
   float Ldiversity_Recursivity_Constant;
 
   int Ldiversity_MultiEntropy_Pos;    //< Stata variable position

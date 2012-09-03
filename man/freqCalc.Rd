@@ -6,7 +6,7 @@
   which is also needed for risk estimation.
 }
 \usage{
-freqCalc(x, keyVars = 1:3, w = 4, fast=TRUE)
+freqCalc(x, keyVars, w = NULL, fast=TRUE)
 }
 \arguments{
   \item{x}{ data frame or matrix }

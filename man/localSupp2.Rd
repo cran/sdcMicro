@@ -56,18 +56,8 @@ Templ, M.
 \author{ Matthias Templ, Bernhard Meindl }
 \note{ fix me: Implementation in C and interface to R.
 }
-\seealso{  \code{\link{freqCalc}}, \code{\link{localSupp}} }
+\seealso{  \code{\link{freqCalc}}, \code{\link{localSuppression}} }
 \examples{
-## example from Capobianchi, Polettini and Lucarelli:
-data(francdat)
-l1 <- localSupp2(francdat, keyVars=c(2,4,5,6), w=8)
-l1
-l1$x
-l2 <- localSupp2(francdat, keyVars=c(2,4,5,6), w=8, k=2)
-l3 <- localSupp2(francdat, keyVars=c(2,4,5,6), w=8, k=4)
-
-## long computation time, wait some seconds to get an information
-## about the estimated computing time.
-## l = localSupp2(free1, keyVars=1:3, w=30, k=2, importance=c(0.1,1,0.8))
+print("this function is deprecated, please use localSuppression() instead")
 }
 \keyword{ manip }

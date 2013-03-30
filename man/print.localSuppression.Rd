@@ -12,14 +12,14 @@ Print method for objects from class localSuppression.
   \item{\dots}{ Additional arguments passed through. }
 }
 \value{
-information about the frequency counts for key variables for object of class \sQuote{localSuppression}.
+Information about the frequency counts for key variables for object of class \sQuote{localSuppression}.
 }
 \author{ Matthias Templ }
 \seealso{ \code{\link{localSuppression}} }
 \examples{
 ## example from Capobianchi, Polettini and Lucarelli:
 data(francdat)
-l1 <- localSuppression(francdat, keyVars=c(2,4,5,6), w=8)
+l1 <- localSuppression(francdat, keyVars=c(2,4,5,6))
 l1
 }
 \keyword{ print }

@@ -1,14 +1,36 @@
 \name{dRiskRMD}
+\docType{methods}
+\alias{dRiskRMD-methods}
+\alias{dRiskRMD,data.frame-method}
+\alias{dRiskRMD,matrix-method}
+\alias{dRiskRMD,sdcMicroObj-method}
 \alias{dRiskRMD}
 \title{ RMD based disclosure risk }
 \description{
   Distance-based disclosure risk estimation via robust Mahalanobis Distances.
 }
-\usage{
-dRiskRMD(x, xm, k = 0.01, k2=0.05)
+\section{Methods}{
+\describe{
+
+\item{\code{signature(obj = "data.frame")}}{
+%%  ~~describe this method here~~
 }
+
+\item{\code{signature(obj = "matrix")}}{
+%%  ~~describe this method here~~
+}
+
+\item{\code{signature(obj = "sdcMicroObj")}}{
+%%  ~~describe this method here~~
+}
+}}
+\usage{
+dRiskRMD(obj,...)#xm, k = 0.01, k2=0.05)
+}
+
 \arguments{
-  \item{x}{ original data  }
+  \item{obj}{ original data  }
+  \item{...}{see possible arguments below}
   \item{xm}{ masked data }
   \item{k}{ weight for adjusting the influence of the robust Mahalanobis distances, 
         i.e. to increase or decrease each of the disclosure risk intervals. }
@@ -71,5 +93,12 @@ x <- Tarragona[, 5:7]
 y <- addNoise(x)$xm
 dRiskRMD(x, xm=y)
 dRisk(x, xm=y)
+
+data(testdata2)
+sdc <- createSdcObj(testdata2, keyVars=c('urbrur','roof','walls','water','electcon','relat','sex'), 
+           numVars=c('expend','income','savings'), w='sampling_weight')
+## this is already made internally: 
+## sdc <- dRiskRMD(sdc)
+## and already stored in sdc
 }
 \keyword{ manip }

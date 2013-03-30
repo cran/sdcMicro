@@ -1,4 +1,42 @@
-addNoise <- function (x, noise = 150, method = "additive", p = 0.001, delta = 0.1)
+setGeneric('addNoise', function(obj, variables=NULL,noise=150,method="additive",...) {standardGeneric('addNoise')})
+setMethod(f='addNoise', signature=c('sdcMicroObj'),
+    definition=function(obj, variables,noise=150,method="additive",...) { 
+      x <- get.sdcMicroObj(obj, type="manipNumVars")
+      if(missing(variables)){
+        variables <- 1:ncol(x)
+      }
+      
+      obj <- nextSdcObj(obj)
+      if( length(variables)==1 ) {
+        x1tmp <- cbind(0, x[,variables])
+        x[,variables] <- addNoiseWORK(x1tmp, noise=noise, method=method,...)$xm[,2,drop=FALSE]
+      } else {
+        x[,variables] <- addNoiseWORK(x=x[,variables], noise=noise,method=method,...)$xm
+        
+        manipData <- x
+        colnames(manipData) <- colnames(x)
+        obj <- set.sdcMicroObj(obj, type="manipNumVars", input=list(as.data.frame(manipData))) 
+      }
+      
+      obj <- dRisk(obj)
+      obj <- dRiskRMD(obj)
+      obj <- dUtility(obj)
+      obj
+    })
+setMethod(f='addNoise', signature=c("data.frame"),
+    definition=function(obj, variables,noise=150,method="additive",...)  { 
+      if(missing(variables))
+        variables <- 1:ncol(obj)
+      addNoiseWORK(x=obj[,variables],noise=noise,method=method,...)
+    })
+setMethod(f='addNoise', signature=c("matrix"),
+    definition=function(obj, variables,noise=150,method="additive",...)  {
+      if(missing(variables))
+        variables <- 1:ncol(obj)
+      addNoiseWORK(x=obj[,variables],noise=noise,method=method,...)
+    })
+
+addNoiseWORK <- function (x, noise = 150, method = "additive", p = 0.001, delta = 0.1)
 {
 	 
     N <- dim(x)[1]

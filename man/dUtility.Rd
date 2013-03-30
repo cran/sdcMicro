@@ -1,14 +1,35 @@
 \name{dUtility}
+\docType{methods}
+\alias{dUtility-methods}
+\alias{dUtility,data.frame-method}
+\alias{dUtility,matrix-method}
+\alias{dUtility,sdcMicroObj-method}
 \alias{dUtility}
 \title{ data utility }
 \description{
   IL1s data utility.
 }
 \usage{
-dUtility(x, xm, method="IL1")
+dUtility(obj,...)#, xm, method="IL1")
 }
+\section{Methods}{
+\describe{
+
+\item{\code{signature(obj = "data.frame")}}{
+%%  ~~describe this method here~~
+}
+
+\item{\code{signature(obj = "matrix")}}{
+%%  ~~describe this method here~~
+}
+
+\item{\code{signature(obj = "sdcMicroObj")}}{
+%%  ~~describe this method here~~
+}
+}}
 \arguments{
-  \item{x}{ original data }
+  \item{obj}{ original data }
+  \item{...}{see arguments below}
   \item{xm}{ perturbed data }
   \item{method}{ method IL1 or eigen. More methods are implemented in summary.micro() }
 }
@@ -36,10 +57,10 @@ data utility
 data(free1)
 m1 <- microaggregation(free1[, 31:34], method="onedims", aggr=3)
 m2 <- microaggregation(free1[, 31:34], method="pca", aggr=3)
-dRisk(x=free1[, 31:34], xm=m1$mx)
-dRisk(x=free1[, 31:34], xm=m2$mx)
-dUtility(x=free1[, 31:34], xm=m1$mx)
-dUtility(x=free1[, 31:34], xm=m2$mx)
+dRisk(obj=free1[, 31:34], xm=m1$mx)
+dRisk(obj=free1[, 31:34], xm=m2$mx)
+dUtility(obj=free1[, 31:34], xm=m1$mx)
+dUtility(obj=free1[, 31:34], xm=m2$mx)
 data(Tarragona)
 x <- Tarragona[, 5:7]
 y <- addNoise(x)$xm
@@ -48,5 +69,13 @@ dRisk(x, xm=y)
 dUtility(x, xm=y)
 dUtility(x, xm=y, method="eigen")
 dUtility(x, xm=y, method="robeigen")
+
+## for objects of class sdcMicro:
+data(testdata2)
+sdc <- createSdcObj(testdata2, keyVars=c('urbrur','roof','walls','water','electcon','relat','sex'), 
+           numVars=c('expend','income','savings'), w='sampling_weight')
+## this is already made internally: 
+## sdc <- dUtility(sdc)
+## and already stored in sdc
 }
 \keyword{ manip }

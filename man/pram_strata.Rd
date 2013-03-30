@@ -1,4 +1,9 @@
 \name{pram_strata}
+\docType{methods}
+\alias{pram_strata-methods}
+\alias{pram_strata,data.frame-method}
+\alias{pram_strata,matrix-method}
+\alias{pram_strata,sdcMicroObj-method}
 \alias{pram_strata}
 \alias{print.pram_strata}
 \title{
@@ -6,19 +11,37 @@ Post Randomization
 }
 \description{
 To be used on categorical data. It randomly change the values of variables on selected records 
-(normally the risky ones) according to an invariant probability transition matrix.
+(usually the risky ones) according to an invariant probability transition matrix.
 }
 \usage{
-pram_strata(data, variables = NULL, strata_variables = NULL, weights = NULL, seed = NULL, missing = -999)
+pram_strata(obj,variables,...)#,  strata_variables = NULL, weights = NULL,
+  #seed = NULL, missing = -999, pd = 0.8,alpha = 0.5)
 \method{print}{pram_strata}(x, ...)
 }
+\section{Methods}{
+\describe{
+
+\item{\code{signature(obj = "data.frame")}}{
+%%  ~~describe this method here~~
+}
+
+\item{\code{signature(obj = "matrix")}}{
+%%  ~~describe this method here~~
+}
+
+\item{\code{signature(obj = "sdcMicroObj")}}{
+%%  ~~describe this method here~~
+}
+}}
 \arguments{
-  \item{data}{
+  \item{obj}{
   Input data
 }
   \item{variables}{
   Names of variables for Post Randomization
 }
+\item{...}{see arguments below}
+
   \item{strata_variables}{
   Names of variables for stratification
 }
@@ -34,9 +57,9 @@ pram_strata(data, variables = NULL, strata_variables = NULL, weights = NULL, see
  \item{x}{
  Output of pram_strata
 }
- \item{...}{
-  currently unused
-}
+\item{pd}{ minimum diagonal entries for the generated transition matrix P. Either a vector of length 1 or a vector of length ( number of categories ). }
+\item{alpha}{ amount of perturbation for the invariant Pram method }
+  
 }
 \value{
 For each randomized variable a new variable with the suffix "_pram" will  be created.
@@ -54,12 +77,19 @@ The GNU Linear Programming Kit(GLPK) is used in this program. The modified make 
 }
 \seealso{\code{pram}}
 \examples{
-\dontrun{
   data(testdata)
   res <- pram_strata(testdata,variables="roof",strata_variables=c("urbrur","sex"))
-  print(res)
+  print.pram_strata(res)
   res1 <- pram_strata(testdata,variables=c("roof","walls","water"),strata_variables=c("urbrur","sex"))
-  print(res1)
-}
+  print.pram_strata(res1)
+  res2 <- pram_strata(testdata,variables=c("roof","walls","water"),strata_variables=NULL)
+  print.pram_strata(res2)
+  
+  ## for objects of class sdcMicro:
+  data(testdata2)
+  sdc <- createSdcObj(testdata2, keyVars=c('urbrur','roof','walls','water','electcon','relat','sex'), 
+           numVars=c('expend','income','savings'), w='sampling_weight')
+  sdc <- pram_strata(sdc, variables=c("urbrur"))
+  
 }
 \keyword{ manip }

@@ -3,7 +3,7 @@
 \alias{testdata2}
 \docType{data}
 \title{
-Dataset for testing purpose
+A real-world data set on household income and expenditures
 }
 \description{
 A concise (1-5 lines) description of the dataset.
@@ -53,14 +53,8 @@ data(testdata2)
     \item{\code{water3}}{a numeric vector}
   }
 }
-\details{
-If necessary, more details than the __description__ above
-}
-\source{
-reference to a publication or URL from which the data were obtained
-}
 \references{
-possibly secondary sources and usages
+The International Household Survey Network, www.ihsn.org
 }
 \examples{
 data(testdata)

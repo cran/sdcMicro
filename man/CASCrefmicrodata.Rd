@@ -4,7 +4,7 @@
 \title{ Census data set }
 \description{
 This test data set was obtained on July 27, 2000 using the public use Data Extraction System 
-of the U. S. Bureau of the Census.
+of the U.S. Bureau of the Census.
 }
 \usage{data(CASCrefmicrodata)}
 \format{
@@ -36,6 +36,6 @@ Unpublished. \url{http://neon.vb.cbs.nl/casc/CASCrefmicrodata.pdf}
 }
 \examples{
 data(CASCrefmicrodata)
-head(CASCrefmicrodata)
+str(CASCrefmicrodata)
 }
 \keyword{datasets}

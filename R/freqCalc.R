@@ -2,10 +2,18 @@
     function(x, keyVars, w=NULL, fast=TRUE){
 
   classInfo <- character()
-  for(i in 1:ncol(x)){
-    classInfo[i] <- class(x[,i])
+  xKeys <- x[,keyVars]
+  xw <- x[,w]
+  for(i in 1:ncol(xKeys)){
+    classInfo[i] <- class(xKeys[,i])
   }
   dfInfo <- is.data.frame(x)
+  ## internally code as numbers:
+  for(i in 1:ncol(xKeys)){
+	  xKeys[,i] <- as.numeric(as.factor(xKeys[,i]))
+  }
+  ## TODO: directly work with xKeys in ffc and freqCalc
+  x[,keyVars] <- xKeys
   if(fast){
     z <- ffc(x,keyVars,w)
     if(dfInfo) z$freqCalc <- data.frame(z$freqCalc)
@@ -67,8 +75,6 @@ ffc <- function(x, keyVars, w = NULL) {
   ind <- do.call(order,data.frame(dataX))
   dataX <- dataX[ind,,drop=FALSE]
   ind <- order(c(1:nrow(dataX))[ind])
-
-  
   if(weighted==1){
     Res <- .Call("ffc",dataX,1,length(keyVars),treatmissing)$Res[ind,]
     Fk <- Res[,2]

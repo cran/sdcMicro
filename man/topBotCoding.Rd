@@ -1,15 +1,31 @@
 \name{topBotCoding}
+\docType{methods}
+\alias{topBotCoding-methods}
+\alias{topBotCoding,ANY-method}
+\alias{topBotCoding,sdcMicroObj-method}
 \alias{topBotCoding}
 \title{ Top and Bottom Coding }
 \description{
 Function for Top and Bottom Coding.
 }
 \usage{
-topBotCoding(x, value, replacement, kind = "top")
+topBotCoding(obj,...)#x, value, replacement, kind = "top")
 }
+\section{Methods}{
+\describe{
+
+\item{\code{signature(obj = "ANY")}}{
+%%  ~~describe this method here~~
+}
+
+\item{\code{signature(obj = "sdcMicroObj")}}{
+%%  ~~describe this method here~~
+}
+}}
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{x}{ vector or one-dimensional matrix or data.frame }
+  \item{obj}{ vector or one-dimensional matrix or data.frame }
+  \item{...}{see arguments below}
   \item{value}{ limit, from where it should be top- or bottom-coded }
   \item{replacement}{ replacement value. }
   \item{kind}{ top or bottom }
@@ -25,6 +41,13 @@ Top or bottom coded data.
 \examples{
 data(free1)
 topBotCoding(free1[,"DEBTS"], value=9000, replacement=9100, kind="top")
+
+## for objects of class sdcMicro:
+data(testdata2)
+sdc <- createSdcObj(testdata2, keyVars=c('urbrur','roof','walls','water','electcon','relat','sex'), 
+           numVars=c('expend','income','savings'), w='sampling_weight')
+sdc <- topBotCoding(sdc, value=60000000, replacement=62000000, column="income")
+
 }
 \keyword{ manip }
 

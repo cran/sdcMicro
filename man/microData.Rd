@@ -3,7 +3,7 @@
 \docType{data}
 \title{ microData }
 \description{
-Small aritificial data set for demonstration.
+Small aritificial toy data set.
 }
 \usage{data(microData)}
 \format{
@@ -16,7 +16,6 @@ Small aritificial data set for demonstration.
 \examples{
 data(microData)
 m1 <- microaggregation(microData, method="mdav")
-x <- m1$x  ### fix me
 summary(m1)
 }
 \keyword{datasets}

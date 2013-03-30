@@ -1,38 +1,81 @@
-LLmodGlobalRisk <- function(x, method="IPF", inclProb=NULL,  
-		form=as.formula(paste(" ~ ", paste(colnames(x), collapse= "+"))), 
-		modOutput=FALSE){
-	if(is.null(inclProb)){
-		warning("please provide the inclusion probabilities, \n e.g. 
-                  approx by 1/sampling weights. \n
-                  They are now set to 0.1 which is simple a wrong assumption.")
-        inclProb = 0.1
-	}
-	#risk functions
-	#P(F_k=r | f_k = r)
-	risk1 = function(l,p) {v = (1-p)*l; exp(-v)}
-	#E(1/F_k | f_k = 1)
-	risk2 = function(l,p) {v = (1-p)*l; (1-exp(-v))/v}	
-	#file level risk measure
-	file_risk = function(freq,risk) {sum(as.numeric(freq==1) * risk)}
-	
-	## sample frequencies
-	tab <- xtabs(form, x)	
-	
-	## IPF
-	mod <- loglm(form, data=tab, fitted=TRUE)
-	lambda <- fitted(mod)
-	
-	## Risk
-	r1 <- risk1(lambda, inclProb)
-	r2 <- risk2(lambda, inclProb)
-	gr1 <- file_risk(tab, r1)/nrow(x)
-	gr2 <- file_risk(tab, r2)/nrow(x)
-	if(modOutput) {
-		res <- list(gr1=gr1, gr2=gr2, gr1perc=gr1*100, gr2perc=gr2*100, tab=tab, fitted=lambda)		
-	} else{ 
-		res <- list(gr1=gr1, gr2=gr2, gr1perc=gr1*100, gr2perc=gr2*100)
-	}
-	res
+setGeneric('LLmodGlobalRisk', function(obj, ...) {standardGeneric('LLmodGlobalRisk')})
+setMethod(f='LLmodGlobalRisk', signature=c('sdcMicroObj'),
+    definition=function(obj, ...) { 
+      # if(!"form" %in% names(list(...))) {
+      #   form=get.sdcMicroObj(obj, type="origData")[,get.sdcMicroObj(obj, type="numVars"),drop=F] 
+      # }else{
+      #   form = list(...)$form
+      # }
+      
+      
+      x <- get.sdcMicroObj(obj, type="manipKeyVars")
+      risk <- get.sdcMicroObj(obj, type="risk")
+      if(length(get.sdcMicroObj(obj,type="weightVar"))>0&&!"inclProb" %in% names(list(...))){
+        inclProbs <- 1/get.sdcMicroObj(obj,type="origData")[,get.sdcMicroObj(obj,type="weightVar")]
+        risk$model <- LLmodGlobalRiskWORK(x=x, inclProb=inclProbs,...)
+      }else{
+        if("inclProb" %in% names(list(...))) {
+          risk$model$inclProb <- list(...)$inclProb
+        }
+        risk$model <- LLmodGlobalRiskWORK(x=x,...)
+      }
+      
+      obj <- set.sdcMicroObj(obj, type="risk", input=list(risk))
+      obj
+    })
+setMethod(f='LLmodGlobalRisk', signature=c("data.frame"),
+    definition=function(obj, ...) { 
+      LLmodGlobalRiskWORK(x=obj,...)
+    })
+setMethod(f='LLmodGlobalRisk', signature=c("matrix"),
+    definition=function(obj, ...) { 
+      LLmodGlobalRiskWORK(x=obj,...)
+    })
+
+
+LLmodGlobalRiskWORK <- function(x, method="IPF", inclProb=NULL,  
+    form=as.formula(paste(" ~ ", paste(colnames(x), collapse= "+"))), 
+    modOutput=FALSE){
+  if(is.null(inclProb)){
+    warning("please provide the inclusion probabilities, \n e.g. 
+            approx by 1/sampling weights. \n
+            They are now set to 0.1 which is simple a wrong assumption.")
+    inclProb = 0.1
+  }
+  #risk functions
+  #P(F_k=r | f_k = r)
+  risk1 <-  function(l,p) {
+    v = (1-p)*l
+    exp(-v)
+  }
+  #E(1/F_k | f_k = 1)
+  risk2 <- function(l,p) {
+    v = (1-p)*l
+    (1-exp(-v))/v
+  }	
+  #file level risk measure
+  file_risk <- function(freq,risk) {
+    sum(as.numeric(freq==1) * risk)
+  }
+  
+  ## sample frequencies
+  tab <- xtabs(form, x)	
+  
+  ## IPF
+  mod <- loglm(form, data=tab, fitted=TRUE)
+  lambda <- fitted(mod)
+  
+  ## Risk
+  r1 <- risk1(lambda, inclProb)
+  r2 <- risk2(lambda, inclProb)
+  gr1 <- file_risk(tab, r1)/nrow(x)
+  gr2 <- file_risk(tab, r2)/nrow(x)
+  if(modOutput) {
+    res <- list(gr1=gr1, gr2=gr2, gr1perc=gr1*100, gr2perc=gr2*100, tab=tab, fitted=lambda)		
+  } else{ 
+    res <- list(gr1=gr1, gr2=gr2, gr1perc=gr1*100, gr2perc=gr2*100)
+  }
+  res
 } 
 
 #data(free1)

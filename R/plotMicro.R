@@ -1,5 +1,4 @@
-`plotMicro` <-
-function (x, p, which.plot = 1:3) 
+plotMicro <-function (x, p, which.plot = 1:3) 
 {
  bct  <-
 function (y, p)

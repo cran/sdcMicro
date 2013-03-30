@@ -1,16 +1,36 @@
 \name{localSuppression}
+\docType{methods}
+\alias{localSuppression-methods}
+\alias{localSuppression,data.frame-method}
+\alias{localSuppression,matrix-method}
+\alias{localSuppression,sdcMicroObj-method}
 \alias{localSuppression}
 \title{ Local Suppression to obtain k-anonymity }
 \description{
 Algorithm to achieve k-anonymity by performing local suppression.
 }
 \usage{
-localSuppression(x, keyVars, w=NULL, k=2, importance=NULL)
+localSuppression(obj,...)#, keyVars, k=2, importance=NULL)
 }
+\section{Methods}{
+\describe{
+
+\item{\code{signature(obj = "data.frame")}}{
+%%  ~~describe this method here~~
+}
+
+\item{\code{signature(obj = "matrix")}}{
+%%  ~~describe this method here~~
+}
+
+\item{\code{signature(obj = "sdcMicroObj")}}{
+%%  ~~describe this method here~~
+}
+}}
 \arguments{
-  \item{x}{ data frame or matrix }
+  \item{obj}{ data frame or matrix }
+  \item{...}{see arguments below}
   \item{keyVars}{ numeric vector specifying indices of (categorical) key-variables }
-  \item{w}{ index specifying weight-variable in input data x }
   \item{k}{ threshold for k-anonymity }
   \item{importance}{ numeric vector of numbers between 1 and n (n=length of vector keyVars). 
   This vector represents the "importance" of variables that should be used for local suppression
@@ -37,5 +57,11 @@ data(francdat)
 localS <- localSuppression(francdat, keyVar=c(4,5,6))
 localS
 plot(localS)
+
+## for objects of class sdcMicro:
+data(testdata2)
+sdc <- createSdcObj(testdata2, keyVars=c('urbrur','roof','walls','water','electcon','relat','sex'), 
+           numVars=c('expend','income','savings'), w='sampling_weight')
+sdc <- localSuppression(sdc)
 }
 \keyword{ manip }

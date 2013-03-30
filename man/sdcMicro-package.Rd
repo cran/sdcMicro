@@ -42,11 +42,21 @@ License: \tab GPL 2.0 \cr
 
 }
 \author{
-Matthias Templ
+Matthias Templ, Alexander Kowarik, Bernhard Meindl
 
 Maintainer: Matthias Templ <templ@statistik.tuwien.ac.at>
 }
 \references{
+Templ, M. and Meindl, B.
+\emph{Practical Applications in Statistical Disclosure Control Using R},
+Privacy and Anonymity in Information Management Systems, Bookchapter, Springer London, pp. 31-62, 2010
+
+
+Kowarik, A. and Templ, M. and Meindl, B. and Fonteneau, F. and Prantner, B.: 
+\emph{Testing of IHSN Cpp Code and Inclusion of New Methods into sdcMicro}, 
+in: Lecture Notes in Computer Science, J. Domingo-Ferrer, I. Tinnirello (editors.); 
+Springer, Berlin, 2012, ISBN: 978-3-642-33626-3, pp. 63-77.
+
 Templ, M.  
                \emph{Statistical Disclosure Control for Microdata Using the R-Package sdcMicro}, 
                Transactions on Data Privacy, 
@@ -95,11 +105,11 @@ ind <- indivRisk(f)
 ## Local suppression with localSupp2 and localSupp2Wrapper is more effective:
 ## example from Capobianchi, Polettini and Lucarelli:
 data(francdat)
-l1 <- localSuppression(francdat, keyVars=c(2,4,5,6), importance=c(1,3,2,4), w=8)
+l1 <- localSuppression(francdat, keyVars=c(2,4,5,6), importance=c(1,3,2,4))
 l1
 l1$x
-l2 <- localSuppression(francdat, keyVars=c(2,4,5,6), w=8, k=2)
-l3 <- localSuppression(francdat, keyVars=c(2,4,5,6), w=8, k=4)
+l2 <- localSuppression(francdat, keyVars=c(2,4,5,6), k=2)
+l3 <- localSuppression(francdat, keyVars=c(2,4,5,6), k=4)
 ## long computation time:
 ## l = localSupp2(free1, keyVar=1:3, w=30, k=2, importance=c(0.1,1,0.8))
 
@@ -141,12 +151,11 @@ plotMicro(microaggregation(free1[,31:34], method="onedims"), 0.1, which.plot=1)
 
 
 ## disclosure risk (interval) and data utility:
-data(free1)
 m1 <- microaggregation(Tarragona, method="onedims", aggr=3)
-dRisk(x=Tarragona, xm=m1$mx)
-dRisk(x=Tarragona, xm=m2$mx)
-dUtility(x=Tarragona, xm=m1$mx)
-dUtility(x=Tarragona, xm=m2$mx)
+dRisk(obj=Tarragona, xm=m1$mx)
+dRisk(obj=Tarragona, xm=m2$mx)
+dUtility(obj=Tarragona, xm=m1$mx)
+dUtility(obj=Tarragona, xm=m2$mx)
 
 ## S4 class code for Adding Noise methods will be included in the next version of sdcMicro.
 
@@ -161,13 +170,93 @@ pairs(dataGen(mtcars[,4:6],n=200))
 ## PRAM
 
 set.seed(123)
-x <- sample(1:4, 250, replace=TRUE)
+x <- factor(sample(1:4, 250, replace=TRUE))
 pr1 <- pram(x)
-length(which(pr1$x == x))
-x2 <- sample(1:4, 250, replace=TRUE)
-length(which(pram(x2)$x == x2))
+length(which(pr1$xpramed == x))
+x2 <- factor(sample(1:4, 250, replace=TRUE))
+length(which(pram(x2)$xpramed == x2))
 
 data(free1)
 marstatPramed <- pram(free1[,"MARSTAT"])  
-
+\dontrun{
+# FOR OBJECTS OF CLASS sdcMicro
+data(testdata)
+sdc <- createSdcObj(testdata, keyVars=c('urbrur','roof','walls','water','electcon','relat','sex'), numVars=c('expend','income','savings'), w='sampling_weight')
+head(sdc@manipNumVars)
+### Display Risks
+sdc@risk$global
+sdc <- dRisk(sdc)
+sdc@risk$numeric
+### use addNoise without Parameters
+sdc <- addNoise(sdc,variables=c("expend","income"))
+head(sdc@manipNumVars)
+sdc@risk$numeric
+### undolast
+sdc <- undolast(sdc)
+head(sdc@manipNumVars)
+sdc@risk$numeric
+### redo addNoise with Parameter
+sdc <- addNoise(sdc, noise=0.2)
+head(sdc@manipNumVars)
+sdc@risk$numeric
+### dataGen
+#sdc <- undolast(sdc)
+#head(sdc@risk$individual)
+#sdc@risk$global
+#sdc <- dataGen(sdc)
+#head(sdc@risk$individual)
+#sdc@risk$global
+### LocalSuppression
+sdc <- undolast(sdc)
+head(sdc@risk$individual)
+sdc@risk$global
+sdc <- localSuppression(sdc)
+head(sdc@risk$individual)
+sdc@risk$global
+### microaggregation
+sdc <- undolast(sdc)
+head(get.sdcMicroObj(sdc, type="manipNumVars"))
+sdc <- microaggregation(sdc)
+head(get.sdcMicroObj(sdc, type="manipNumVars"))
+### pram
+sdc <- undolast(sdc)
+head(sdc@risk$individual)
+sdc@risk$global
+sdc <- pram(sdc,keyVar="water")
+head(sdc@risk$individual)
+sdc@risk$global
+### pram_strata
+sdc <- undolast(sdc)
+sdc <- pram_strata(sdc,variables=c("walls","water"))
+head(sdc@risk$individual)
+sdc@risk$global
+### rankSwap
+sdc <- undolast(sdc)
+head(sdc@risk$individual)
+sdc@risk$global
+head(get.sdcMicroObj(sdc, type="manipNumVars"))
+sdc <- rankSwap(sdc)
+head(get.sdcMicroObj(sdc, type="manipNumVars"))
+head(sdc@risk$individual)
+sdc@risk$global
+### suda2
+sdc <- suda2(sdc)
+sdc@risk$suda2
+### topBotCoding
+head(get.sdcMicroObj(sdc, type="manipNumVars"))
+sdc@risk$numeric
+sdc <- topBotCoding(sdc, value=60000000, replacement=62000000, column="income")
+head(get.sdcMicroObj(sdc, type="manipNumVars"))
+sdc@risk$numeric
+### LocalRecProg
+data(testdata2)
+sdc <- createSdcObj(testdata2, keyVars=c("urbrur", "roof", "walls", "water", "sex", "relat"))
+sdc@risk$global
+sdc <- LocalRecProg(sdc)
+sdc@risk$global
+### LLmodGlobalRisk
+sdc <- undolast(sdc)
+sdc <- LLmodGlobalRisk(sdc, inclProb=0.001)
+sdc@risk$model
+}
 }

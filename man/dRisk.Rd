@@ -1,19 +1,40 @@
 \name{dRisk}
+\docType{methods}
+\alias{dRisk-methods}
+\alias{dRisk,data.frame-method}
+\alias{dRisk,matrix-method}
+\alias{dRisk,sdcMicroObj-method}
 \alias{dRisk}
 \title{ overal disclosure risk }
 \description{
-  Distance-based disclosure risk estimation via standard deviation-based intervals.
+  Distance-based disclosure risk estimation via standard deviation-based intervals around observations.
 }
+\section{Methods}{
+\describe{
+
+\item{\code{signature(obj = "data.frame")}}{
+%%  ~~describe this method here~~
+}
+
+\item{\code{signature(obj = "matrix")}}{
+%%  ~~describe this method here~~
+}
+
+\item{\code{signature(obj = "sdcMicroObj")}}{
+%%  ~~describe this method here~~
+}
+}}
 \usage{
-dRisk(x, xm, k = 0.01)
+dRisk(obj,...)# xm, k = 0.05)
 }
 \arguments{
-  \item{x}{ original data  }
+  \item{obj}{ original data  }
+  \item{...}{see possible arguments below}
   \item{xm}{ perturbed data }
   \item{k}{ percentage of the standard deviation }
 }
 \details{
-An interval is built around each value of the perturbed value with the help of the standard deviation. 
+An interval (based on the standard deviation) is built around each value of the perturbed value. 
 Then we look if the original values lay in these intervals or not.
 With parameter k one can enlarge or down scale the interval.
 }
@@ -27,9 +48,16 @@ The disclosure risk.
 data(free1)
 m1 <- microaggregation(free1[, 31:34], method="onedims", aggr=3)
 m2 <- microaggregation(free1[, 31:34], method="pca", aggr=3)
-dRisk(x=free1[, 31:34], xm=m1$mx)
-dRisk(x=free1[, 31:34], xm=m2$mx)
-dUtility(x=free1[, 31:34], xm=m1$mx)
-dUtility(x=free1[, 31:34], xm=m2$mx)
+dRisk(obj=free1[, 31:34], xm=m1$mx)
+dRisk(obj=free1[, 31:34], xm=m2$mx)
+dUtility(obj=free1[, 31:34], xm=m1$mx)
+dUtility(obj=free1[, 31:34], xm=m2$mx)
+
+## for objects of class sdcMicro:
+data(testdata2)
+sdc <- createSdcObj(testdata2, keyVars=c('urbrur','roof','walls','water','electcon','relat','sex'), 
+           numVars=c('expend','income','savings'), w='sampling_weight')
+## this is already made internally: sdc <- dRisk(sdc)
+## and already stored in sdc
 }
 \keyword{ manip }

@@ -1,17 +1,34 @@
 \name{localSupp}
+\docType{methods}
+\alias{localSupp-methods}
+\alias{localSupp,ANY-method}
+\alias{localSupp,sdcMicroObj-method}
 \alias{localSupp}
 \title{ Local Suppression }
 \description{
 A simple method to perfom local suppression.
 }
 \usage{
-localSupp(x, keyVar, indivRisk, threshold = 0.15)
+localSupp(obj, threshold=0.15, keyVar,...)# indivRisk)
 }
+
+\section{Methods}{
+\describe{
+
+\item{\code{signature(obj = "ANY")}}{
+%%  ~~describe this method here~~
+}
+
+\item{\code{signature(obj = "sdcMicroObj")}}{
+%%  ~~describe this method here~~
+}
+}}
 \arguments{
-  \item{x}{ object from class freqCalc }
-  \item{keyVar}{ Variable on which some values might be suppressed }
-  \item{indivRisk}{ object from class indivRisk }
+  \item{obj}{ object from class freqCalc }
   \item{threshold}{ threshold for individual risk }
+  \item{keyVar}{ Variable on which some values might be suppressed }
+  \item{...}{see arguments below}
+  \item{indivRisk}{ object from class indivRisk }
 }
 \details{
 Values of high risk (above the threshold) of a certain variable (parameter keyVar) 
@@ -45,5 +62,12 @@ f2 <- freqCalc(localS$freqCalc, keyVars=c(4,5,6), w=8)
 indivf2 <- indivRisk(f2)
 indivf2$rk
 ## select another keyVar and run localSupp once again, if you think the table is not fully protected
+
+
+## for objects of class sdcMicro:
+data(testdata2)
+sdc <- createSdcObj(testdata2, keyVars=c('urbrur','roof','walls','water','electcon','relat','sex'), 
+           numVars=c('expend','income','savings'), w='sampling_weight')
+sdc <- localSupp(sdc, keyVar='urbrur')
 }
 \keyword{ manip }

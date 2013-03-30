@@ -1,9 +1,38 @@
-rankSwap <- function(data,variables=NULL,TopPercent=5,BottomPercent=5,K0=-1,R0=.95,P=0,missing=-999,seed=NULL){
+setGeneric('rankSwap', function(obj, ...) {standardGeneric('rankSwap')})
+setMethod(f='rankSwap', signature=c('sdcMicroObj'),
+    definition=function(obj, ...) { 
+      manipData <- get.sdcMicroObj(obj, type="manipNumVars")
+      
+      if(!"variables" %in% names(list(...))) {
+        numVars <- colnames(manipData)
+      }else{
+        numVars <- list(...)$variables
+      }    
+      
+      res <- rankSwapWORK(manipData, variables=numVars, ...)    
+      
+      obj <- nextSdcObj(obj)
+      obj <- set.sdcMicroObj(obj, type="manipNumVars", input=list(res))
+      obj <- dRisk(obj)
+      obj <- dUtility(obj)
+      
+      obj
+    })
+setMethod(f='rankSwap', signature=c("data.frame"),
+    definition=function(obj, ...) { 
+      rankSwapWORK(data=obj,...)
+    })
+setMethod(f='rankSwap', signature=c("matrix"),
+    definition=function(obj, ...) { 
+      rankSwapWORK(data=obj,...)
+    })
+
+rankSwapWORK <- function(data,variables=NULL,TopPercent=5,BottomPercent=5,K0=-1,R0=.95,P=0,missing=-999,seed=NULL){
   if(is.null(variables)){
-		if(is.matrix(data))
-			variables <- 1:ncol(data)
-		else
-			variables <- colnames(data)
+    if(is.matrix(data))
+      variables <- 1:ncol(data)
+    else
+      variables <- colnames(data)
   }
   dataX <- data[,variables]
   dataX <- as.matrix(dataX)

@@ -1,3 +1,52 @@
+setGeneric('pram_strata', function(obj, variables,...) {standardGeneric('pram_strata')})
+setMethod(f='pram_strata', signature=c('sdcMicroObj'),
+    definition=function(obj, variables,...) { 
+      ### Get data from manipKeyVars
+      manipData <- get.sdcMicroObj(obj, type="manipKeyVars")
+      keyVars <- colnames(obj@origData)[get.sdcMicroObj(obj, type="keyVars")]
+      strataVars <- get.sdcMicroObj(obj, type="strataVar")
+      if(length(strataVars)>0) {
+        sData <- get.sdcMicroObj(obj, type="origData")[,strataVars,drop=F]
+        manipData <- cbind(manipData, sData)
+        strataVars <- c(length(keyVars):length(manipData))
+      }
+      
+      if(!"pd" %in% names(list(...))) {
+        pd <- 0.8
+      }else{
+        pd <- list(...)$pd
+      }   
+      
+      if(!"alpha" %in% names(list(...))) {
+        alpha <- 0.5
+      }else{
+        alpha <- list(...)$alpha
+      }
+      
+      res <- pram_strataWORK(data=manipData,variables=variables,strata_variables=strataVars,pd=pd,alpha=alpha, ...)
+      manipData[,variables] <- res[,paste(variables,"_pram",sep="")]
+      obj <- nextSdcObj(obj)
+      
+      obj <- set.sdcMicroObj(obj, type="manipKeyVars", input=list(manipData))
+      
+      pram <- get.sdcMicroObj(obj, type="pram")
+      pram$pd <- pd
+      pram$alpha <- alpha
+      obj <- set.sdcMicroObj(obj, type="pram", input=list(pram))
+      
+      obj <- calcRisks(obj)
+      
+      obj
+    })
+setMethod(f='pram_strata', signature=c("data.frame"),
+    definition=function(obj, variables,...) { 
+      pram_strataWORK(data=obj,variables=variables,...)
+    })
+setMethod(f='pram_strata', signature=c("matrix"),
+    definition=function(obj, variables,...) { 
+      pram_strataWORK(data=obj, variables=variables,...)
+    })
+
 #require(sdcMicro)
 #data(testdata)
 #dat <- testdata[,c("urbrur","sex","roof")]
@@ -8,39 +57,105 @@
 #x <- .Call("Pram",as.matrix(dat),-999,2,1,-1)
 ## only frequency
 #x <- .Call("Pram",as.matrix(dat),-999,0,0,-1)
-
-pram_strata <- function(data,variables=NULL,strata_variables=NULL,weights=NULL,seed=NULL,missing=-999){
-  if(is.null(seed))
-    seed <- floor(rnorm(1)*1000)
+pram_strataWORK <- function(data,variables=NULL,strata_variables=NULL,weights=NULL,seed=NULL,missing=-999, pd=0.8, alpha=0.5){
   if(is.null(variables))
-    stop("Please define valid strata variables and variables to pram!")
-  if(is.null(strata_variables)){
-    data$strata_variables <- 1
-    strata_variables <- "strata_variables"
-  }
-  if(length(variables)==1){
-    variables <- c(variables,"pram_dummy_var1","pram_dummy_var2")
-    data$pram_dummy_var1 <- 1
-    data$pram_dummy_var2 <- 1
+    stop("Please define valid variables to pram!")
+  if(0){
+    if(is.null(seed))
+      seed <- floor(rnorm(1)*1000)
+    if(is.null(strata_variables)){
+      data$strata_variables <- 1
+      strata_variables <- "strata_variables"
+    }
+    if(length(variables)==1){
+      variables <- c(variables,"pram_dummy_var1","pram_dummy_var2")
+      data$pram_dummy_var1 <- 1
+      data$pram_dummy_var2 <- 1
+    }
+    
+    if(is.null(weights))
+      weights <- rep(1,length(variables))
+    pvariables <- paste(variables,"_pram",sep="")
+    dataX <- data[,c(strata_variables,variables),drop=FALSE]
+    dataX[,pvariables] <- rep(0,nrow(dataX))
+    for(i in 1:ncol(dataX)){
+      if(!is.numeric(dataX[,i]))
+        dataX[,i] <- as.numeric(dataX[,i])
+    }
+    dataX[is.na(dataX)] <- missing
+    dataX <- as.matrix(dataX)
+    res <- .Call("Pram",dataX,missing,length(strata_variables),weights,seed)$Mat
+    class(res) <- "pram_strata"
+    if("pram_dummy_var1"%in%colnames(res)){
+      res <- res[,-which(colnames(res)%in%c("pram_dummy_var1","pram_dummy_var2","pram_dummy_var1_pram","pram_dummy_var2_pram"))]
+    }
+    invisible(res)
+  }else{
+    if(length(strata_variables)>0){
+      data$idvarpram <- 1:nrow(data)
+      fac <- list()
+      chara <- list()
+      f <- rep("",nrow(data))
+      for(sv in strata_variables){
+        f <- paste(f,as.character(data[,sv]),"_",sep="")
+      }
+      f <- as.factor(f)
+      s <- split(data[,c(variables,"idvarpram"),drop=FALSE],f)
+      for(i in 1:length(variables)){
+        v <- variables[i]
+        fac[[i]] <- FALSE
+        if(!is.factor(data[,v])&is.character(data[,v])){
+          fac[[i]] <- TRUE
+          chara[[i]] <- TRUE
+        }else if(!is.factor(data[,v])&is.numeric(data[,v])){
+          chara[[i]] <- FALSE
+          data[,v] <- as.character(data[,v])
+        }else{
+          fac[[i]] <- TRUE
+          data[,v] <- as.character(data[,v])
+        }
+        for(si in 1:length(s)){
+          s[[si]][,paste(v,"_pram",sep="")] <- as.character(pram(as.factor(s[[si]][,v]),pd=pd,alpha=alpha)$xpramed)
+        }
+      }
+      r <- vector()
+      for(si in 1:length(s)){
+        r <- rbind(r,s[[si]])
+      }
+      for(i in 1:length(variables)){
+        v <- variables[i]
+        if(!fac[[i]]){
+          if(chara[[i]]){
+            data[,v] <- as.character(data[,v])
+            data[,paste(v,"_pram",sep="")] <- as.character(r[,paste(v,"_pram",sep="")])
+          }else{
+            data[,v] <- as.numeric(data[,v])
+            data[,paste(v,"_pram",sep="")] <- as.numeric(r[,paste(v,"_pram",sep="")])
+          }
+        }else{
+          data[,v] <- as.factor(data[,v])
+          data[,paste(v,"_pram",sep="")] <- as.factor(r[,paste(v,"_pram",sep="")])
+        }
+        
+      }
+      data <- data[,-which(colnames(data)=="idvarpram"),drop=FALSE]
+      
+    }else{
+      for(v in variables){
+        if(is.factor(data[,v]))
+          data[,paste(v,"_pram",sep="")] <- pram(data[,v],pd=pd,alpha=alpha)$xpramed
+        else if(is.numeric(data[,v])){
+          data[,paste(v,"_pram",sep="")] <- as.numeric(as.character(pram(as.factor(as.character(data[,v])),pd=pd,alpha=alpha)$xpramed))
+        }else if(is.character(data[,v])){
+          data[,paste(v,"_pram",sep="")] <- as.character(pram(as.factor(data[,v]),pd=pd,alpha=alpha)$xpramed)
+        }
+      }
+    }
+    res <- data
+    #class(res) <- "pram_strata"
+    invisible(res)
   }
   
-  if(is.null(weights))
-    weights <- rep(1,length(variables))
-  pvariables <- paste(variables,"_pram",sep="")
-  dataX <- data[,c(strata_variables,variables),drop=FALSE]
-  dataX[,pvariables] <- rep(0,nrow(dataX))
-  for(i in 1:ncol(dataX)){
-    if(!is.numeric(dataX[,i]))
-      dataX[,i] <- as.numeric(dataX[,i])
-  }
-  dataX[is.na(dataX)] <- missing
-  dataX <- as.matrix(dataX)
-  res <- .Call("Pram",dataX,missing,length(strata_variables),weights,seed)$Mat
-  class(res) <- "pram_strata"
-  if("pram_dummy_var1"%in%colnames(res)){
-    res <- res[,-which(colnames(res)%in%c("pram_dummy_var1","pram_dummy_var2","pram_dummy_var1_pram","pram_dummy_var2_pram"))]
-  }
-  invisible(res)
 }
 
 print.pram_strata <- function(x, ...){

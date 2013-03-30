@@ -1,4 +1,9 @@
 \name{suda2}
+\docType{methods}
+\alias{suda2-methods}
+\alias{suda2,data.frame-method}
+\alias{suda2,matrix-method}
+\alias{suda2,sdcMicroObj-method}
 \alias{suda2}
 \title{
 Suda2: Detecting Special Uniques
@@ -7,12 +12,28 @@ Suda2: Detecting Special Uniques
 SUDA risk measure for data from (stratified) simple random sampling.
 }
 \usage{
-suda2(data,variables=NULL,missing=-999,DisFraction=0.01)
+suda2(obj,...)#,variables=NULL,missing=-999,DisFraction=0.01)
 }
+\section{Methods}{
+\describe{
+
+\item{\code{signature(obj = "data.frame")}}{
+%%  ~~describe this method here~~
+}
+
+\item{\code{signature(obj = "matrix")}}{
+%%  ~~describe this method here~~
+}
+
+\item{\code{signature(obj = "sdcMicroObj")}}{
+%%  ~~describe this method here~~
+}
+}}
 \arguments{
-  \item{data}{
+  \item{obj}{
 object of class \dQuote{data.frame}
 }
+\item{...}{see arguments below}
   \item{variables}{
 Categorical (key) variables. Either the column names or and index of the variables to be used for
 risk measurement.
@@ -63,9 +84,15 @@ Co-operation and Development (OECD). This work builds on previous work which
 is elsewhere acknowledged.
 }
 \examples{
-data(testdata)
-data_suda2 <- suda2(testdata,variables=c("urbrur","roof","walls","water","sex"))
+data(testdata2)
+data_suda2 <- suda2(testdata2,variables=c("urbrur","roof","walls","water","sex"))
 data_suda2
 summary(data_suda2)
+
+## for objects of class sdcMicro:
+data(testdata2)
+sdc <- createSdcObj(testdata2, keyVars=c('urbrur','roof','walls','water','electcon','relat','sex'), 
+           numVars=c('expend','income','savings'), w='sampling_weight')
+sdc <- suda2(sdc)
 }
 \keyword{ manip }

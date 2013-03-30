@@ -3,7 +3,7 @@
 \docType{data}
 \title{ Demo data set from mu-Argus}
 \description{
-The public use demo data set from the mu-Argus software for SDC. 
+The public use toy demo data set from the mu-Argus software for SDC. 
 }
 \usage{data(free1)}
 \format{
@@ -16,7 +16,7 @@ The public use demo data set from the mu-Argus software for SDC.
 \details{
 Please, see at the link given below. Please note, that the correlation structure of the data
 is not very realistic, especially concerning the continuous scaled variables 
-which drawn independedly from are a multivariate uniform distribution.
+which drawn independently from are a multivariate uniform distribution.
 }
 \source{
 Public use file from the CASC project.

@@ -1,4 +1,9 @@
 \name{rankSwap}
+\docType{methods}
+\alias{rankSwap-methods}
+\alias{rankSwap,data.frame-method}
+\alias{rankSwap,matrix-method}
+\alias{rankSwap,sdcMicroObj-method}
 \alias{rankSwap}
 \title{
 Rank Swapping
@@ -8,12 +13,28 @@ Each ranked value is then swapped with another
 ranked value that has been chosen randomly within a restricted range.
 }
 \usage{
-rankSwap(data, variables, TopPercent = 5, BottomPercent = 5, K0 = -1, R0 = 0.95, P = 0, missing = -999, seed = NULL)
+rankSwap(obj,...)#, variables, TopPercent = 5, BottomPercent = 5, K0 = -1, R0 = 0.95, P = 0, missing = -999, seed = NULL)
 }
+\section{Methods}{
+\describe{
+
+\item{\code{signature(obj = "data.frame")}}{
+%%  ~~describe this method here~~
+}
+
+\item{\code{signature(obj = "matrix")}}{
+%%  ~~describe this method here~~
+}
+
+\item{\code{signature(obj = "sdcMicroObj")}}{
+%%  ~~describe this method here~~
+}
+}}
 \arguments{
-  \item{data}{
+  \item{obj}{
 matrix or data frame
 }
+\item{...}{see arguments below}
   \item{variables}{
 names or index of variables for that rank swapping is applied.
 }
@@ -68,6 +89,12 @@ This work builds on previous work which is elsewhere acknowledged.
 }
 
 \examples{
-data(testdata)
-data_swap <- rankSwap(testdata,variables=c("age","income","expend","savings"))
+data(testdata2)
+data_swap <- rankSwap(testdata2,variables=c("age","income","expend","savings"))
+
+## for objects of class sdcMicro:
+data(testdata2)
+sdc <- createSdcObj(testdata2, keyVars=c('urbrur','roof','walls','water','electcon','relat','sex'), 
+           numVars=c('expend','income','savings'), w='sampling_weight')
+sdc <- rankSwap(sdc)
 }

@@ -2,7 +2,7 @@
 \alias{indivRisk}
 \title{ Individual Risk computation }
 \description{
-Base individual risk computation.
+Individual risk computation.
 }
 \usage{
 indivRisk(x, method = "approx", qual = 1, survey=TRUE)
@@ -17,6 +17,9 @@ indivRisk(x, method = "approx", qual = 1, survey=TRUE)
 Estimation of the risk for each observation. After the risk is computed one can use e.g. the function
 localSuppr() for the protection of values of high risk. 
 Further details can be found at the link given below.
+
+S4 class sdcMicro objects are only supported by function \emph{measure_risk} that also estimates the 
+individual risk with the same method.
 }
 \value{
   \item{rk }{ base individual risk }

@@ -1,16 +1,39 @@
 \name{addNoise}
+\docType{methods}
 \alias{addNoise}
-\title{ Adding noise for the perturbation of data }
-\description{
-  Various adding noise methods for the perturbation of continuous scaled variables can be used.
-}
+\alias{addNoise-methods}
+\alias{addNoise,data.frame-method}
+\alias{addNoise,matrix-method}
+\alias{addNoise,sdcMicroObj-method}
+\title{ Adding noise to perturb data }
 \usage{
-addNoise(x, noise = 150, method = "additive", p = 0.001, delta=0.1)
+addNoise(obj, variables,noise=150,method="additive",...)#,p,delta)
+}
+\description{
+  Various methods for adding noise to perturb continuous scaled variables.
+}
+\section{Methods}{
+\describe{
+
+\item{\code{signature(obj = "data.frame")}}{
+%%  ~~describe this method here~~
+}
+
+\item{\code{signature(obj = "matrix")}}{
+%%  ~~describe this method here~~
+}
+
+\item{\code{signature(obj = "sdcMicroObj")}}{
+%%  ~~describe this method here~~
+}
+}
 }
 \arguments{
-  \item{x}{ data frame or matrix which should be perturbed }
+  \item{obj}{ data frame or matrix which should be perturbed  or a sdcMicroObj}
+  \item{variables}{vector with names of variables, whoch should be perturbed}
   \item{noise}{ amount of noise (in percentages)}
   \item{method}{ choose between \sQuote{additive}, \sQuote{correlated}, \sQuote{correlated2}, \sQuote{restr}, \sQuote{ROMM}, \sQuote{outdect}  }
+  \item{...}{see possible arguments below}
   \item{p}{ multiplication factor for method \sQuote{ROMM} }
   \item{delta}{ parameter for method \sQuote{correlated2}, details can be found
    in the reference below. }  
@@ -73,5 +96,14 @@ Springer, 31-62, 2010, ISBN: 978-1-84996-237-7.
 data(Tarragona)
 a1 <- addNoise(Tarragona)
 a1
+
+data(testdata)
+testdata[, c('expend','income','savings')] <- addNoise(testdata[,c('expend','income','savings')])$xm
+
+## for objects of class sdcMicro:
+data(testdata2)
+sdc <- createSdcObj(testdata2, keyVars=c('urbrur','roof','walls','water','electcon','relat','sex'), 
+           numVars=c('expend','income','savings'), w='sampling_weight')
+sdc <- addNoise(sdc)
 }
 \keyword{ manip }

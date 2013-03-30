@@ -19,6 +19,10 @@ The function considers the case of missing values in the data.
 A missing value stands for any of the possible categories of the variable considered.
 It is possible to apply this function to large data sets with many (catergorical) key variables, 
 since the computation is done in C.
+
+Note that function \emph{measure_risk()} also estimates the frequencies, and this function using an faster
+C++ code.
+\emph{freqCalc()} does not support sdcMicro S4 class objects.
 }
 \value{
   Object from class freqCalc.
@@ -50,7 +54,7 @@ Springer, 31-62, 2010, ISBN: 978-1-84996-237-7.
 
 }
 \author{ Bernhard Meindl and Matthias Templ }
-\seealso{ \code{\link{indivRisk}} }
+\seealso{ \code{\link{indivRisk}}, \code{\link{measure_risk}} }
 \examples{
 data(francdat)
 f <- freqCalc(francdat, keyVars=c(2,4,5,6),w=8)

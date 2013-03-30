@@ -1,18 +1,40 @@
 \name{dataGen}
+\docType{methods}
 \alias{dataGen}
+\alias{dataGen-methods}
+\alias{dataGen,data.frame-method}
+\alias{dataGen,matrix-method}
+\alias{dataGen,sdcMicroObj-method}
 \title{ Fast generation of synthetic data }
 \description{
-  Fast generation of synthetic data.
+  Fast generation of (primitive) synthetic multivariate normal data.
 }
 \usage{
-dataGen(x, n = 200)
+dataGen(obj,...)# n = 200)
 }
+\section{Methods}{
+\describe{
+
+\item{\code{signature(obj = "data.frame")}}{
+%%  ~~describe this method here~~
+}
+
+\item{\code{signature(obj = "matrix")}}{
+%%  ~~describe this method here~~
+}
+
+\item{\code{signature(obj = "sdcMicroObj")}}{
+%%  ~~describe this method here~~
+}
+}}
 \arguments{
-  \item{x}{ data.frame or matix }
+  \item{obj}{ data.frame or matix }
+  \item{...}{see possible arguments below}
   \item{n}{ amount of observations for the generated data }
 }
 \details{
-Uses the cholesky decomposition to generate synthetic data. For details see at the reference.
+Uses the cholesky decomposition to generate synthetic data with approx. the same means and covariances. 
+For details see at the reference.
 }
 \value{
  the generated synthetic data.
@@ -28,6 +50,12 @@ cov(mtcars[,4:6])
 cov(dataGen(mtcars[,4:6]))
 pairs(mtcars[,4:6])
 pairs(dataGen(mtcars[,4:6]))
+
+## for objects of class sdcMicro:
+data(testdata2)
+sdc <- createSdcObj(testdata2, keyVars=c('urbrur','roof','walls','water','electcon','relat','sex'), 
+           numVars=c('expend','income','savings'), w='sampling_weight')
+sdc <- dataGen(sdc)
 }
 \keyword{ manip }
 

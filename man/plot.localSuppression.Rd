@@ -2,7 +2,7 @@
 \alias{plot.localSuppression}
 \title{ plot method for localSuppression objects }
 \description{
- Special barplot for objects from class localSuppression.
+ Barplot for objects from class localSuppression.
 }
 \usage{
 \method{plot}{localSuppression}(x, ...)
@@ -19,7 +19,7 @@
 \examples{
 ## example from Capobianchi, Polettini and Lucarelli:
 data(francdat)
-l1 <- localSuppression(francdat, keyVars=c(2,4,5,6), w=8)
+l1 <- localSuppression(francdat, keyVars=c(2,4,5,6))
 l1
 plot(l1)
 }

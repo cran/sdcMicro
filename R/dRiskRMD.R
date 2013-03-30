@@ -1,4 +1,28 @@
-dRiskRMD <-
+setGeneric('dRiskRMD', function(obj, ...) {standardGeneric('dRiskRMD')})
+setMethod(f='dRiskRMD', signature=c('sdcMicroObj'),
+    definition=function(obj, ...) { 
+      numVars <- get.sdcMicroObj(obj, type="numVars")
+      x <- get.sdcMicroObj(obj, type="origData")[,numVars,drop=F]
+      xm <- get.sdcMicroObj(obj, type="manipNumVars")
+      risk <- get.sdcMicroObj(obj, type="risk")
+      optionss <- get.sdcMicroObj(obj, type="options")
+      if("risk_k"%in%names(optionss)){
+        risk$numericRMD <- dRiskRMDWORK(x=x, xm=xm, k=optionss$risk_k,k2=optionss$risk_k2,...)
+      }else
+        risk$numericRMD <- dRiskRMDWORK(x=x, xm=xm,...)
+      obj <- set.sdcMicroObj(obj, type="risk", input=list(risk))
+      obj
+    })
+setMethod(f='dRiskRMD', signature=c("data.frame"),
+    definition=function(obj, ...) { 
+      dRiskRMDWORK(x=obj,...)
+    })
+setMethod(f='dRiskRMD', signature=c("matrix"),
+    definition=function(obj, ...) { 
+      dRiskRMDWORK(x=obj,...)
+    })
+
+dRiskRMDWORK <-
 function (x, xm, k = 0.01, k2 = 0.05)
 {
     if (dim(x)[1] != dim(xm)[1]) {

@@ -1,4 +1,35 @@
-microaggregation <- function (x, variables=colnames(x),method = "pca", aggr = 3, weights=NULL, nc = 8, clustermethod = "clara",
+setGeneric('microaggregation', function(obj, variables,aggr=3,strata_variables=NULL,...) {standardGeneric('microaggregation')})
+setMethod(f='microaggregation', signature=c('sdcMicroObj'),
+    definition=function(obj, variables,aggr=3,strata_variables=NULL, ...) { 
+      x <- get.sdcMicroObj(obj, type="manipNumVars")
+      if(!is.null(strata_variables)){
+        sx <- get.sdcMicroObj(obj, type="origData")[,strata_variables[!strata_variables%in%variables],drop=FALSE]
+        res <- microaggregationWORK(cbind(x,sx), variables=variables, aggr=aggr,strata_variables=strata_variables, ...)
+      }else{
+        res <- microaggregationWORK(x, variables=variables, aggr=aggr,strata_variables=strata_variables, ...)
+      }
+      obj <- nextSdcObj(obj)
+      x[,variables] <- res$mx
+      
+      obj <- set.sdcMicroObj(obj, type="manipNumVars", input=list(as.data.frame(x)))
+      
+      obj <- dRisk(obj)
+      obj <- dRiskRMD(obj)
+      obj <- dUtility(obj)
+      
+      obj
+    })
+setMethod(f='microaggregation', signature=c("data.frame"),
+    definition=function(obj, variables,aggr=3,strata_variables=NULL,...) { 
+      microaggregationWORK(x=obj,variables=variables,aggr=aggr,strata_variables=strata_variables,...)
+    })
+setMethod(f='microaggregation', signature=c("matrix"),
+    definition=function(obj, variables,aggr=3,strata_variables=NULL,...) { 
+      microaggregationWORK(x=obj,variables=variables,aggr=aggr,strata_variables=strata_variables,...)
+    })
+
+
+microaggregationWORK <- function (x, variables=colnames(x),method = "pca", aggr = 3, weights=NULL, nc = 8, clustermethod = "clara",
     opt = FALSE, measure = "mean", trim = 0, varsort = 1, transf = "log", strata_variables=NULL
 )
 #,blow = TRUE, blowxm = 0)
@@ -195,8 +226,8 @@ microaggregation <- function (x, variables=colnames(x),method = "pca", aggr = 3,
       y <- scale(log(x))
     }
     if (transf == "boxcox") {
-      lambda <- box.cox.powers(x)$lambda
-      y <- scale(box.cox(x, lambda))
+      lambda <- powerTransform(x)$lambda
+      y <- scale(bcPower(x, lambda))
     }
     if (clustermethod == "clara") {
       a <- clara(x, nc)

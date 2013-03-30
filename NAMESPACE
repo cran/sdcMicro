@@ -1,21 +1,55 @@
 useDynLib(sdcMicro)
+import("methods")
+import("Rcpp")
+import("Rglpk")
+import("robustbase")
+import("MASS")
+import("car")
+import("cluster")
+import("e1071")
 
-import(robustbase)
-importFrom(car, scatterplotMatrix, box.cox.powers, box.cox)
-#importFrom(robustbase, covMcd)
-importFrom(cluster, clara, pam, fanny)
-importFrom(stats, kmeans, princomp)
-importFrom(e1071, impute)
-importFrom(MASS, loglm)
+exportClasses(
+	'sdcMicroObj'
+)
 
+exportMethods(
+	'get.sdcMicroObj',
+	'nextSdcObj',
+	'report',
+	'set.sdcMicroObj',
+	'addNoise',
+	'dataGen',
+	'dRisk',
+	'dRiskRMD',
+	'dUtility',
+	'localSupp',
+	'pram_strata','pram',
+	'topBotCoding',
+	'suda2',
+	'rankSwap',
+	'report',
+    'shuffle',
+	'localSuppression',
+	'globalRecode',
+	'LLmodGlobalRisk',
+	'LocalRecProg',
+	'measure_risk',
+	'calcRisks',
+  'undolast',
+  'varToFactor',
+  'varToNumeric'
+)
+
+
+##################################
+### Export remaining functions ###
+##################################
 export(
-    addNoise,
-    dataGen,
-    dRisk,
+varToFactor,varToNumeric,groupVars,renameVars,
+    undolast,calcRisks,report,addNoise, dataGen, dRisk, dUtility, globalRecode, LLmodGlobalRisk, LocalRecProg,
+    createSdcObj,
     dRiskRMD,
-    dUtility,
     freqCalc,
-    globalRecode,
     indivRisk,
     localSuppression,
     localSupp,
@@ -29,6 +63,7 @@ export(
     print.micro,
     print.pram,
     print.suda2,
+    report,
     summary.freqCalc,
     summary.micro,
     summary.pram,
@@ -36,15 +71,15 @@ export(
     topBotCoding,
     valTable,
     rankSwap,
+    shuffle,
     suda2,
     pram_strata,
     measure_risk,
     ldiversity,
-    LocalRecProg, 
     # deprecated functions
     localSupp2,
     localSupp2Wrapper,
-    LLmodGlobalRisk
+    print.pram_strata
 )
 
 S3method(print, indivRisk)
@@ -52,7 +87,7 @@ S3method(print, freqCalc)
 S3method(print, localSuppression)
 S3method(print, micro)
 S3method(print, pram)
-S3method(print, pram_strata)
+#S3method(print, pram_strata)
 S3method(print, measure_risk)
 S3method(print, ldiversity)
 S3method(print, suda2)

@@ -1,4 +1,10 @@
 \name{LLmodGlobalRisk}
+\docType{methods}
+\alias{LLmodGlobalRisk-methods}
+\alias{LLmodGlobalRisk,ANY-method}
+\alias{LLmodGlobalRisk,data.frame-method}
+\alias{LLmodGlobalRisk,matrix-method}
+\alias{LLmodGlobalRisk,sdcMicroObj-method}
 \alias{LLmodGlobalRisk}
 \title{
 Global risk using log-linear models.
@@ -9,14 +15,19 @@ Poisson distribution. The parameters of the corresponding parameters are
 estimated by a log-linear model including the main effects and possible interactions.
 }
 \usage{
-LLmodGlobalRisk(x, method = "IPF", inclProb = NULL, form = as.formula(paste(" ~ ", paste(colnames(x), collapse = "+"))), modOutput = FALSE)
+LLmodGlobalRisk(obj,...)
+# LLmodGlobalRisk(x, method = "IPF", inclProb = NULL, form = as.formula(paste(" ~ ", paste(colnames(x), collapse = "+"))), modOutput = FALSE)
 }
 \arguments{
-  \item{x}{
+  \item{obj}{
 A numeric matrix or data frame containing the categorical key variables.
 }
+\item{...}{see possible arguments below}
   \item{method}{
 At this time, only iterative proportional fitting  (\dQuote{IPF}) can be used.
+}
+  \item{x}{
+data frame or matrix
 }
   \item{inclProb}{
 Inclusion probabilites (experimental)
@@ -53,5 +64,12 @@ x["SEX"] <- as.factor(x[,"SEX"])
 x["MARSTAT"] <- as.factor(x[,"MARSTAT"])
 x["KINDPERS"] <- as.factor(x[,"KINDPERS"])
 LLmodGlobalRisk(x, inclProb=1/mean(free1[,"WEIGHT"]))
+
+## for objects of class sdcMicro:
+data(testdata2)
+sdc <- createSdcObj(testdata2, keyVars=c('urbrur','roof','walls','water','electcon','relat','sex'), 
+           numVars=c('expend','income','savings'), w='sampling_weight')
+sdc <- LLmodGlobalRisk(sdc)
+
 }
 \keyword{ manip }

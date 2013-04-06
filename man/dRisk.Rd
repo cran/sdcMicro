@@ -28,7 +28,7 @@
 dRisk(obj,...)# xm, k = 0.05)
 }
 \arguments{
-  \item{obj}{ original data  }
+  \item{obj}{ original data or object of class sdcMicroObj  }
   \item{...}{see possible arguments below}
   \item{xm}{ perturbed data }
   \item{k}{ percentage of the standard deviation }
@@ -39,7 +39,7 @@ Then we look if the original values lay in these intervals or not.
 With parameter k one can enlarge or down scale the interval.
 }
 \value{
-The disclosure risk.
+The disclosure risk or/and the modified \dQuote{sdcMicroObj}
 }
 \references{ see method SDID in \url{http://vneumann.etse.urv.es/publications/sci/lncs3050Outlier.pdf} }
 \author{Matthias Templ }

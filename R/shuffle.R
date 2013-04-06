@@ -30,7 +30,7 @@ setMethod(f='shuffle', signature=c('sdcMicroObj'),
 	  
       obj <- set.sdcMicroObj(obj, type="manipNumVars", input=list(as.data.frame(xn)))
       obj <- dRisk(obj)
-      obj <- dRiskRMD(obj)
+#      obj <- dRiskRMD(obj)
       obj <- dUtility(obj)
       obj
     })

@@ -24,8 +24,9 @@ dRiskWORK <- function (x, xm, k = 0.05)
     warning("dimension of perturbed data and original data are different")
     xm <- xm[1:dim(x)[1], ]
   }
-  mi <- t(t(xm) - k * apply(xm, 2, sd))
-  ma <- t(t(xm) + k * apply(xm, 2, sd))
+  sds <- apply(xm, 2, sd)
+  mi <- t(t(xm) - k * sds)
+  ma <- t(t(xm) + k * sds)
   w <- which(rowSums(x < mi | x > ma) %in% 0:1)
   as.numeric(length(w)/nrow(x))
 }

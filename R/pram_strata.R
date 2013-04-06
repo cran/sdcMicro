@@ -23,7 +23,8 @@ setMethod(f='pram_strata', signature=c('sdcMicroObj'),
         alpha <- list(...)$alpha
       }
       
-      res <- pram_strataWORK(data=manipData,variables=variables,strata_variables=strataVars,pd=pd,alpha=alpha, ...)
+      res <- pram_strataWORK(data=manipData,variables=variables,
+			  strata_variables=strataVars,pd=pd,alpha=alpha, ...)
       manipData[,variables] <- res[,paste(variables,"_pram",sep="")]
       obj <- nextSdcObj(obj)
       
@@ -32,6 +33,11 @@ setMethod(f='pram_strata', signature=c('sdcMicroObj'),
       pram <- get.sdcMicroObj(obj, type="pram")
       pram$pd <- pd
       pram$alpha <- alpha
+	    
+	  #rownames(result) <- 1:nrow(result)
+	  #colnames(result) <- c("transition", "Frequency")
+	  
+	  pram$summary <- print
       obj <- set.sdcMicroObj(obj, type="pram", input=list(pram))
       
       obj <- calcRisks(obj)

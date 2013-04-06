@@ -20,7 +20,7 @@ LLmodGlobalRisk(obj,...)
 }
 \arguments{
   \item{obj}{
-A numeric matrix or data frame containing the categorical key variables.
+An object of class sdcMicroObj or a numeric matrix or data frame containing the categorical key variables.
 }
 \item{...}{see possible arguments below}
   \item{method}{
@@ -45,7 +45,7 @@ the Poisson distribution related to the model specified.
 These parameters are used to estimate a global risk, defined in Skinner and Holmes (1998).
 }
 \value{
-Two global risk measures. 
+Two global risk measures or the modified risk in the \dQuote{sdcMicroObj} object.
 }
 \references{
 CJ. Skinner and DJ. Holmes. Estimating the re-identification risk per record in microdata.

@@ -14,6 +14,8 @@ that everybody could look at the source code and that there are no time-consumin
 meta-data management is necessary.
 However, the user should have a detailed knowledge about SDC when applying the methods on data.
 
+The package is programmed using S4-classes and it comes with a well-defined class structure.
+
 The implemented graphical user interface (GUI) for microdata protection
 serves as an easy-to-handle tool for users who want to use the sdcMicro
 package for statistical disclosure control but are not
@@ -26,10 +28,6 @@ after each anonymization step. In addition to that, the code for every anonymiza
 within the GUI is saved in a script which can then be easily modified and
 reloaded. 
 
-Please note, that methods \dQuote{shuffling}, \dQuote{robShuffle} (robust shuffling), 
-\dQuote{gadp} and \dQuote{robgadp} are not included 
-in the package because method \dQuote{shuffling} is under a US-patent by other authors, 
-even shuffling consits only of 8 lines of code \ldots
 }
 \details{
 \tabular{ll}{

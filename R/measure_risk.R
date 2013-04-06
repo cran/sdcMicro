@@ -157,7 +157,33 @@ measure_riskWORK <- function(data,keyVars,w=NULL,missing=-999,hid=NULL,max_globa
   }
   invisible(res)
 }
-ldiversity <- function(data,keyVars,missing=-999,l_recurs_c=2,ldiv_index=NULL){
+setGeneric('ldiversity', function(obj, ldiv_index,l_recurs_c=2,missing=-999,...) {standardGeneric('ldiversity')})
+setMethod(f='ldiversity', signature=c('sdcMicroObj'),definition=function(obj, ldiv_index,l_recurs_c=2,missing=-999) { 
+      o <- obj@origData
+      k <- obj@manipKeyVars
+      n <- obj@manipNumVars
+      s <- obj@manipStrataVar
+      if(!is.null(k))
+        o[,colnames(k)] <- k
+      if(!is.null(n))
+        o[,colnames(n)] <- n
+      if(!is.null(s))
+        o$sdcGUI_strataVar <- s
+      kV <- colnames(obj@origData)[get.sdcMicroObj(obj,"keyVars")]
+      obj@risk$ldiversity <- ldiversityWORK(data=o,keyVars=kV,l_recurs_c=l_recurs_c,ldiv_index=ldiv_index,missing=missing)
+      return(obj)
+    })
+setMethod(f='ldiversity', signature=c("data.frame"),
+    definition=function(obj, keyVars,ldiv_index,l_recurs_c=2,missing=-999) { 
+      ldiversityWORK(data=obj,keyVars=keyVars,ldiv_index=ldiv_index,l_recurs_c=l_recurs_c,missing=missing)
+    })
+setMethod(f='ldiversity', signature=c("matrix"),
+    definition=function(obj, keyVars,ldiv_index,l_recurs_c=2,missing=-999) { 
+      ldiversityWORK(data=obj,keyVars=keyVars,ldiv_index=ldiv_index,l_recurs_c=l_recurs_c,missing=missing)
+    })
+
+      
+ldiversityWORK <- function(data,keyVars,ldiv_index,missing=-999,l_recurs_c=2){
   variables <- keyVars
   if((is.null(variables)||!variables%in%colnames(data))&&is.character(variables))
     stop("Please define valid key variables")
@@ -241,5 +267,5 @@ print.ldiversity <- function(x,...){
   cat("--------------------------\n")
   cat("L-Diversity Measures \n")
   cat("--------------------------\n")
-  print(summary(x[,-c(ncol(x)-1,ncol(x))]))
+  print(summary(x[,grep("_Distinct_Ldiversity",colnames(x))]))
 }

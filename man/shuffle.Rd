@@ -31,7 +31,7 @@ shuffle(obj, form,...)#, method="ds", weights=NULL, covmethod = "spearman", regm
 }
 \arguments{
   \item{obj}{
-  	data.frame including the data.
+  	An object of class sdcMicroObj or a data.frame including the data.
   }
 
   \item{form}{
@@ -47,7 +47,7 @@ shuffle(obj, form,...)#, method="ds", weights=NULL, covmethod = "spearman", regm
     \dQuote{mvn} or \dQuote{mlm}, see the details section. The last method is in experimental mode and almost untested.
   }
   \item{weights}{
-    Survey sampling weights.
+    Survey sampling weights. Automatically chosen when obj is of class \dQuote{sdcMicroObj}.
   }
   \item{covmethod}{
 	Method for covariance estimation. \dQuote{spearman}, \dQuote{pearson} and \
@@ -76,6 +76,10 @@ Method \dQuote{mlm} is also a simplification. A linear model is applied the expe
 shuffling is applied.
 }
 \value{
+If \sQuote{obj} is of class \dQuote{sdcMicroObj} the corresponding slots are filled, 
+  like manipNumVars, risk and utility. 
+If \sQuote{obj} is of class \dQuote{data.frame}  an object 
+  of class \dQuote{micro} with following entities is returned:
   \item{shConf }{the shuffled numeric key variables}
   \item{egadp }{the perturbed (using gadp method) numeric key variables}
 }

@@ -31,7 +31,7 @@ suda2(obj,...)#,variables=NULL,missing=-999,DisFraction=0.01)
 }}
 \arguments{
   \item{obj}{
-object of class \dQuote{data.frame}
+object of class \dQuote{data.frame} or object of class \dQuote{sdcMicroObj}
 }
 \item{...}{see arguments below}
   \item{variables}{
@@ -55,6 +55,7 @@ amount of variables needed to receive uniqueness, the higher the risk of the
 corresponding observation.
 }
 \value{
+A modified \dQuote{sdcMicroObj} object or the following list
 \item{ContributionPercent}{The contribution of each key variable to the SUDA score, calculated for each row.}
 \item{score }{The suda score.}
 \item{disscore }{The dis suda score}

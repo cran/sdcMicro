@@ -25,7 +25,8 @@ Global recoding
 globalRecode(obj,...)#, column,breaks, labels, method="equidistant")
 }
 \arguments{
-  \item{obj}{ vector of class numeric or of class factor with integer labels for recoding }
+  \item{obj}{ vector of class numeric or of class factor with integer labels for recoding or an object 
+  of class sdcMicroObj}
   \item{column}{which keyVar should be changed}
   \item{...}{see possible arguments below}
   \item{breaks}{ either a numeric vector of cut points or number giving the number of intervals which x is to be cut into. }
@@ -43,7 +44,7 @@ If a labels parameter is specified, its values are used to name the factor level
 If none is specified, the factor level labels are constructed. 
 }
 \value{
-A factor is returned, unless labels = FALSE which results in the mere integer level codes.
+the modified \dQuote{sdcMicroObj} or a factor, unless labels = FALSE which results in the mere integer level codes.
 }
 \seealso{  \code{\link{cut}} }
 \examples{

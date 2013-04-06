@@ -47,6 +47,7 @@ Objects can be created by calls of the form \code{new("sdcMicroObj", ...)}.
     \item{\code{manipKeyVars}:}{Object of class \code{"dataframeOrNULL"} ~~ }
     \item{\code{manipNumVars}:}{Object of class \code{"dataframeOrNULL"} ~~ }
     \item{\code{manipStrataVar}:}{Object of class \code{"factorOrNULL"} ~~ }
+    \item{\code{originalRisk}:}{Object of class \code{"listOrNULL"} ~~ }
     \item{\code{risk}:}{Object of class \code{"listOrNULL"} ~~ }
     \item{\code{utility}:}{Object of class \code{"listOrNULL"} ~~ }
     \item{\code{pram}:}{Object of class \code{"listOrNULL"} ~~ }

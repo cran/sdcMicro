@@ -27,7 +27,7 @@ report(obj, outdir=getwd(),filename="SDC-Report",Title="SDC-Report",...)
   }
 }
 \details{
-The application of this function gives you a html report for your sdcMicro object. 
+The application of this function provides you with a html report for your sdcMicro object. 
 }
 \section{Methods}{
 \describe{

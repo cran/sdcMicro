@@ -2,8 +2,8 @@ Package: sdcMicro
 Type: Package
 Title: Statistical Disclosure Control methods for the generation of
         public- and scientific-use files.
-Version: 4.0.0
-Date: 2013-03-30
+Version: 4.0.1
+Date: 2013-04-06
 Author: Matthias Templ, Alexander Kowarik, Bernhard Meindl
 Maintainer: Matthias Templ <matthias.templ@gmail.com>
 Description: Data from statistical agencies and other institutions are
@@ -12,6 +12,7 @@ Description: Data from statistical agencies and other institutions are
         of public- and scientific-use files.  The package sdcMicroGUI
         includes a graphical user interface for the methods in this
         package.
+LazyData: TRUE
 Depends: R (>= 2.10),R2HTML
 Imports: car, robustbase, cluster, MASS, e1071, R2HTML, Rcpp, Rglpk,
         methods
@@ -29,7 +30,7 @@ Collate: '0classes.r' 'addNoise.r' 'aux_functions.r' 'dataGen.r'
         'summary.freqCalc.R' 'summary.micro.R' 'summary.pram.r'
         'swappNum.R' 'timeEstimation.R' 'topBotCoding.R' 'valTable.R'
         'zzz.R'
-Packaged: 2013-03-22 06:14:21 UTC; alex
+Packaged: 2013-04-06 12:17:52 UTC; alex
 NeedsCompilation: yes
 Repository: CRAN
-Date/Publication: 2013-03-22 10:44:39
+Date/Publication: 2013-04-06 17:00:35

@@ -24,7 +24,7 @@ localSupp(obj, threshold=0.15, keyVar,...)# indivRisk)
 }
 }}
 \arguments{
-  \item{obj}{ object from class freqCalc }
+  \item{obj}{ object of class freqCalc or sdcMicroObj }
   \item{threshold}{ threshold for individual risk }
   \item{keyVar}{ Variable on which some values might be suppressed }
   \item{...}{see arguments below}
@@ -35,7 +35,7 @@ Values of high risk (above the threshold) of a certain variable (parameter keyVa
 are suppressed.
 }
 \value{
-Manipulated data with suppressions
+Manipulated data with suppressions or the \dQuote{sdcMicroObj} object with manipulated data.
 }
 \references{ 
 Templ, M.  

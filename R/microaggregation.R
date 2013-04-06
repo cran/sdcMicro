@@ -14,7 +14,7 @@ setMethod(f='microaggregation', signature=c('sdcMicroObj'),
       obj <- set.sdcMicroObj(obj, type="manipNumVars", input=list(as.data.frame(x)))
       
       obj <- dRisk(obj)
-      obj <- dRiskRMD(obj)
+#      obj <- dRiskRMD(obj)
       obj <- dUtility(obj)
       
       obj
@@ -29,7 +29,7 @@ setMethod(f='microaggregation', signature=c("matrix"),
     })
 
 
-microaggregationWORK <- function (x, variables=colnames(x),method = "pca", aggr = 3, weights=NULL, nc = 8, clustermethod = "clara",
+microaggregationWORK <- function (x, variables=colnames(x),method = "mdav", aggr = 3, weights=NULL, nc = 8, clustermethod = "clara",
     opt = FALSE, measure = "mean", trim = 0, varsort = 1, transf = "log", strata_variables=NULL
 )
 #,blow = TRUE, blowxm = 0)

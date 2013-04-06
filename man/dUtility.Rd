@@ -28,7 +28,7 @@ dUtility(obj,...)#, xm, method="IL1")
 }
 }}
 \arguments{
-  \item{obj}{ original data }
+  \item{obj}{ original data  or object of class sdcMicroObj}
   \item{...}{see arguments below}
   \item{xm}{ perturbed data }
   \item{method}{ method IL1 or eigen. More methods are implemented in summary.micro() }
@@ -41,7 +41,7 @@ Method \sQuote{eigen} and \sQuote{robeigen} compares the
 eigenvalues and robust eigenvalues form the original data and the perturbed data.
 }
 \value{
-data utility
+data utility or modified entry for data utility the \dQuote{sdcMicroObj}.
 }
 \references{for IL1s: see \url{http://vneumann.etse.urv.es/publications/sci/lncs3050Outlier.pdf},
  

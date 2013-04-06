@@ -4,7 +4,10 @@ setMethod(f='pram', signature=c('sdcMicroObj'),
       manipKeyVars <- get.sdcMicroObj(obj, type="manipKeyVars")
       x <- as.factor(manipKeyVars[,keyVar])
       
-      manipKeyVars[,keyVar] <- pramWORK(x=x, ...)$xpramed
+	  pW <- pramWORK(x=x, ...)
+	  summarypW <- summary(pW)
+	  
+      manipKeyVars[,keyVar] <- pW$xpramed 
       
       obj <- nextSdcObj(obj)
       
@@ -12,6 +15,8 @@ setMethod(f='pram', signature=c('sdcMicroObj'),
       
       obj <- calcRisks(obj)
       
+	  obj <- set.sdcMicroObj(obj, type="pram", input=list(summarypW))
+	  
       obj
     })
 setMethod(f='pram', signature=c("ANY"),

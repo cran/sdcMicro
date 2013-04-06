@@ -38,7 +38,7 @@ LocalRecProg(obj,ancestors=NULL,ancestor_setting=NULL,
 }}
 \arguments{
   \item{obj}{
-  Input data
+  Input data or object of class sdcMicroObj
 }
  \item{ancestors}{
   Names of ancestors of the cateorical variables
@@ -69,14 +69,15 @@ LocalRecProg(obj,ancestors=NULL,ancestor_setting=NULL,
   Names of numerical variables
 }
 }
-\value{
-dataframe with original variables and the supressed variables (suffix _lr).
-}
 \references{
 \url{http://www.stat.t.u-tokyo.ac.jp/~takemura/papers/localrec.pdf}
 }
 \author{
 Alexander Kowarik, Bernd Prantner, IHSN C++ source, Akimichi Takemura
+}
+\value{
+dataframe with original variables and the supressed variables (suffix _lr). / 
+ the modified \dQuote{sdcMicroObj}
 }
 \examples{
 # LocalRecProg

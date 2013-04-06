@@ -29,7 +29,7 @@ dRiskRMD(obj,...)#xm, k = 0.01, k2=0.05)
 }
 
 \arguments{
-  \item{obj}{ original data  }
+  \item{obj}{ original data or object of class sdcMicroObj  }
   \item{...}{see possible arguments below}
   \item{xm}{ masked data }
   \item{k}{ weight for adjusting the influence of the robust Mahalanobis distances, 
@@ -64,7 +64,7 @@ dRiskRMD(obj,...)#xm, k = 0.01, k2=0.05)
         If more than $m$ points are in such a small interval, we conclude that this observation is ``save''. 
 }
 \value{
-The disclosure risk.
+The disclosure risk or the modified \dQuote{sdcMicroObj}
   \item{risk1}{percentage of sensitive observations according to method RMDID1.}
   \item{risk2}{standardized version of risk1}
   \item{wrisk1}{amount of sensitive observations according to RMDID1 weighted by their corresponding robust Mahalanobis distances.}

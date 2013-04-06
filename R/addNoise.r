@@ -19,7 +19,7 @@ setMethod(f='addNoise', signature=c('sdcMicroObj'),
       }
       
       obj <- dRisk(obj)
-      obj <- dRiskRMD(obj)
+#      obj <- dRiskRMD(obj)
       obj <- dUtility(obj)
       obj
     })

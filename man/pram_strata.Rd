@@ -35,7 +35,7 @@ pram_strata(obj,variables,...)#,  strata_variables = NULL, weights = NULL,
 }}
 \arguments{
   \item{obj}{
-  Input data
+  Input data or object of class sdcMicroObj
 }
   \item{variables}{
   Names of variables for Post Randomization
@@ -62,7 +62,7 @@ pram_strata(obj,variables,...)#,  strata_variables = NULL, weights = NULL,
   
 }
 \value{
-For each randomized variable a new variable with the suffix "_pram" will  be created.
+a modified \dQuote{sdcMicroObj} object or new variables with the suffix "_pram" will  be created.
 }
 \references{
 \url{http://www.gnu.org/software/glpk}

@@ -23,7 +23,7 @@ pram(obj,keyVar=NULL,...)#x, pd=0.8, alpha=0.5)
 }
 }}
 \arguments{
-  \item{obj}{ a numeric vector or factor }
+  \item{obj}{ a numeric vector or factor, data.frame or object of class sdcMicroObj }
   \item{keyVar}{name of the keyVar that should be prammed}
   \item{...}{see arguments below}
   \item{pd}{ minimum diagonal entries for the generated transition matrix P. Either a vector of length 1 or a vector of length ( number of categories ). }
@@ -36,6 +36,7 @@ are random numbers between \sQuote{pd} and 1. The remaining entries of the matri
 the matrix is 1. Then a invariant transition matrix is generated.
 }
 \value{
+a modified \dQuote{sdcMicroObj} object or the following list
   \item{x}{ original vector }
   \item{xpramed}{ the perturbed vector }
   \item{pd}{ randomly generated diagonal entry of the P (between original pd and 1) }

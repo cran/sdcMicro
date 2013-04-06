@@ -1,3 +1,16 @@
+setGeneric('removeDirectID', function(obj,var) {standardGeneric('removeDirectID')})
+setMethod(f='removeDirectID', signature=c('sdcMicroObj'),
+    definition=function(obj, var) {
+      kV <- colnames(obj@origData)[get.sdcMicroObj(obj,"keyVars")]
+      if(any(var%in%kV))
+        stop("A direct identifier should not be seleceted as key variable.")
+      o <- obj@origData
+      if(any(!var%in%colnames(o)))
+        stop("direct identifier variable not found on data set")
+      o <- o[,-which(colnames(o)%in%var),drop=FALSE]
+      obj@origData <- o
+      obj
+    })
 setGeneric('varToFactor', function(obj,var) {standardGeneric('varToFactor')})
 setMethod(f='varToFactor', signature=c('sdcMicroObj'),
     definition=function(obj, var) {

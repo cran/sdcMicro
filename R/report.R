@@ -121,7 +121,7 @@ setMethod(f='report', signature=c('sdcMicroObj'),
 			
 			if(!is.null(pram)){
 				HTML("Information on Pramed Variables:")
-#				HTML(summary(obj@pram))
+				HTML(get.sdcMicroObj(obj, "pram"))
 			}
 			
 			

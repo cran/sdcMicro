@@ -29,6 +29,7 @@ By applying this function, the dislosure risk is re-estimated and the correspond
 class \dQuote{sdcMicro} are updated. This function mostly used internally to automatically update the risk after
 an sdc method is applied.
 }
+\seealso{ \code{\link{sdcMicroObj-class}}}
 \examples{
 data(testdata2)
 sdc <- createSdcObj(testdata2, keyVars=c('urbrur','roof','walls','water','electcon','relat','sex'), 

@@ -34,17 +34,19 @@ exportMethods(
 	'LLmodGlobalRisk',
 	'LocalRecProg',
 	'measure_risk',
+	'ldiversity',
 	'calcRisks',
   'undolast',
   'varToFactor',
-  'varToNumeric'
+  'varToNumeric',
+  'removeDirectID'
 )
 
 
 ##################################
 ### Export remaining functions ###
 ##################################
-export(
+export(removeDirectID,
 varToFactor,varToNumeric,groupVars,renameVars,
     undolast,calcRisks,report,addNoise, dataGen, dRisk, dUtility, globalRecode, LLmodGlobalRisk, LocalRecProg,
     createSdcObj,

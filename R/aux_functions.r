@@ -80,6 +80,7 @@ createSdcObj <- function(dat, keyVars, numVars=NULL, weightVar=NULL, hhId=NULL, 
 	}
 
 	obj <- measure_risk(obj)
+  obj@originalRisk <- obj@risk
   
   if ( length(numVars)>0 ) {
     obj <- dRisk(obj)
@@ -131,7 +132,6 @@ printFrequencies <- function(obj){
 	cat(paste(sum(obj@risk$individual[,2]<3), "obs. violate 3-anonymity \n"))
 	cat(" --------------------------\n")  
 }
-
 ###
 #library(sdcMicro4)
 #data(francdat)

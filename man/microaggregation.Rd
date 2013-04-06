@@ -11,7 +11,8 @@
   Function to perform various methods of microaggregation.
 }
 \usage{
-microaggregation(obj,variables,aggr=3,strata_variables=NULL,...)#,method = "pca", weights=NULL, nc = 8, clustermethod = "clara", opt = FALSE, measure = "mean", trim = 0, varsort = 1, transf = "log")%, blow = TRUE, blowxm = 0)
+microaggregation(obj,variables,aggr=3,strata_variables=NULL,...)
+#,method = "pca", weights=NULL, nc = 8, clustermethod = "clara", opt = FALSE, measure = "mean", trim = 0, varsort = 1, transf = "log")%, blow = TRUE, blowxm = 0)
 }
 \section{Methods}{
 \describe{
@@ -34,15 +35,14 @@ microaggregation(obj,variables,aggr=3,strata_variables=NULL,...)#,method = "pca"
 }}
 
 \arguments{
-  \item{obj}{ data frame or matrix }
-
-  \item{variables}{variables to microaggregate}
+  \item{obj}{ either an object of class sdcMicroObj or a data frame or matrix }
+  \item{variables}{variables to microaggregate. If obj is of class sdcMicroObj the categorical key variables are chosen per default.}
   \item{aggr}{ aggregation level (default=3)}
   \item{strata_variables}{by-variables for applying microaggregation only within strata defined by the variables}
   \item{...}{see arguments below}
   \item{method}{ pca, rmd, onedims, single, simple, clustpca, pppca, clustpppca, mdav, clustmcdpca, influence, mcdpca }
   \item{nc}{ number of cluster, if the chosen method performs cluster analysis }
-  \item{weights}{ sampling weights. If determined, a weighted version of the aggregation measure is chosen automatically, e.g. weighted median or weighted mean. }
+  \item{weights}{ sampling weights. If obj is of class sdcMicroObj the vector of sampling weights is chosen automatically. If determined, a weighted version of the aggregation measure is chosen automatically, e.g. weighted median or weighted mean. }
   \item{clustermethod}{ clustermethod, if necessary }
   \item{opt}{ experimental }
   \item{measure}{ aggregation statistic, mean, median, trim, onestep (default = mean) }
@@ -105,7 +105,11 @@ replies the question how much better is a sorting of the data before aggregation
 %If blow is set to FALSE, the result will be a data set with dimension n divided by aggr. 
 }
 \value{
-  \item{mx  }{ aggregated data set }
+If \sQuote{obj} was of class \dQuote{sdcMicroObj} the corresponding slots are filled, 
+  like manipNumVars, risk and utility. 
+If \sQuote{obj} was of class \dQuote{data.frame} or \dQuote{matrix} an object 
+  of class \dQuote{micro} with following entities is returned:
+    \item{mx  }{  the aggregated data}
   \item{x }{original data}
   \item{method  }{method  }
   %\item{clustering  }{ TRUE, if a clustering is done before microaggregation }

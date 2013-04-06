@@ -28,7 +28,7 @@ localSuppression(obj,...)#, keyVars, k=2, importance=NULL)
 }
 }}
 \arguments{
-  \item{obj}{ data frame or matrix }
+  \item{obj}{ an object of class sdcMicroObj or a data frame or matrix }
   \item{...}{see arguments below}
   \item{keyVars}{ numeric vector specifying indices of (categorical) key-variables }
   \item{k}{ threshold for k-anonymity }
@@ -47,7 +47,7 @@ important than key variables with a low number of characteristics.
 }
 \value{
 Manipulated data set with suppressions that has k-anonymity 
-with respect to specified key-variables
+with respect to specified key-variables or the manipulated data stored in the \dQuote{sdcMicroObj} object.
 }
 
 \author{ Bernhard Meindl, Matthias Templ}

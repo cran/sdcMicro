@@ -29,8 +29,8 @@ addNoise(obj, variables,noise=150,method="additive",...)#,p,delta)
 }
 }
 \arguments{
-  \item{obj}{ data frame or matrix which should be perturbed  or a sdcMicroObj}
-  \item{variables}{vector with names of variables, whoch should be perturbed}
+  \item{obj}{ either a data frame, matrix or a sdcMicroObj that should be perturbed}
+  \item{variables}{vector with names of variables that should be perturbed}
   \item{noise}{ amount of noise (in percentages)}
   \item{method}{ choose between \sQuote{additive}, \sQuote{correlated}, \sQuote{correlated2}, \sQuote{restr}, \sQuote{ROMM}, \sQuote{outdect}  }
   \item{...}{see possible arguments below}
@@ -39,6 +39,10 @@ addNoise(obj, variables,noise=150,method="additive",...)#,p,delta)
    in the reference below. }  
 }
 \details{
+If \sQuote{obj} is of class \dQuote{sdcMicroObj} all continuous key variables are selected per default.
+If \sQuote{obj} is of class \dQuote{data.frame} or \dQuote{matrix}, the continuous variables have to
+be specified.
+
   Method \sQuote{additive} adds noise completely at random to each variable 
   depending on there size and standard deviation. \sQuote{correlated}
    and method \sQuote{correlated2} adds noise and preserves the covariances as descriped in 
@@ -52,7 +56,11 @@ addNoise(obj, variables,noise=150,method="additive",...)#,p,delta)
    based on a robust mahalanobis distancs calculated by the MCD estimator.
 }
 \value{
-  An object of class \dQuote{micro} with following entities:
+  If \sQuote{obj} was of class \dQuote{sdcMicroObj} the corresponding slots are filled, like manipNumVars,
+  risk and utility.
+  
+  If \sQuote{obj} was of class \dQuote{data.frame} or \dQuote{matrix} an object 
+  of class \dQuote{micro} with following entities is returned:
   \item{x }{ the original data }
   \item{xm }{ the modified (perturbed) data }
   \item{method }{method used for perturbation}
@@ -91,7 +99,7 @@ Springer, 31-62, 2010, ISBN: 978-1-84996-237-7.
              
 }
 \author{ Matthias Templ }
-\seealso{  \code{\link{summary.micro}} }
+\seealso{ \code{\link{sdcMicroObj-class}}, \code{\link{summary.micro}} }
 \examples{
 data(Tarragona)
 a1 <- addNoise(Tarragona)
@@ -100,7 +108,7 @@ a1
 data(testdata)
 testdata[, c('expend','income','savings')] <- addNoise(testdata[,c('expend','income','savings')])$xm
 
-## for objects of class sdcMicro:
+## for objects of class sdcMicroObj:
 data(testdata2)
 sdc <- createSdcObj(testdata2, keyVars=c('urbrur','roof','walls','water','electcon','relat','sex'), 
            numVars=c('expend','income','savings'), w='sampling_weight')

@@ -32,7 +32,7 @@ rankSwap(obj,...)#, variables, TopPercent = 5, BottomPercent = 5, K0 = -1, R0 = 
 }}
 \arguments{
   \item{obj}{
-matrix or data frame
+object of class sdcMicroObj or matrix or data frame
 }
 \item{...}{see arguments below}
   \item{variables}{
@@ -71,7 +71,7 @@ observations.
 
 }
 \value{
-The rank-swapped data set.
+The rank-swapped data set or a modified \dQuote{sdcMicroObj} object.
 }
 \references{
 Moore, Jr.R. (1996) 

@@ -42,8 +42,10 @@ For details see at the reference.
 \references{ Have a look at \url{http://vneumann.etse.urv.es/publications/sci/lncs3050FastGen.pdf} }
 \author{ Matthias Templ }
 \note{ With this method only multivariate normal distributed data with approxiomately the same covariance as the original data can be generated
-without reflecting the distribution of real complex data, which are, in general, not follows a multivariate normal distribution.
+without reflecting the distribution of real complex data, which are, in general, not follows 
+a multivariate normal distribution. 
 }
+\seealso{ \code{\link{sdcMicroObj-class}}, \code{\link{shuffle}}}
 \examples{
 data(mtcars)
 cov(mtcars[,4:6])

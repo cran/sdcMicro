@@ -34,15 +34,15 @@ dUtilityWORK <- function (x, xm, method = "IL1")
     return(infLoss1)
   }
   if (method == "eigen") {
-    e1 <- eigen(cov(x))$values
-    e2 <- eigen(cov(xm))$values
-    d <- sum(abs(e1 - e2))
+    e1 <- eigen(cov(scale(x)))$values
+    e2 <- eigen(cov(scale(xm)))$values
+    d <- sum(abs(e1 - e2)/e1)
     return(d)
   }
   if (method == "robeigen") {
-    e1 <- eigen(covMcd(x)$cov)$values
-    e2 <- eigen(covMcd(xm)$cov)$values
-    d <- sum(abs(e1 - e2))
+    e1 <- eigen(covMcd(scale(x))$cov)$values
+    e2 <- eigen(covMcd(scale(xm))$cov)$values
+    d <- sum(abs(e1 - e2)/e1)
     return(d)
   }
 }

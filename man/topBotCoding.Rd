@@ -24,7 +24,7 @@ topBotCoding(obj,...)#x, value, replacement, kind = "top")
 }}
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{obj}{ vector or one-dimensional matrix or data.frame }
+  \item{obj}{ vector or one-dimensional matrix or data.frame or object of class \dQuote{sdcMicroObj} }
   \item{...}{see arguments below}
   \item{value}{ limit, from where it should be top- or bottom-coded }
   \item{replacement}{ replacement value. }
@@ -34,7 +34,7 @@ topBotCoding(obj,...)#x, value, replacement, kind = "top")
 Extreme values are replaced by one value to reduce the disclosure risk.
 }
 \value{
-Top or bottom coded data.
+Top or bottom coded data or modified \dQuote{sdcMicroObj}.
 }
 \author{ Matthias Templ }
 \seealso{ \code{\link{indivRisk}} }

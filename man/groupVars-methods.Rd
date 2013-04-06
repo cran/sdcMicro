@@ -23,6 +23,9 @@ groupVars(obj, var, before, after)
 %%  ~~describe this method here~~
 }
 }}
+\value{
+ the modified \dQuote{sdcMicroObj}
+}
 \examples{
 ## for objects of class sdcMicro:
 data(testdata2)

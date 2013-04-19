@@ -7,7 +7,7 @@ setMethod(f='removeDirectID', signature=c('sdcMicroObj'),
       o <- obj@origData
       if(any(!var%in%colnames(o)))
         stop("direct identifier variable not found on data set")
-      o <- o[,-which(colnames(o)%in%var),drop=FALSE]
+      o[,colnames(o)%in%var] <- NA
       obj@origData <- o
       obj
     })

@@ -8,22 +8,24 @@
  Summary statistics of the original and the perturbed data set
 }
 \usage{
-report(obj, outdir=getwd(),filename="SDC-Report",Title="SDC-Report",...)
+report(obj, outdir=getwd(),filename="SDC-Report",Title="SDC-Report",internal=TRUE)
 }
 \arguments{
 \item{obj}{
   	an object of class 'sdcMicroObj'
   }
 
-  \item{...}{see possible arguments below}
   \item{outdir}{
 	output folder
   }
   \item{filename}{
    	output filename
   }
-    \item{Title}{
+  \item{Title}{
    	Title for HTML
+  }
+  \item{internal}{
+   	TRUE for the long internal version of the report. FALSE for a short version for externals.
   }
 }
 \details{
@@ -52,7 +54,7 @@ LLmodGlobalRisk(x, inclProb=1/mean(free1[,"WEIGHT"]))
 data(testdata2)
 sdc <- createSdcObj(testdata2, keyVars=c('urbrur','roof','walls','water','electcon','relat','sex'), 
            numVars=c('expend','income','savings'), w='sampling_weight')
-\dontrun{report(sdc)}
+report(sdc)
 }
 }
 \keyword{methods}

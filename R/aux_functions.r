@@ -126,12 +126,6 @@ setMethod(f='calcRisks', signature=c('sdcMicroObj'),
       obj
     })
 
-printFrequencies <- function(obj){
-	cat("\n --------------------------\n")
-	cat(paste(sum(obj@risk$individual[,2]<2), "obs. violate 2-anonymity \n"))
-	cat(paste(sum(obj@risk$individual[,2]<3), "obs. violate 3-anonymity \n"))
-	cat(" --------------------------\n")  
-}
 ###
 #library(sdcMicro4)
 #data(francdat)

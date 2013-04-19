@@ -1,7 +1,7 @@
-setGeneric('report', function(obj, outdir=getwd(),filename="SDC-Report",Title="SDC-Report",...) {
+setGeneric('report', function(obj, outdir=getwd(),filename="SDC-Report",Title="SDC-Report",internal=TRUE) {
       standardGeneric('report')})
 setMethod(f='report', signature=c('sdcMicroObj'),
-		definition=function(obj, outdir=getwd(),filename="SDC-Report",Title="SDC-Report",...) { 
+		definition=function(obj, outdir=getwd(),filename="SDC-Report",Title="SDC-Report",internal=TRUE) { 
 			x <- get.sdcMicroObj(obj, type="origData")
 			y1 <- get.sdcMicroObj(obj, type="manipKeyVars")
 			y2 <- get.sdcMicroObj(obj, type="manipNumVars")
@@ -21,7 +21,9 @@ setMethod(f='report', signature=c('sdcMicroObj'),
         stratacn <- colnames(x)[get.sdcMicroObj(obj, type="strataVar")]
       else
         stratacn <- "not defined"
-			
+	
+	  n <- nrow(obj@origData)
+	  pCat <- length(obj@keyVars)
       wind <- get.sdcMicroObj(obj, type="weightVar")
       if(length(wind)>0)
   			weightcn <- colnames(x)[wind]
@@ -30,7 +32,7 @@ setMethod(f='report', signature=c('sdcMicroObj'),
 			#########################
 			###   HTML START   ###### 
 			HTMLStart(outdir=outdir, filename=filename, Title=Title)
-			HTML.title("SDC Report by sdcMicroGUI", HR=1)
+			if(internal) HTML.title("SDC Report by sdcMicroGUI", HR=1) else HTML.title("Short SDC Report by sdcMicroGUI", HR=1)
 #			HTML.title("Path (files):", HR=3)
 #			PATHIMPORTEDDATA <- "D:/TODOINPUTPATHANDFILENAME"
       if("filename"%in%names(optionss)){
@@ -44,6 +46,7 @@ setMethod(f='report', signature=c('sdcMicroObj'),
 			#############################################
 			###   Begin Report on Cat Key Variables   ###
 			#############################################
+			HTML(paste("The data set consits of", nrow(x), "observations"))
 			HTML.title("Selected (Key) Variables:", HR=3)
 			maxcols <- max(c(length(y1cn), length(y2cn)))
 			df <- data.frame(matrix(, ncol=maxcols, nrow=5))
@@ -58,51 +61,86 @@ setMethod(f='report', signature=c('sdcMicroObj'),
 			df[5,] <- extend(stratacn, maxcols)
 			rownames(df) <- c("Categorical", "Continuous", "weight", "hhID", "strata")
 			HTML(df)
-			HTML(paste("your data consits of", nrow(x), "observations"))
+
 			sensiblecn <- get.sdcMicroObj(obj, "sensibleVar")
 			if(!is.null(sensiblecn)){
 				HTML(paste("for ldiversity the following sensible variables have been selected", 
 								colnames(x)[sensiblecn]))
-			}
-			
-			HTMLhr()
-			HTMLhr()
+			}			
+#			HTMLhr()
+#			HTMLhr()
 			
 			###########################################
 			###   Report on Anonymisation Methods   ###
 			###########################################
-			HTML.title("Applied Anonymization Methods:", HR=3)
-			HTML("TODO - List Methods that have been applied, from R code that is generated.")
-			
+#			HTML.title("Modifications:", HR=3)
+			modCat <- sum(!(obj@origData[,obj@keyVars] == obj@manipKeyVars), na.rm=TRUE) > 0
+			#isTRUE(sdc@origData[,sdc@keyVars] == sdc@manipKeyVars)
+			modNum <- sum(!(obj@origData[,obj@numVars] == obj@manipNumVars), na.rm=TRUE) > 0
+			modPram <- !is.null(obj@pram)
+			modLocSupp <- !is.null(obj@localSuppression)			
+			HTML(paste("Modifications on categorical key variables:",modCat))
+			HTML(paste("Modifications on continuous key variables:",modNum))	
+			HTML(paste("Modifications using PRAM:",modPram))
+			HTML(paste("Local suppressions:",modLocSupp))			
 			HTMLhr()
 			HTMLhr()
-			
+			if(internal){
 			#############################################
 			###   DISCLOSURE RISK                     ###
 			#############################################
 			HTML.title("Disclosure Risk:", HR=3)
 			HTMLhr()
-			
-			## disclosure risk on categorical key variables
-			HTML.title("Disclosure Risk Categorical Variables:", HR=4)
 			pram <- get.sdcMicroObj(obj, "pram")
 			if(!is.null(pram)){
-				HTML("you applied (also) PRAM, the following risk is of interest but not appropriate")
-			}
+				HTML.title("Changes with PRAM:", HR=4)
+#				HTML("you applied PRAM")			
+				HTML("Number of changed categories: \n")
+				for(i in 1:length(obj@keyVars)){
+					s <- sum(obj@origData[,obj@keyVars[i]] != obj@manipKeyVars[,i])
+					p <- round(s/nrow(obj@origData)*100,2)
+					HTML(paste(colnames(obj@origData)[obj@keyVars][i]," != ", colnames(obj@origData)[obj@keyVars][i],"_pramed"," : ",s," (",p,"%)","\n",sep=""))
+				}
+				HTML(print(paste("Total number of changes in the categorical key variables:",
+										sum(obj@origData[,obj@keyVars] != obj@manipKeyVars),
+										"(",round(100*sum(obj@origData[,obj@keyVars] != obj@manipKeyVars)/(n*pCat),4)," %)"
+				)))
+			} else{
+			HTML.title("Frequency Analysis for Categorical Key Variables:", HR=4)	
+		    ## k-anonymity
+			HTML(print("Number of observations violating\n"))
+			HTML(print("\n -  2-anonymity:  "))
+			HTML(print(paste(sum(obj@risk$individual[,2]<2),
+							"(unmodified data: ",sum(obj@originalRisk$individual[,2]<2),")\n")))
+			HTML(print(" -  3-anonymity:  "))
+			HTML(print(paste(sum(obj@risk$individual[,2]<3),
+							"(unmodified data: ",sum(obj@originalRisk$individual[,2]<3),")")))
+			HTML(print("\n--------------------------\n"))  
+			n <- nrow(obj@origData)
+			HTML(print("\nPercentage of observations violating\n"))
+			HTML(print(" -  2-anonymity:  "))
+			HTML(print(paste(round(sum(obj@risk$individual[,2]<2)/n*100,2),"% ",
+							"(unmodified data: ",round(sum(obj@originalRisk$individual[,2]<2)/n*100,2),"%",")\n")))
+			HTML(print(" -  3-anonymity:  "))
+			HTML(print(paste(round(sum(obj@risk$individual[,2]<3)/n*100,2),"% ",
+							"(unmodified data: ",round(sum(obj@originalRisk$individual[,2]<3)/n*100,2),"%",")")))
+			
+			## individual risk:
+			HTML(print("\n--------------------------\n"))  
+			HTML.title("Disclosure Risk Categorical Variables:", HR=4)
 			risk <- get.sdcMicroObj(obj, type="risk")
 			HTML("Expected Percentage of Reidentifications:")
 			HTML(paste(round(risk$global$risk_pct, 4), 
 							"%  ( ~ ", round(risk$global$risk*nrow(x)), "observations )" ))
 			## TODO: save risk of original data and not renewly calculate it:
-      if(weightcn=="not defined")
-        weightcn <- NULL
+     		if(weightcn=="not defined") weightcn <- NULL
 			ro <- measure_risk(x, keyVars=y1cn, w=weightcn)$global_risk_pct
-			HTML(paste("( original data:", round(ro,2)," % )" ))
+			HTML(paste("( unmodified data:", round(ro,4)," % )" ))
 			
-			HTML(paste("Information on k-anonymity:"))
-			y1w <- cbind(y1, w=x[,wind])
-			fr <- freqCalc(y1w, keyVars=1:(ncol(y1w)-1), w=ncol(y1w))
-	        HTML(fr)
+#			HTML(paste("Information on k-anonymity:"))
+#			y1w <- cbind(y1, w=x[,wind])
+#			fr <- freqCalc(y1w, keyVars=1:(ncol(y1w)-1), w=ncol(y1w))
+#	        HTML(fr)
 			
 			HTML(paste("10 combinations of categories with highest risk:"))
 #			rownames(risk$individual) <- 1:nrow(x)
@@ -110,32 +148,50 @@ setMethod(f='report', signature=c('sdcMicroObj'),
 #			HTML(cbind(y1[so,], risk$individual[so,]))
 			or <- cbind(y1, risk$individual)
 			index <- apply(y1, 1, paste, collapse="")
-      or <- or[!duplicated(index),]
+      		or <- or[!duplicated(index),]
 			or <- or[order(or$risk,decreasing = TRUE),]
 			HTML(or[1:10,])
+			}
 			
-
-			HTML("TODO - present hiercharical DR. CURRENTLY RISK ON HIERARCHICAL DATA IS NOT SAVED IN THE SDC MICRO OBJ")
+			if("hier_risk_ER"%in%names(obj@risk$global)){
+				if(!is.na(obj@risk$global$hier_risk_ER)){
+					HTML(print("--------------------------\n"))
+					HTML(print("Hierarchical risk \n"))
+#					HTML(print("--------------------------\n"))
+					HTML(print(paste("Expected no. of re-identifications:\n",
+							round(obj@risk$global$hier_risk_ER,2),"")))
+					HTML(print(paste("[",round(obj@risk$global$hier_risk_pct,2),"%]  (orig:", 
+							round(obj@originalRisk$global$hier_risk_ER,2), 
+							"[",round(obj@originalRisk$global$hier_risk_pct,2),"%])\n")))
+				}else{
+					HTML(print("--------------------------\n"))
+					HTML(print("Hierarchical risk not available\n"))
+					HTML(print("--------------------------\n"))
+				}
+			}
 			
 			HTMLhr()
 			
-			if(!is.null(pram)){
-				HTML("Information on Pramed Variables:")
-				HTML(get.sdcMicroObj(obj, "pram"))
-			}
+#			if(!is.null(pram)){
+#				HTML("Information on Pramed Variables:")
+#				HTML(get.sdcMicroObj(obj, "pram"))
+#			}
 			
 			
 			#			HTML("Allowing 1 % risky observations")
 	
-			HTMLhr()
+#			HTMLhr()
 			
 			## disclosure risk on continuous key variables
 			HTML.title("Disclosure Risk Continuous Scaled Variables:", HR=4)
 			risknum <- get.sdcMicroObj(obj, "risk")$numeric
 			if(!is.null(get.sdcMicroObj(obj, "manipNumVars"))){
 				HTML(paste("Distance-based Disclosure Risk for Continuous Key Variables:"))
-				HTML(paste("Percent of Observations with high risk:",round(risknum*100,3),"% ( ~", 
-								round(risknum*nrow(x)), " observations )" ))
+#				HTML(paste("Percent of Observations with high risk:",round(risknum*100,3),"% ( ~", 
+#								round(risknum*nrow(x)), " observations )" ))
+				HTML(paste("Disclosure Risk is between: \n [0% ; ", 
+						round(100*obj@risk$numeric,2), "%] (current)\n 
+								(original data: ~", 100, "%) \n",sep=""))
 			}
 			HTMLhr()
 			HTMLhr()
@@ -151,7 +207,7 @@ setMethod(f='report', signature=c('sdcMicroObj'),
 				colnames(df) <- paste(1:maxcols)
 				df[1,] <- levels(factor(x[,i]))
 				df[2,] <- table(factor(x[,i]))
-				df[4,] <- table(factor(y1[,ind]))
+				df[4,] <- extend(table(factor(y1[,ind])), maxcols)
 				df[3,] <- extend(levels(factor(y1[,ind])), maxcols)
 #				colnames(df) <- levels(factor(x[,i]))
 				rownames(df) <- c("categories1","orig","categories2","recoded")
@@ -160,12 +216,7 @@ setMethod(f='report', signature=c('sdcMicroObj'),
 				HTML(df)
 				ind <- ind +1
 			}
-			
-			#################
-			HTMLhr()
-			HTML("TODO: if PRAM: apply and present output from PRAM print method")
-			HTMLhr()
-			
+				
 			##################
 			HTML.title("Local Suppressions", HR=5)
 			HTML("Number of local suppressions:")
@@ -179,14 +230,29 @@ setMethod(f='report', signature=c('sdcMicroObj'),
 			HTML(df)
 			
 			if(ncol(y2)>0){
-        HTMLhr()
+        	HTMLhr()
 			  HTML.title("Data Utility of Continuous Scaled Key Variables:", HR=4)
-			  HTML("Univariate Summary for original variables:")
+			  HTML("Univariate Summary:")
 			  s <- apply(x[,y2cn], 2, summary, na.rm=TRUE) 
-			  HTML(s) 	
-			  HTML("Univariate Summary for Perturbed Variables:")
+#			  HTML(s) 	
+#			  HTML("Univariate Summary for Perturbed Variables:")
 			  ss <- apply(y2, 2, function(x) round(summary(x, na.rm=TRUE),1)) 
-			  HTML(ss)
+			  colnames(ss) <- paste(colnames(ss),"_m")
+#			  HTML(ss)
+			  pNum <- length(obj@numVars)
+			  xx <- cbind(s,ss)
+			  if(pNum > 1){
+			  	SEQ <- SEQinit <- c(1,pNum+1)
+				for(i in 1:(pNum-1)){
+				  SEQ <- c(SEQ, SEQinit+i)
+				}
+		  	  }
+			  xx <- xx[, SEQ]
+              HTML(xx)
+			  HTML(paste("- Information Loss:\n    IL1: ", 
+					  round(obj@utility$il1,2))) 
+	          HTML(paste("Difference Eigenvalues: ",round(obj@utility$eigen*100,2)," %",
+					  "\n\n (orig: Information Loss: 0) \n",sep=""))
 #	HTML("Relative Differences (in %):")
 #	s <- s %/% ss
 #	options(scipen=999)
@@ -207,6 +273,7 @@ setMethod(f='report', signature=c('sdcMicroObj'),
         for(i in 1:length(obj@options$cmd))
         HTML(obj@options$cmd[[i]])
       }
+	  }
       HTMLhr()
       HTML.title("Session Info:", HR=3)
       HTML(sessionInfo())

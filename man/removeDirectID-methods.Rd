@@ -5,14 +5,14 @@
 \alias{removeDirectID,sdcMicroObj-method}
 \title{ Remove certain variables from the data set inside a sdc object.}
 \description{
- Delete variables without changing anything else in the sdcObject.
+ Delete variables without changing anything else in the sdcObject (writing NAs).
 }
 \usage{
 removeDirectID(obj, var)
 }
 \arguments{
   \item{obj}{ object of class 'sdcMicroObj }
-  \item{var}{name of the variable(s) to remove}
+  \item{var}{name of the variable(s) to be remove}
 }  
 \section{Methods}{
 \describe{

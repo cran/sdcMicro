@@ -13,6 +13,8 @@ exportClasses(
 )
 
 exportMethods(
+	'freq',
+	'print',
 	'get.sdcMicroObj',
 	'nextSdcObj',
 	'report',
@@ -47,7 +49,7 @@ exportMethods(
 ### Export remaining functions ###
 ##################################
 export(removeDirectID,
-varToFactor,varToNumeric,groupVars,renameVars,
+varToFactor,varToNumeric,groupVars,renameVars,freq,
     undolast,calcRisks,report,addNoise, dataGen, dRisk, dUtility, globalRecode, LLmodGlobalRisk, LocalRecProg,
     createSdcObj,
     dRiskRMD,

@@ -91,15 +91,39 @@ createSdcObj <- function(dat, keyVars, numVars=NULL, weightVar=NULL, hhId=NULL, 
 
 	obj
 }
+computeNumberPrev <- function(obj){
+  tmpo <- obj
+  for(i in 1:1000){
+    tmpo <- tmpo@prev
+    if(is.null(tmpo))
+      return(i-1)
+  }
+}
+deletePrevSave <- function(obj,m){
+  nprev <- computeNumberPrev(obj)
+  if(m>=1&&m<=nprev){
+    cmd <- paste("obj@",paste(rep("prev",m),collapse="@"),"<-NULL",sep="")
+    eval(parse(text=cmd))
+  }
+  return(obj)
+}
 setGeneric('nextSdcObj', function(obj) {standardGeneric('nextSdcObj')})
 setMethod(f='nextSdcObj', signature=c('sdcMicroObj'),
     definition=function(obj) {
       options <- get.sdcMicroObj(obj, type="options")
-      if('noUndo' %in% options)
+      if(('noUndo' %in% options))
         return(obj)
+      if(nrow(obj@origData)>100000){
+        warning("No previous states are saved because your data set has more than 100 000 observations.")
+        return(obj)
+      }
+      if(length(grep("maxUndo",options))>0)
+        maxUndo <- as.numeric(substr(options[grep("maxUndo",options)],9,stop=nchar(options[grep("maxUndo",options)])))
+      else
+        maxUndo <- 1
+      obj <- deletePrevSave(obj,maxUndo)
       obj <- set.sdcMicroObj(obj, type="prev", input=list(obj))
       return(obj) 
-      
     })
 
 setGeneric('calcRisks', function(obj, ...) {standardGeneric('calcRisks')})
@@ -126,6 +150,24 @@ setMethod(f='calcRisks', signature=c('sdcMicroObj'),
       obj
     })
 
+
+setGeneric('extractManipData', function(obj,ignoreKeyVars=FALSE,ignoreNumVars=FALSE,
+        ignoreStrataVar=FALSE) {standardGeneric('extractManipData')})
+setMethod(f='extractManipData', signature=c('sdcMicroObj'),
+    definition=function(obj,ignoreKeyVars=FALSE,ignoreNumVars=FALSE,
+        ignoreStrataVar=FALSE) { 
+      o <- obj@origData
+      k <- obj@manipKeyVars
+      n <- obj@manipNumVars
+      s <- obj@manipStrataVar
+      if(!is.null(k)&&!ignoreKeyVars)
+        o[,colnames(k)] <- k
+      if(!is.null(n)&&!ignoreNumVars)
+        o[,colnames(n)] <- n
+      if(!is.null(s)&&!ignoreStrataVar)
+        o$sdcGUI_strataVar <- s
+      return(o)
+    })
 ###
 #library(sdcMicro4)
 #data(francdat)

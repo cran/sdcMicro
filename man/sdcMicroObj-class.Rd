@@ -53,6 +53,7 @@ Objects can be created by calls of the form \code{new("sdcMicroObj", ...)}.
     \item{\code{pram}:}{Object of class \code{"listOrNULL"} ~~ }
     \item{\code{localSuppression}:}{Object of class \code{"listOrNULL"} ~~ }
     \item{\code{options}:}{Object of class \code{"listOrNULL"} ~~ }
+    \item{\code{additionalResults}:}{Object of class \code{"listOrNULL"} ~~ }
     \item{\code{set}:}{Object of class \code{"listOrNULL"} ~~ }
     \item{\code{prev}:}{Object of class \code{"sdcmicroOrNULL"} ~~ }
   }
@@ -76,7 +77,9 @@ Bernhard Meindl, Elias Rut, Alexander Kowarik, Matthias Templ
 showClass("sdcMicroObj")
 \dontrun{
 data(testdata)
-sdc <- createSdcObj(testdata, keyVars=c('urbrur','roof','walls','water','electcon','relat','sex'), numVars=c('expend','income','savings'), w='sampling_weight')
+sdc <- createSdcObj(testdata,
+  keyVars=c('urbrur','roof','walls','water','electcon','relat','sex'),
+  numVars=c('expend','income','savings'), w='sampling_weight')
 head(sdc@manipNumVars)
 ### Display Risks
 sdc@risk$global
@@ -145,7 +148,8 @@ head(get.sdcMicroObj(sdc, type="manipNumVars"))
 sdc@risk$numeric
 ### LocalRecProg
 data(testdata2)
-sdc <- createSdcObj(testdata2, keyVars=c("urbrur", "roof", "walls", "water", "sex", "relat"))
+sdc <- createSdcObj(testdata2,
+  keyVars=c("urbrur", "roof", "walls", "water", "sex", "relat"))
 sdc@risk$global
 sdc <- LocalRecProg(sdc)
 sdc@risk$global

@@ -2,8 +2,8 @@ Package: sdcMicro
 Type: Package
 Title: Statistical Disclosure Control methods for the production of
         public- and scientific-use files.
-Version: 4.0.2
-Date: 2013-04-19
+Version: 4.0.3
+Date: 2013-06-05
 Author: Matthias Templ, Alexander Kowarik, Bernhard Meindl
 Maintainer: Matthias Templ <matthias.templ@gmail.com>
 Description: Data from statistical agencies and other institutions are
@@ -29,8 +29,8 @@ Collate: '0classes.r' 'addNoise.r' 'aux_functions.r' 'dataGen.r'
         'rankSwap.R' 'report.R' 'shuffle.R' 'suda2.R'
         'summary.freqCalc.R' 'summary.micro.R' 'summary.pram.r'
         'swappNum.R' 'timeEstimation.R' 'topBotCoding.R' 'valTable.R'
-        'zzz.R' 'printFunctions.R'
-Packaged: 2013-04-22 14:50:55 UTC; alex
+        'zzz.R' 'printFunctions.R' 'mafast.R'
+Packaged: 2013-06-12 05:33:10 UTC; alex
 NeedsCompilation: yes
 Repository: CRAN
-Date/Publication: 2013-04-22 22:04:44
+Date/Publication: 2013-06-12 09:19:52

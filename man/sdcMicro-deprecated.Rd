@@ -12,8 +12,10 @@
 }
 
 \usage{
-localSupp2(x, keyVars, w, importance=rep(1, length(keyVars)), method="minimizeSupp", k=1)
-localSupp2Wrapper (x, keyVars, w, importance=rep(1, length(keyVars)), method="minimizeSupp", kAnon=2) 
+localSupp2(x, keyVars, w, importance=rep(1, length(keyVars)),
+  method="minimizeSupp", k=1)
+localSupp2Wrapper (x, keyVars, w, importance=rep(1, length(keyVars)),
+  method="minimizeSupp", kAnon=2) 
 }
 
 \arguments{

@@ -162,20 +162,23 @@ void compute_group_ldiversity(int group_size, SVariable *pSensitive_Var, int NbV
 /**
  * Computes the multi l-diversity values for the current group
  */
-void Compute_Multi_LDiversity(int Obs, int GroupSize)
+void Compute_Multi_LDiversity(int Obs, int GroupSize,Rcpp::NumericMatrix Mat,Rcpp::NumericVector indexSensVar)
 {
 	int i, j, k, l;
 	const int NbVar = g_Config.Nb_Sensitive_Var;
 	double *pSet = new double[GroupSize * NbVar];
+	int var_pos;
 	int *pSetIndex = new int[GroupSize];
 	BOOL First = TRUE;
-	Rcpp::NumericMatrix Mat;
-
 	//=== Load the SubSet
 	ForLoop (i, GroupSize)
 	{
-		ForLoop (j, NbVar)
-			pSet[i * NbVar + j] = Mat(Obs + i, g_Config.Sensitive_Var[j].position);
+		ForLoop (j, NbVar){
+			var_pos=indexSensVar(j)-1;
+			//printf("Obs + i %d \n",Obs+i);
+			//printf("pos %d \n -----\n",var_pos);
+			pSet[i * NbVar + j] = Mat(Obs + i, var_pos);
+		}
 			//g_pDataset->GetValue(g_Config.Sensitive_Var[j].position, Obs + i, pSet + i * NbVar + j);
 
 		pSetIndex[i] = i;
@@ -765,7 +768,7 @@ RcppExport SEXP measure_risk(SEXP data, SEXP weighted_R, SEXP n_key_vars_R, SEXP
 
 
 						if (g_Config.Nb_Sensitive_Var >= 2){
-														Compute_Multi_LDiversity(current_obs - group_size, group_size);
+														Compute_Multi_LDiversity(current_obs - group_size, group_size,Mat,ldiv_index_RR);
 
 						}
 					}

@@ -29,8 +29,9 @@ groupVars(obj, var, before, after)
 \examples{
 ## for objects of class sdcMicro:
 data(testdata2)
-sdc <- createSdcObj(testdata2, keyVars=c('urbrur','roof','walls','water','electcon','relat','sex'), 
-           numVars=c('expend','income','savings'), w='sampling_weight')
+sdc <- createSdcObj(testdata2,
+  keyVars=c('urbrur','roof','walls','water','electcon','relat','sex'), 
+  numVars=c('expend','income','savings'), w='sampling_weight')
 sdc <- groupVars(sdc, var="urbrur", before=c(1,2), after=1)
 
 }

@@ -32,7 +32,8 @@ addNoise(obj, variables,noise=150,method="additive",...)#,p,delta)
   \item{obj}{ either a data frame, matrix or a sdcMicroObj that should be perturbed}
   \item{variables}{vector with names of variables that should be perturbed}
   \item{noise}{ amount of noise (in percentages)}
-  \item{method}{ choose between \sQuote{additive}, \sQuote{correlated}, \sQuote{correlated2}, \sQuote{restr}, \sQuote{ROMM}, \sQuote{outdect}  }
+  \item{method}{ choose between \sQuote{additive}, \sQuote{correlated}, \sQuote{correlated2},
+  \sQuote{restr}, \sQuote{ROMM}, \sQuote{outdect}  }
   \item{...}{see possible arguments below}
   \item{p}{ multiplication factor for method \sQuote{ROMM} }
   \item{delta}{ parameter for method \sQuote{correlated2}, details can be found
@@ -106,12 +107,14 @@ a1 <- addNoise(Tarragona)
 a1
 
 data(testdata)
-testdata[, c('expend','income','savings')] <- addNoise(testdata[,c('expend','income','savings')])$xm
+testdata[, c('expend','income','savings')] <- 
+addNoise(testdata[,c('expend','income','savings')])$xm
 
 ## for objects of class sdcMicroObj:
 data(testdata2)
-sdc <- createSdcObj(testdata2, keyVars=c('urbrur','roof','walls','water','electcon','relat','sex'), 
-           numVars=c('expend','income','savings'), w='sampling_weight')
+sdc <- createSdcObj(testdata2, 
+  keyVars=c('urbrur','roof','walls','water','electcon','relat','sex'),
+  numVars=c('expend','income','savings'), w='sampling_weight')
 sdc <- addNoise(sdc)
 }
 \keyword{ manip }

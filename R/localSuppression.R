@@ -1,6 +1,6 @@
-setGeneric('localSuppression', function(obj, ...) {standardGeneric('localSuppression')})
+setGeneric('localSuppression', function(obj,k=2, importance=NULL,...) {standardGeneric('localSuppression')})
 setMethod(f='localSuppression', signature=c('sdcMicroObj'),
-    definition=function(obj, ...) { 
+    definition=function(obj,k=2, importance=NULL,...) { 
       ### get data from origData
       # x <- get.sdcMicroObj(obj, type="origData")
       # keyVars <- get.sdcMicroObj(obj, type="keyVars")
@@ -9,7 +9,7 @@ setMethod(f='localSuppression', signature=c('sdcMicroObj'),
       x <- get.sdcMicroObj(obj, type="manipKeyVars")    
       keyVars <- c(1:length(x))
       
-      ls <- localSuppressionWORK(x=x, keyVars, ...)
+      ls <- localSuppressionWORK(x=x, k=k,importance=importance,keyVars=keyVars, ...)
       
       obj <- nextSdcObj(obj)
       
@@ -32,12 +32,12 @@ setMethod(f='localSuppression', signature=c('sdcMicroObj'),
       obj
     })
 setMethod(f='localSuppression', signature=c("data.frame"),
-    definition=function(obj, ...) { 
-      localSuppressionWORK(x=obj,...)
+    definition=function(obj,k=2, importance=NULL,...) { 
+      localSuppressionWORK(x=obj,k=k,importance=importance,...)
     })
 setMethod(f='localSuppression', signature=c("matrix"),
-    definition=function(obj, ...) { 
-      localSuppressionWORK(x=obj,...)
+    definition=function(obj,k=2, importance=NULL,...) { 
+      localSuppressionWORK(x=obj,k=k,importance=importance,...)
     })
 
 

@@ -8,8 +8,8 @@ function(x, method="approx", qual=1, survey=TRUE){
   fk <- x$fk
   Fk <- x$Fk
   pk <- fk/Fk
-  pk = pk-0.0001
-      rk <- rep(0, N)
+  #pk = pk-0.0001
+  rk <- rep(0, N)
   if( method == "exact" ){
     A <- (pk^(1-fk) - 1)/(fk-1)
     B <- function(fk,pk,i){

@@ -32,8 +32,9 @@ an sdc method is applied.
 \seealso{ \code{\link{sdcMicroObj-class}}}
 \examples{
 data(testdata2)
-sdc <- createSdcObj(testdata2, keyVars=c('urbrur','roof','walls','water','electcon','relat','sex'), 
-           numVars=c('expend','income','savings'), w='sampling_weight')
+sdc <- createSdcObj(testdata2,
+  keyVars=c('urbrur','roof','walls','water','electcon','relat','sex'), 
+  numVars=c('expend','income','savings'), w='sampling_weight')
 sdc <- calcRisks(sdc)
 }
 \keyword{methods}

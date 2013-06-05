@@ -1,35 +1,53 @@
-setGeneric('LLmodGlobalRisk', function(obj, ...) {standardGeneric('LLmodGlobalRisk')})
+setGeneric('LLmodGlobalRisk', function(obj, method = "IPF", inclProb = NULL, form = NULL, modOutput = FALSE) {standardGeneric('LLmodGlobalRisk')})
 setMethod(f='LLmodGlobalRisk', signature=c('sdcMicroObj'),
-    definition=function(obj, ...) { 
-      # if(!"form" %in% names(list(...))) {
-      #   form=get.sdcMicroObj(obj, type="origData")[,get.sdcMicroObj(obj, type="numVars"),drop=F] 
-      # }else{
-      #   form = list(...)$form
-      # }
-      
-      
-      x <- get.sdcMicroObj(obj, type="manipKeyVars")
-      risk <- get.sdcMicroObj(obj, type="risk")
-      if(length(get.sdcMicroObj(obj,type="weightVar"))>0&&!"inclProb" %in% names(list(...))){
-        inclProbs <- 1/get.sdcMicroObj(obj,type="origData")[,get.sdcMicroObj(obj,type="weightVar")]
-        risk$model <- LLmodGlobalRiskWORK(x=x, inclProb=inclProbs,...)
+    definition=function(obj, method = "IPF", inclProb = NULL, form = NULL, modOutput = FALSE) { 
+      if(is.null(form)){
+        x <- get.sdcMicroObj(obj, type="manipKeyVars")
+        form <- as.formula(paste(" ~ ", paste(colnames(x), collapse= "+")))
       }else{
-        if("inclProb" %in% names(list(...))) {
-          risk$model$inclProb <- list(...)$inclProb
+        vars <- labels(terms(form))
+        mk <- get.sdcMicroObj(obj, type="manipKeyVars")
+        mn <- get.sdcMicroObj(obj, type="manipNumVars")
+        ok <- get.sdcMicroObj(obj, type="origData")
+        ok <- ok[,!colnames(ok)%in%c(colnames(mk),colnames(mn)),drop=FALSE]
+        if(any(colnames(mk)%in%vars)){
+          x <- mk[,colnames(mk)%in%vars,drop=FALSE]
+        }else
+          x <- NULL
+        if(any(colnames(mn)%in%vars)){
+          if(is.null(x))
+            x <- mn[,colnames(mn)%in%vars,drop=FALSE]
+          else 
+            x <- data.frame(x,mn[,colnames(mn)%in%vars,drop=FALSE])
         }
-        risk$model <- LLmodGlobalRiskWORK(x=x,...)
+        if(any(colnames(ok)%in%vars)){
+          if(is.null(x))
+            x <- ok[,colnames(ok)%in%vars,drop=FALSE]
+          else 
+            x <- data.frame(x,ok[,colnames(ok)%in%vars,drop=FALSE])
+        }
+      }
+      if(is.null(inclProb)&&!is.null(get.sdcMicroObj(obj,type="weightVar"))){
+        inclProb <- 1/get.sdcMicroObj(obj,type="origData")[,get.sdcMicroObj(obj,type="weightVar")]
       }
       
+      risk <- get.sdcMicroObj(obj, type="risk")
+      risk$model <- LLmodGlobalRiskWORK(x=x,method=method,inclProb=inclProb,form=form,modOutput=modOutput)
+      risk$model$inclProb <- inclProb
       obj <- set.sdcMicroObj(obj, type="risk", input=list(risk))
       obj
     })
 setMethod(f='LLmodGlobalRisk', signature=c("data.frame"),
-    definition=function(obj, ...) { 
-      LLmodGlobalRiskWORK(x=obj,...)
+    definition=function(obj, method = "IPF", inclProb = NULL, form = NULL, modOutput = FALSE) { 
+      if(is.null(form))
+        form <- as.formula(paste(" ~ ", paste(colnames(obj), collapse= "+")))
+      LLmodGlobalRiskWORK(x=obj,method=method,inclProb=inclProb,form=form,modOutput=modOutput)
     })
 setMethod(f='LLmodGlobalRisk', signature=c("matrix"),
-    definition=function(obj, ...) { 
-      LLmodGlobalRiskWORK(x=obj,...)
+    definition=function(obj, method = "IPF", inclProb = NULL, form = NULL, modOutput = FALSE) {
+      if(is.null(form))
+        form <- as.formula(paste(" ~ ", paste(colnames(obj), collapse= "+")))
+      LLmodGlobalRiskWORK(x=obj,method=method,inclProb=inclProb,form=form,modOutput=modOutput)
     })
 
 
@@ -42,6 +60,7 @@ LLmodGlobalRiskWORK <- function(x, method="IPF", inclProb=NULL,
             They are now set to 0.1 which is simple a wrong assumption.")
     inclProb = 0.1
   }
+  #x
   #risk functions
   #P(F_k=r | f_k = r)
   risk1 <-  function(l,p) {
@@ -59,15 +78,18 @@ LLmodGlobalRiskWORK <- function(x, method="IPF", inclProb=NULL,
   }
   
   ## sample frequencies
-  tab <- xtabs(form, x)	
+  tab <- xtabs(form, x)
+  x <- data.frame(x,inclProb=inclProb)
+  form2 <- as.formula(paste(c("inclProb",as.character(form)),collapse=""))
+  tabP <-  xtabs(form2, x)
   
   ## IPF
   mod <- loglm(form, data=tab, fitted=TRUE)
   lambda <- fitted(mod)
-  
+
   ## Risk
-  r1 <- risk1(lambda, inclProb)
-  r2 <- risk2(lambda, inclProb)
+  r1 <- risk1(lambda, tabP)
+  r2 <- risk2(lambda, tabP)
   gr1 <- file_risk(tab, r1)/nrow(x)
   gr2 <- file_risk(tab, r2)/nrow(x)
   if(modOutput) {

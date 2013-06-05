@@ -18,7 +18,8 @@ form new categories based on the recoding result and repeatedly apply this algor
 }
 \usage{
 LocalRecProg(obj,ancestors=NULL,ancestor_setting=NULL,
-  k_level=2, FindLowestK=TRUE, weight=NULL, lowMemory=FALSE, missingValue=NA,...)#,categorical,numerical=NULL
+  k_level=2, FindLowestK=TRUE, weight=NULL, lowMemory=FALSE, missingValue=NA,...)
+  #,categorical,numerical=NULL
   
 }
 \section{Methods}{
@@ -82,18 +83,24 @@ dataframe with original variables and the supressed variables (suffix _lr). /
 \examples{
 # LocalRecProg
 data(testdata2)
-r1=LocalRecProg(testdata2,categorical=c("urbrur", "roof", "walls", "water", "sex", "relat"),missingValue=-99)
-r2=LocalRecProg(testdata2,categorical=c("urbrur", "roof", "walls", "water", "sex", "relat"),
-    ancestor=c("water2", "water3", "relat2"),ancestor_setting=c("water","water","relat"),missingValue=-99)
-r3=LocalRecProg(testdata2,categorical=c("urbrur", "roof", "walls", "water", "sex", "relat"),
-    ancestor=c("water2", "water3", "relat2"),ancestor_setting=c("water","water","relat"),missingValue=-99,
+r1=LocalRecProg(testdata2,
+  categorical=c("urbrur", "roof", "walls", "water", "sex", "relat"),
+  missingValue=-99)
+r2=LocalRecProg(testdata2,
+  categorical=c("urbrur", "roof", "walls", "water", "sex", "relat"),
+    ancestor=c("water2", "water3", "relat2"),
+    ancestor_setting=c("water","water","relat"),missingValue=-99)
+r3=LocalRecProg(testdata2,
+  categorical=c("urbrur", "roof", "walls", "water", "sex", "relat"),
+    ancestor=c("water2", "water3", "relat2"),
+    ancestor_setting=c("water","water","relat"),missingValue=-99,
     FindLowestK=FALSE)
 
 ## for objects of class sdcMicro:
 data(testdata2)
-sdc <- createSdcObj(testdata2, keyVars=c('urbrur','roof','walls','water','electcon','relat','sex'), 
-           numVars=c('expend','income','savings'), w='sampling_weight')
+sdc <- createSdcObj(testdata2,
+  keyVars=c('urbrur','roof','walls','water','electcon','relat','sex'), 
+  numVars=c('expend','income','savings'), w='sampling_weight')
 sdc <- LocalRecProg(sdc)
-
 }
 \keyword{ manip }

@@ -103,7 +103,7 @@ measure_riskWORK <- function(data,keyVars,w=NULL,missing=-999,hid=NULL,max_globa
   res <- list()
   res$Res <- Res
   colnames(res$Res) <- c("risk","fk","Fk")
-  res$global_risk_ER <- sum(ir$rk)
+  res$global_risk_ER <- sum(ir$rk, na.rm=TRUE)
   res$global_risk <- res$global_risk_ER/nrow(res$Res)
   res$global_risk_pct <- res$global_risk*100
   
@@ -129,7 +129,7 @@ measure_riskWORK <- function(data,keyVars,w=NULL,missing=-999,hid=NULL,max_globa
         dataX[,i] <- as.numeric(dataX[,i])
     }
     dataX <- as.matrix(dataX)
-    maxHH <- max(table(dataX[,1]))
+    maxHH <- max(table(dataX[,1]) ,na.rm=TRUE)
     if(fast_hier){
       #warning("The households are to large for a fast computation of the hierachical risk.\n
       #(Use the parameter forceHier to perform the computation anyway)")
@@ -141,8 +141,8 @@ measure_riskWORK <- function(data,keyVars,w=NULL,missing=-999,hid=NULL,max_globa
       datX <- merge(dataX,reshier,all.x=TRUE)
       
       res$Res <- cbind(res$Res,datX$reshier[ind])
-      res[["hier_risk_ER"]] <- sum(res$Res[,4])
-      res[["hier_risk"]] <- sum(res$Res[,4])/nrow(res$Res)
+      res[["hier_risk_ER"]] <- sum(res$Res[,4], na.rm=TRUE)
+      res[["hier_risk"]] <- sum(res$Res[,4], na.rm=TRUE)/nrow(res$Res)
       res[["hier_risk_pct"]] <- res[["hier_risk"]]*100
     }else{
       resh <- .Call("measure_hierachical",dataX)

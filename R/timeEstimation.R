@@ -8,7 +8,7 @@
 predictTime <- function(n,nkey,nmean){
   coef()*(5.297e-12*n^2+1.178e-06*n*nkey+-2.973e-07*n*nmean)#FreqCalc
 }
-coef <- function(){ ##very very very simple coefficent for computation time in comparison to my computer
+coefTime <- function(){ ##very very very simple coefficent for computation time in comparison to my computer
   t<-Sys.time();a<-rnorm(5e5);rm(a);
   max(0.1,as.numeric(Sys.time()-t)/0.06)
 }

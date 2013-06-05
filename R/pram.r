@@ -1,10 +1,10 @@
-setGeneric('pram', function(obj, keyVar=NULL,...) {standardGeneric('pram')})
+setGeneric('pram', function(obj, keyVar=NULL,pd=0.8, alpha=0.5) {standardGeneric('pram')})
 setMethod(f='pram', signature=c('sdcMicroObj'),
-    definition=function(obj, keyVar,...) { 
+    definition=function(obj, keyVar=NULL,pd=0.8, alpha=0.5) { 
       manipKeyVars <- get.sdcMicroObj(obj, type="manipKeyVars")
       x <- as.factor(manipKeyVars[,keyVar])
       
-	  pW <- pramWORK(x=x, ...)
+	  pW <- pramWORK(x=x, keyVar=keyVar,pd=pd,alpha=alpha)
 	  summarypW <- summary(pW)
 	  
       manipKeyVars[,keyVar] <- pW$xpramed 
@@ -20,8 +20,8 @@ setMethod(f='pram', signature=c('sdcMicroObj'),
       obj
     })
 setMethod(f='pram', signature=c("ANY"),
-    definition=function(obj, keyVar=NULL,...) { 
-      pramWORK(x=obj,...)
+    definition=function(obj, keyVar=NULL,pd=0.8, alpha=0.5) { 
+      pramWORK(x=obj,keyVar=keyVar,pd=pd,alpha=alpha)
     })
 pramWORK <- function(x, pd=0.8, alpha=0.5, keyVar=NULL){ #COLUMN FOR V4 COMPATIBILITY
   fac <- FALSE

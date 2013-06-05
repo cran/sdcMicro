@@ -55,8 +55,9 @@ pairs(dataGen(mtcars[,4:6]))
 
 ## for objects of class sdcMicro:
 data(testdata2)
-sdc <- createSdcObj(testdata2, keyVars=c('urbrur','roof','walls','water','electcon','relat','sex'), 
-           numVars=c('expend','income','savings'), w='sampling_weight')
+sdc <- createSdcObj(testdata2,
+  keyVars=c('urbrur','roof','walls','water','electcon','relat','sex'), 
+  numVars=c('expend','income','savings'), w='sampling_weight')
 sdc <- dataGen(sdc)
 }
 \keyword{ manip }

@@ -27,7 +27,8 @@ Data shuffling and General Additive Data Perturbation.
 }
 }}
 \usage{
-shuffle(obj, form,...)#, method="ds", weights=NULL, covmethod = "spearman", regmethod = "MM", gadp = TRUE)
+shuffle(obj, form, method="ds", weights=NULL, covmethod="spearman",
+        regmethod="lm", gadp=TRUE)
 }
 \arguments{
   \item{obj}{
@@ -41,7 +42,6 @@ shuffle(obj, form,...)#, method="ds", weights=NULL, covmethod = "spearman", regm
      The response variables belongs to numeric key variables (quasi-identifiers of numeric scale). The predictors are  
      can be distributed in any way (numeric, factor, ordered factor).
 }
-  \item{...}{see possible arguments below}
   \item{method}{
     currently either the original form of data shuffling (\dQuote{ds} - default), 
     \dQuote{mvn} or \dQuote{mlm}, see the details section. The last method is in experimental mode and almost untested.
@@ -116,8 +116,9 @@ cor(sh$sh, method="spearman")
 
 ## for objects of class sdcMicro:
 data(testdata2)
-sdc <- createSdcObj(testdata2, keyVars=c('urbrur','roof','walls','water','electcon','relat','sex'), 
-           numVars=c('expend','income','savings'), w='sampling_weight')
+sdc <- createSdcObj(testdata2,
+  keyVars=c('urbrur','roof','walls','water','electcon','relat','sex'), 
+  numVars=c('expend','income','savings'), w='sampling_weight')
 sdc <- shuffle(sdc, method=c('ds'),regmethod= c('lm'), covmethod=c('spearman'), 
 		form=savings+expend ~ urbrur+walls) 
 

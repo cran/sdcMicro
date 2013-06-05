@@ -13,10 +13,12 @@ mdav <- function(data,variables=NULL,weights=NULL,K=10,missing=-999){
     if(!is.numeric(dataX[,i]))
       dataX[,i] <- as.numeric(dataX[,i])
   }
-  data2 <- dataX                 
-  dataX[is.na(dataX)] <- missing
+  data2 <- dataX
+  TF <- is.na(dataX)
+  dataX[TF] <- missing
   data2[,] <- NA                                                                   
-  dat <- .Call("Mdav",dataX,data2,missing,weights,K)$Res                                                                                                             
+  dat <- .Call("Mdav",dataX,data2,missing,weights,K)$Res
+  try(dat[TF] <- NA)
   data[,variables] <- dat
   invisible(data)
 }

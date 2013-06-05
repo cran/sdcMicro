@@ -51,6 +51,7 @@ setClass(
 		pram='listOrNULL',
 		localSuppression='listOrNULL',
 		options='listOrNULL',
+    additionalResults='listOrNULL',
 		set='listOrNULL',
 		prev='sdcmicroOrNULL'
 	),
@@ -71,6 +72,7 @@ setClass(
 		pram=NULL,
 		localSuppression=NULL,
 		options=NULL,
+    additionalResults=NULL,
 		set=NULL,
 		prev=NULL
 	),

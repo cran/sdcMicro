@@ -42,14 +42,16 @@ Alexander Kowarik, Matthias Templ
 }
 
 \examples{
-  data(testdata)
-  sdc <- createSdcObj(testdata, keyVars=c('urbrur','roof','walls','water','electcon','relat','sex'), numVars=c('expend','income','savings'), w='sampling_weight')
-  fk=freq(sdc)
-  Fk=freq(sdc,type="Fk")
-  print(sdc)
-  print(sdc,type="ls")
-  print(sdc,type="recode")
-  print(sdc,type="risk")
-  print(sdc,type="numrisk")
+data(testdata)
+sdc <- createSdcObj(testdata,
+  keyVars=c('urbrur','roof','walls','water','electcon','relat','sex'),
+  numVars=c('expend','income','savings'), w='sampling_weight')
+fk=freq(sdc)
+Fk=freq(sdc,type="Fk")
+print(sdc)
+print(sdc,type="ls")
+print(sdc,type="recode")
+print(sdc,type="risk")
+print(sdc,type="numrisk")
 }
 \keyword{classes}

@@ -1,13 +1,21 @@
-setGeneric('microaggregation', function(obj, variables,aggr=3,strata_variables=NULL,...) {standardGeneric('microaggregation')})
+setGeneric('microaggregation', function(obj,variables,aggr=3,strata_variables=NULL,method="mdav",weights=NULL, nc = 8,
+        clustermethod = "clara", opt = FALSE, measure = "mean", trim = 0, varsort = 1, transf = "log") {
+      standardGeneric('microaggregation')})
 setMethod(f='microaggregation', signature=c('sdcMicroObj'),
-    definition=function(obj, variables,aggr=3,strata_variables=NULL, ...) { 
+    definition=function(obj,variables,aggr=3,strata_variables=NULL,method="mdav",weights=NULL, nc = 8,
+        clustermethod = "clara", opt = FALSE, measure = "mean", trim = 0, varsort = 1, transf = "log") { 
       x <- get.sdcMicroObj(obj, type="manipNumVars")
       if(!is.null(strata_variables)){
         sx <- get.sdcMicroObj(obj, type="origData")[,strata_variables[!strata_variables%in%variables],drop=FALSE]
-        res <- microaggregationWORK(cbind(x,sx), variables=variables, aggr=aggr,strata_variables=strata_variables, ...)
-      }else{
-        res <- microaggregationWORK(x, variables=variables, aggr=aggr,strata_variables=strata_variables, ...)
+        x <- cbind(x,sx)
       }
+      
+      if(!is.null(weights)&&!is.null(get.sdcMicroObj(obj, type="weightVar"))){
+        weights <- get.sdcMicroObj(obj, type="origData")[,get.sdcMicroObj(obj, type="weightVar")]
+      }
+      res <- microaggregationWORK(x, variables=variables, aggr=aggr,strata_variables=strata_variables,method=method,
+          weights=weights,nc=nc,clustermethod=clustermethod,opt=opt,
+          measure=measure,trim=trim,varsort=varsort,transf=transf)
       obj <- nextSdcObj(obj)
       x[,variables] <- res$mx
       
@@ -20,16 +28,23 @@ setMethod(f='microaggregation', signature=c('sdcMicroObj'),
       obj
     })
 setMethod(f='microaggregation', signature=c("data.frame"),
-    definition=function(obj, variables,aggr=3,strata_variables=NULL,...) { 
-      microaggregationWORK(x=obj,variables=variables,aggr=aggr,strata_variables=strata_variables,...)
+    definition=function(obj,variables,aggr=3,strata_variables=NULL,method="mdav",weights=NULL, nc = 8,
+        clustermethod = "clara", opt = FALSE, measure = "mean", trim = 0, varsort = 1, transf = "log") { 
+      microaggregationWORK(x=obj,variables=variables,aggr=aggr,strata_variables=strata_variables,method=method,
+          weights=weights,nc=nc,clustermethod=clustermethod,opt=opt,measure=measure,trim=trim,varsort=varsort,
+          transf=transf)
     })
 setMethod(f='microaggregation', signature=c("matrix"),
-    definition=function(obj, variables,aggr=3,strata_variables=NULL,...) { 
-      microaggregationWORK(x=obj,variables=variables,aggr=aggr,strata_variables=strata_variables,...)
+    definition=function(obj,variables,aggr=3,strata_variables=NULL,method="mdav",weights=NULL, nc = 8,
+        clustermethod = "clara", opt = FALSE, measure = "mean", trim = 0, varsort = 1, transf = "log") { 
+      microaggregationWORK(x=obj,variables=variables,aggr=aggr,strata_variables=strata_variables,method=method,
+          weights=weights,nc=nc,clustermethod=clustermethod,opt=opt,measure=measure,trim=trim,varsort=varsort,
+          transf=transf)
     })
 
 
-microaggregationWORK <- function (x, variables=colnames(x),method = "mdav", aggr = 3, weights=NULL, nc = 8, clustermethod = "clara",
+microaggregationWORK <- function (x, variables=colnames(x),method = "mdav", aggr = 3, weights=NULL, nc = 8,
+    clustermethod = "clara",
     opt = FALSE, measure = "mean", trim = 0, varsort = 1, transf = "log", strata_variables=NULL
 )
 #,blow = TRUE, blowxm = 0)
@@ -345,7 +360,7 @@ microaggregationWORK <- function (x, variables=colnames(x),method = "mdav", aggr
   }
   reslist <- list()
   for(spind in 1:length(xsp)){
-    x <- xsp[[spind]][,variables]
+    x <- xsp[[spind]][,variables,drop=FALSE]
     fot <- factorOfTotals(x, aggr)
     if (method == "simple" || method == "single" || method ==
         "pca" || method == "mcdpca" || method == "pppca") {

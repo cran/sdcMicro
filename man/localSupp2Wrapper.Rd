@@ -5,7 +5,8 @@
 A wrapper function for function localSupp2 in order to guarantee k-anonymity.
 }
 \usage{
-localSupp2Wrapper(x, keyVars, w, importance=rep(1, length(keyVars)), method="minimizeSupp", kAnon=2)
+localSupp2Wrapper(x, keyVars, w, importance=rep(1, length(keyVars)),
+method="minimizeSupp", kAnon=2)
 }
 \arguments{
   \item{x}{ data frame or matrix }

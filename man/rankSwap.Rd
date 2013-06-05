@@ -13,7 +13,8 @@ Each ranked value is then swapped with another
 ranked value that has been chosen randomly within a restricted range.
 }
 \usage{
-rankSwap(obj,...)#, variables, TopPercent = 5, BottomPercent = 5, K0 = -1, R0 = 0.95, P = 0, missing = -999, seed = NULL)
+rankSwap(obj, variables=NULL,TopPercent=5,BottomPercent=5,
+        K0=-1,R0=.95,P=0,missing=-999,seed=NULL)
 }
 \section{Methods}{
 \describe{
@@ -34,9 +35,9 @@ rankSwap(obj,...)#, variables, TopPercent = 5, BottomPercent = 5, K0 = -1, R0 = 
   \item{obj}{
 object of class sdcMicroObj or matrix or data frame
 }
-\item{...}{see arguments below}
   \item{variables}{
 names or index of variables for that rank swapping is applied.
+For an object of class 'sdcMicroObj' all numeric key variables are selected if variables=NULL.
 }
   \item{TopPercent}{
 Percentage of largest values that are group together before rank swapping is applied.
@@ -94,7 +95,8 @@ data_swap <- rankSwap(testdata2,variables=c("age","income","expend","savings"))
 
 ## for objects of class sdcMicro:
 data(testdata2)
-sdc <- createSdcObj(testdata2, keyVars=c('urbrur','roof','walls','water','electcon','relat','sex'), 
-           numVars=c('expend','income','savings'), w='sampling_weight')
+sdc <- createSdcObj(testdata2,
+  keyVars=c('urbrur','roof','walls','water','electcon','relat','sex'), 
+  numVars=c('expend','income','savings'), w='sampling_weight')
 sdc <- rankSwap(sdc)
 }

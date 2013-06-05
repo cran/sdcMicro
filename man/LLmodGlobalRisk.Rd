@@ -15,19 +15,14 @@ Poisson distribution. The parameters of the corresponding parameters are
 estimated by a log-linear model including the main effects and possible interactions.
 }
 \usage{
-LLmodGlobalRisk(obj,...)
-# LLmodGlobalRisk(x, method = "IPF", inclProb = NULL, form = as.formula(paste(" ~ ", paste(colnames(x), collapse = "+"))), modOutput = FALSE)
+LLmodGlobalRisk(obj, method = "IPF", inclProb = NULL, form = NULL, modOutput = FALSE)
 }
 \arguments{
   \item{obj}{
 An object of class sdcMicroObj or a numeric matrix or data frame containing the categorical key variables.
 }
-\item{...}{see possible arguments below}
   \item{method}{
 At this time, only iterative proportional fitting  (\dQuote{IPF}) can be used.
-}
-  \item{x}{
-data frame or matrix
 }
   \item{inclProb}{
 Inclusion probabilites (experimental)
@@ -58,18 +53,17 @@ Matthias Templ
 \code{\link{loglm}}, \code{\link{measure_risk}}
 }
 \examples{
-data(free1)
-x <- data.frame(free1[,c(2,4:5)])
-x["SEX"] <- as.factor(x[,"SEX"])
-x["MARSTAT"] <- as.factor(x[,"MARSTAT"])
-x["KINDPERS"] <- as.factor(x[,"KINDPERS"])
-LLmodGlobalRisk(x, inclProb=1/mean(free1[,"WEIGHT"]))
+data(testdata2)
+x <- testdata2[,c("sex","water","roof")]
+res <- LLmodGlobalRisk(x, form=~sex+water+roof, 
+           inclProb=1/testdata2[,"sampling_weight"])
+res$gr1; res$gr2
 
 ## for objects of class sdcMicro:
 data(testdata2)
-sdc <- createSdcObj(testdata2, keyVars=c('urbrur','roof','walls','water','electcon','relat','sex'), 
-           numVars=c('expend','income','savings'), w='sampling_weight')
-sdc <- LLmodGlobalRisk(sdc)
-
+sdc <- createSdcObj(testdata2,
+  keyVars=c('urbrur','roof','walls','electcon','relat','sex'), 
+  numVars=c('expend','income','savings'), w='sampling_weight')
+sdc <- LLmodGlobalRisk(sdc,form=~sex+water+roof)
 }
 \keyword{ manip }

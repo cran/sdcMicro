@@ -61,13 +61,15 @@ localS <- localSupp(f, keyVar=2, indivRisk=indivf$rk, threshold=0.25)
 f2 <- freqCalc(localS$freqCalc, keyVars=c(4,5,6), w=8)
 indivf2 <- indivRisk(f2)
 indivf2$rk
-## select another keyVar and run localSupp once again, if you think the table is not fully protected
+## select another keyVar and run localSupp once again,
+# if you think the table is not fully protected
 
 
 ## for objects of class sdcMicro:
 data(testdata2)
-sdc <- createSdcObj(testdata2, keyVars=c('urbrur','roof','walls','water','electcon','relat','sex'), 
-           numVars=c('expend','income','savings'), w='sampling_weight')
+sdc <- createSdcObj(testdata2,
+  keyVars=c('urbrur','roof','walls','water','electcon','relat','sex'), 
+  numVars=c('expend','income','savings'), w='sampling_weight')
 sdc <- localSupp(sdc, keyVar='urbrur')
 }
 \keyword{ manip }

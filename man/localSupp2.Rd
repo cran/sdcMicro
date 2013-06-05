@@ -5,7 +5,8 @@
 An Algorithm to perfom local suppression to achieve k-anonymity.
 }
 \usage{
-localSupp2(x, keyVars, w, importance=rep(1, length(keyVars)), method="minimizeSupp", k=1)
+localSupp2(x, keyVars, w, importance=rep(1, length(keyVars)),
+  method="minimizeSupp", k=1)
 }
 \arguments{
   \item{x}{ data frame or matrix }

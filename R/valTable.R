@@ -50,7 +50,7 @@ function (X, k = 0, sca = "mad", scores = TRUE)
       flush.console() 
         if( method[i] %in% c("simple", "single", "onedims", "pca", 
     "pppca", "clustpca", "clustpppca", "mdav", "influence", "rmd", "clustmcdpca","mcdpca")){
-        m[[i]] <- microaggregation(x = x, method = method[i], 
+        m[[i]] <- microaggregation(obj = x, method = method[i], 
             measure = measure, clustermethod = clustermethod, 
             aggr = aggr, nc = nc, transf = transf)
         }

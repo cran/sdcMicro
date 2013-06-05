@@ -20,6 +20,7 @@ exportMethods(
 	'report',
 	'set.sdcMicroObj',
 	'addNoise',
+	'mafast','microaggregation',
 	'dataGen',
 	'dRisk',
 	'dRiskRMD',
@@ -41,14 +42,15 @@ exportMethods(
   'undolast',
   'varToFactor',
   'varToNumeric',
-  'removeDirectID'
+  'removeDirectID',
+  'extractManipData'
 )
 
 
 ##################################
 ### Export remaining functions ###
 ##################################
-export(removeDirectID,
+export(removeDirectID,extractManipData,
 varToFactor,varToNumeric,groupVars,renameVars,freq,
     undolast,calcRisks,report,addNoise, dataGen, dRisk, dUtility, globalRecode, LLmodGlobalRisk, LocalRecProg,
     createSdcObj,
@@ -58,6 +60,7 @@ varToFactor,varToNumeric,groupVars,renameVars,freq,
     localSuppression,
     localSupp,
     microaggregation,
+    mafast,
     plot.localSuppression,
     plotMicro,
     pram,

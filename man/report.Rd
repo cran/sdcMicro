@@ -42,18 +42,11 @@ The application of this function provides you with a html report for your sdcMic
 Matthias Templ
 }
 \examples{
-data(free1)
-x <- data.frame(free1[,c(2,4:5)])
-x["SEX"] <- as.factor(x[,"SEX"])
-x["MARSTAT"] <- as.factor(x[,"MARSTAT"])
-x["KINDPERS"] <- as.factor(x[,"KINDPERS"])
-LLmodGlobalRisk(x, inclProb=1/mean(free1[,"WEIGHT"]))
-
-## for objects of class sdcMicro:
 \dontrun{
 data(testdata2)
-sdc <- createSdcObj(testdata2, keyVars=c('urbrur','roof','walls','water','electcon','relat','sex'), 
-           numVars=c('expend','income','savings'), w='sampling_weight')
+sdc <- createSdcObj(testdata2,
+  keyVars=c('urbrur','roof','walls','water','electcon','relat','sex'), 
+  numVars=c('expend','income','savings'), w='sampling_weight')
 report(sdc)
 }
 }

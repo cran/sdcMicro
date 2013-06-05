@@ -1,6 +1,8 @@
-setGeneric('shuffle', function(obj, form,...) {standardGeneric('shuffle')})
+setGeneric('shuffle', function(obj, form, method="ds", weights=NULL, covmethod="spearman",
+        regmethod="lm", gadp=TRUE) {standardGeneric('shuffle')})
 setMethod(f='shuffle', signature=c('sdcMicroObj'),
-    definition=function(obj, form, ...) { 
+    definition=function(obj, form, method="ds", weights=NULL, covmethod="spearman",
+        regmethod="lm", gadp=TRUE) { 
       xn <- get.sdcMicroObj(obj, type="manipNumVars")
       xk <- get.sdcMicroObj(obj, type="manipKeyVars")
       xs <- get.sdcMicroObj(obj, type="manipStrataVar")
@@ -20,7 +22,8 @@ setMethod(f='shuffle', signature=c('sdcMicroObj'),
     if(any(!vars%in%colnames(x))){
       stop(paste("Variables:",paste(vars[!vars%in%colnames(x)],collapse=","),"not found"))
     }
-      res <- shuffleWORK(data=x, form=form,...)
+      res <- shuffleWORK(data=x, form=form,method=method,weights=weights,
+          covmethod=covmethod,regmethod=regmethod,gadp=gadp)
       if(any(!vars%in%colnames(xn)))
         stop("All response variable have to be numeric!")
       if(any(vars %in% colnames(xn))){
@@ -35,12 +38,14 @@ setMethod(f='shuffle', signature=c('sdcMicroObj'),
       obj
     })
 setMethod(f='shuffle', signature=c("data.frame"),
-    definition=function(obj, form,...) { 
-      shuffleWORK(data=obj,form=form,...)
+    definition=function(obj, form, method="ds", weights=NULL, covmethod="spearman", regmethod="lm", gadp=TRUE) { 
+      shuffleWORK(data=obj,form=form,method=method,weights=weights,covmethod=covmethod,
+          regmethod=regmethod,gadp=gadp)
     })
 setMethod(f='shuffle', signature=c("matrix"),
-    definition=function(obj, form,...) { 
-      shuffleWORK(data=obj,form=form,...)
+    definition=function(obj, form, method="ds", weights=NULL, covmethod="spearman", regmethod="lm", gadp=TRUE) { 
+      shuffleWORK(data=obj,form=form,method=method,weights=weights,covmethod=covmethod,
+          regmethod=regmethod,gadp=gadp)
     })
 
 

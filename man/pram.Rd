@@ -9,7 +9,7 @@
 PRAM is a probabilistic, perturbative method which can be applied on categorical variables.
 }
 \usage{
-pram(obj,keyVar=NULL,...)#x, pd=0.8, alpha=0.5)
+pram(obj, keyVar=NULL,pd=0.8, alpha=0.5)
 }
 \section{Methods}{
 \describe{
@@ -25,7 +25,6 @@ pram(obj,keyVar=NULL,...)#x, pd=0.8, alpha=0.5)
 \arguments{
   \item{obj}{ a numeric vector or factor, data.frame or object of class sdcMicroObj }
   \item{keyVar}{name of the keyVar that should be prammed}
-  \item{...}{see arguments below}
   \item{pd}{ minimum diagonal entries for the generated transition matrix P. Either a vector of length 1 or a vector of length ( number of categories ). }
   \item{alpha}{ amount of perturbation for the invariant Pram method }
 }
@@ -60,10 +59,11 @@ free1 <- data.frame(free1)
 free1[,"MARSTAT"] <- as.factor(free1[,"MARSTAT"])
 marstatPramed <- pram(free1[,"MARSTAT"])  
 
-  ## for objects of class sdcMicro:
-  data(testdata2)
-  sdc <- createSdcObj(testdata2, keyVars=c('urbrur','roof','walls','water','electcon','relat','sex'), 
-           numVars=c('expend','income','savings'), w='sampling_weight')
-  sdc <- pram(sdc,keyVar="water")
+## for objects of class sdcMicro:
+data(testdata2)
+sdc <- createSdcObj(testdata2,
+  keyVars=c('urbrur','roof','walls','water','electcon','relat','sex'), 
+  numVars=c('expend','income','savings'), w='sampling_weight')
+sdc <- pram(sdc,keyVar="water")
 }
 \keyword{ manip }

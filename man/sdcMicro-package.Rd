@@ -93,7 +93,8 @@ f2 <- freqCalc(localS$freqCalc, keyVars=c(2,4,5,6), w=8)
 indivf2 <- indivRisk(f2)
 indivf2$rk
 
-## select another keyVar and run localSupp once again, if you think the table is not fully protected
+## select another keyVar and run localSupp once again,
+#if you think the table is not fully protected
 data(free1)
 f <- freqCalc(free1, keyVars=1:3, w=30)
 ind <- indivRisk(f)
@@ -112,11 +113,13 @@ l3 <- localSuppression(francdat, keyVars=c(2,4,5,6), k=4)
 ## l = localSupp2(free1, keyVar=1:3, w=30, k=2, importance=c(0.1,1,0.8))
 
 ## we want to avoid missings in column 5:
-#l1 <- localSupp2Wrapper(francdat, keyVars=c(2,4,5,6), importance=c(1,1,0,1), w=8, kAnon=1)
+#l1 <- localSupp2Wrapper(francdat, keyVars=c(2,4,5,6), importance=c(1,1,0,1),
+#   w=8, kAnon=1)
 #l1$x
 ## we want to avoid missings in column 5 and allow missings in 1 only if
 ## is really necessary:
-#l1 <- localSupp2Wrapper(francdat, keyVars=c(2,4,5,6), importance=c(0.1,1,0,1), w=8, kAnon=1)
+#l1 <- localSupp2Wrapper(francdat, keyVars=c(2,4,5,6), importance=c(0.1,1,0,1),
+#  w=8, kAnon=1)
 #l1$x
 #plot(l1)
 
@@ -129,7 +132,8 @@ free1[, "AGE"] <- globalRecode(free1[,"AGE"], c(1,9,19,29,39,49,59,69,100), labe
 topBotCoding(free1[,"DEBTS"], value=9000, replacement=9100, kind="top")
 
 ## Numerical Rank Swapping:
-## do not use the mu-Argus test data set (free1) since the numerical variables are (probably) faked.
+## do not use the mu-Argus test data set (free1)
+# since the numerical variables are (probably) faked.
 data(Tarragona)
 Tarragona1 <- rankSwap(Tarragona, P=10) 
 
@@ -137,7 +141,9 @@ Tarragona1 <- rankSwap(Tarragona, P=10)
 m1 <- microaggregation(Tarragona, method="onedims", aggr=3)
 m2 <- microaggregation(Tarragona, method="pca", aggr=3)
 # summary(m1)
-# valTable(Tarragona, method=c("simple","onedims","pca")) ## approx. 1 minute computation time
+## approx. 1 minute computation time
+# valTable(Tarragona, method=c("simple","onedims","pca")) 
+
 
 data(microData)
 m1 <- microaggregation(microData, method="mdav")
@@ -155,9 +161,11 @@ dRisk(obj=Tarragona, xm=m2$mx)
 dUtility(obj=Tarragona, xm=m1$mx)
 dUtility(obj=Tarragona, xm=m2$mx)
 
-## S4 class code for Adding Noise methods will be included in the next version of sdcMicro.
+## S4 class code for Adding Noise methods will be included
+#in the next version of sdcMicro.
 
-## Fast generation of synthetic data with aprox. the same covariance matrix as the original one.
+## Fast generation of synthetic data with aprox.
+#the same covariance matrix as the original one.
 
 data(mtcars)
 cov(mtcars[,4:6])
@@ -179,7 +187,9 @@ marstatPramed <- pram(free1[,"MARSTAT"])
 \dontrun{
 # FOR OBJECTS OF CLASS sdcMicro
 data(testdata)
-sdc <- createSdcObj(testdata, keyVars=c('urbrur','roof','walls','water','electcon','relat','sex'), numVars=c('expend','income','savings'), w='sampling_weight')
+sdc <- createSdcObj(testdata,
+  keyVars=c('urbrur','roof','walls','water','electcon','relat','sex'),
+  numVars=c('expend','income','savings'), w='sampling_weight')
 head(sdc@manipNumVars)
 ### Display Risks
 sdc@risk$global
@@ -248,7 +258,8 @@ head(get.sdcMicroObj(sdc, type="manipNumVars"))
 sdc@risk$numeric
 ### LocalRecProg
 data(testdata2)
-sdc <- createSdcObj(testdata2, keyVars=c("urbrur", "roof", "walls", "water", "sex", "relat"))
+sdc <- createSdcObj(testdata2,
+  keyVars=c("urbrur", "roof", "walls", "water", "sex", "relat"))
 sdc@risk$global
 sdc <- LocalRecProg(sdc)
 sdc@risk$global

@@ -31,7 +31,8 @@ Internally, function \emph{freqCalc()} and \emph{indivRisk} are used for estimat
 }
 \usage{
 measure_risk(obj,...)
-#measure_risk(data,keyVars,w=NULL,missing=-999,hid=NULL,max_global_risk=.01,fast_hier=TRUE)
+#measure_risk(data,keyVars,w=NULL,missing=-999,
+#hid=NULL,max_global_risk=.01,fast_hier=TRUE)
 ldiversity(obj,ldiv_index,l_recurs_c=2,missing=-999,...)
 \method{print}{measure_risk}(x, ...)
 \method{print}{ldiversity}(x, ...)
@@ -112,37 +113,45 @@ Alexander Kowarik, Bernd Prantner, Matthias Templ, minor parts of IHSN C++ sourc
 \code{\link{freqCalc}}, \code{\link{indivRisk}}
 }
 \examples{
-  ## measure_risk with sdcMicro objects:
-  data(testdata)
-  sdc <- createSdcObj(testdata, keyVars=c('urbrur','roof','walls','water','electcon'), 
-		numVars=c('expend','income','savings'), w='sampling_weight')
-  ## risk is already estimated and available in...
-  names(sdc@risk)
-
-  ## measure risk on data frames or matrices:
-  res <- measure_risk(testdata,keyVars=c("urbrur","roof","walls","water","sex"))
-  print(res)
-  head(res$Res)
-  resw <- measure_risk(testdata,keyVars=c("urbrur","roof","walls","water","sex"),w="sampling_weight")
-  print(resw)
-  head(resw$Res)
-  res1 <- ldiversity(testdata,keyVars=c("urbrur","roof","walls","water","sex"),ldiv_index="electcon")
-  print(res1)
-  head(res1)
-  res2 <- ldiversity(testdata,keyVars=c("urbrur","roof","walls","water","sex"),ldiv_index=c("electcon","relat"))
-  print(res2)
-  head(res2)
-  # measure risk with household risk
-  resh <- measure_risk(testdata,keyVars=c("urbrur","roof","walls","water","sex"),w="sampling_weight",hid="ori_hid")
-  print(resh)
-  # change max_global_risk
-  rest <- measure_risk(testdata,keyVars=c("urbrur","roof","walls","water","sex"),w="sampling_weight",max_global_risk=0.0001)
-  print(rest)
+## measure_risk with sdcMicro objects:
+data(testdata)
+sdc <- createSdcObj(testdata,
+  keyVars=c('urbrur','roof','walls','water','electcon'),
+numVars=c('expend','income','savings'), w='sampling_weight')
+## risk is already estimated and available in...
+names(sdc@risk)
+## measure risk on data frames or matrices:
+res <- measure_risk(testdata,
+  keyVars=c("urbrur","roof","walls","water","sex"))
+print(res)
+head(res$Res)
+resw <- measure_risk(testdata,
+  keyVars=c("urbrur","roof","walls","water","sex"),w="sampling_weight")
+print(resw)
+head(resw$Res)
+res1 <- ldiversity(testdata,
+  keyVars=c("urbrur","roof","walls","water","sex"),ldiv_index="electcon")
+print(res1)
+head(res1)
+res2 <- ldiversity(testdata,
+  keyVars=c("urbrur","roof","walls","water","sex"),ldiv_index=c("electcon","relat"))
+print(res2)
+head(res2)
+# measure risk with household risk
+resh <- measure_risk(testdata,
+  keyVars=c("urbrur","roof","walls","water","sex"),w="sampling_weight",hid="ori_hid")
+print(resh)
+# change max_global_risk
+rest <- measure_risk(testdata,
+  keyVars=c("urbrur","roof","walls","water","sex"),
+  w="sampling_weight",max_global_risk=0.0001)
+print(rest)
   
 ## for objects of class sdcMicro:
 data(testdata2)
-sdc <- createSdcObj(testdata2, keyVars=c('urbrur','roof','walls','water','electcon','relat','sex'), 
-           numVars=c('expend','income','savings'), w='sampling_weight')
+sdc <- createSdcObj(testdata2,
+  keyVars=c('urbrur','roof','walls','water','electcon','relat','sex'), 
+  numVars=c('expend','income','savings'), w='sampling_weight')
 ## already interally applied and availabe in object sdc: 
 ## sdc <- measure_risk(sdc)
 }

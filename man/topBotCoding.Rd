@@ -9,7 +9,7 @@
 Function for Top and Bottom Coding.
 }
 \usage{
-topBotCoding(obj,...)#x, value, replacement, kind = "top")
+topBotCoding(obj, value, replacement, kind = "top",column=NULL)
 }
 \section{Methods}{
 \describe{
@@ -25,10 +25,10 @@ topBotCoding(obj,...)#x, value, replacement, kind = "top")
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{obj}{ vector or one-dimensional matrix or data.frame or object of class \dQuote{sdcMicroObj} }
-  \item{...}{see arguments below}
   \item{value}{ limit, from where it should be top- or bottom-coded }
   \item{replacement}{ replacement value. }
   \item{kind}{ top or bottom }
+  \item{column}{xxx}
 }
 \details{
 Extreme values are replaced by one value to reduce the disclosure risk.
@@ -46,7 +46,8 @@ topBotCoding(free1[,"DEBTS"], value=9000, replacement=9100, kind="top")
 data(testdata2)
 sdc <- createSdcObj(testdata2, keyVars=c('urbrur','roof','walls','water','electcon','relat','sex'), 
            numVars=c('expend','income','savings'), w='sampling_weight')
-sdc <- topBotCoding(sdc, value=60000000, replacement=62000000, column="income")
+sdc <- topBotCoding(sdc, value=500000, replacement=1000, column="income")
+testdataout <- extractManipData(sdc)
 
 }
 \keyword{ manip }

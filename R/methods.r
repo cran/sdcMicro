@@ -137,9 +137,9 @@ setMethod(f='calc.sdcMicroObj', signature=c('sdcMicroObj', 'character'),
 setMethod(f='undolast', signature=c('sdcMicroObj'),
 	definition=function(obj) {
 		if ( is.null(obj@prev) ) {
-			stop("undo:: can not undo. No previous state stored.\n")
+			warning("Can not undo. No previous state stored. (The input object is returned).\n")
+      return(obj)
 		}
-
 		return(obj@prev)
 	}
 )

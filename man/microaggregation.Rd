@@ -11,8 +11,9 @@
   Function to perform various methods of microaggregation.
 }
 \usage{
-microaggregation(obj,variables,aggr=3,strata_variables=NULL,...)
-#,method = "pca", weights=NULL, nc = 8, clustermethod = "clara", opt = FALSE, measure = "mean", trim = 0, varsort = 1, transf = "log")%, blow = TRUE, blowxm = 0)
+microaggregation(obj,variables,aggr=3,strata_variables=NULL,method="mdav",
+  weights=NULL, nc = 8, clustermethod = "clara", opt = FALSE, measure = "mean",
+  trim = 0, varsort = 1, transf = "log")
 }
 \section{Methods}{
 \describe{
@@ -39,7 +40,6 @@ microaggregation(obj,variables,aggr=3,strata_variables=NULL,...)
   \item{variables}{variables to microaggregate. If obj is of class sdcMicroObj the categorical key variables are chosen per default.}
   \item{aggr}{ aggregation level (default=3)}
   \item{strata_variables}{by-variables for applying microaggregation only within strata defined by the variables}
-  \item{...}{see arguments below}
   \item{method}{ pca, rmd, onedims, single, simple, clustpca, pppca, clustpppca, mdav, clustmcdpca, influence, mcdpca }
   \item{nc}{ number of cluster, if the chosen method performs cluster analysis }
   \item{weights}{ sampling weights. If obj is of class sdcMicroObj the vector of sampling weights is chosen automatically. If determined, a weighted version of the aggregation measure is chosen automatically, e.g. weighted median or weighted mean. }
@@ -49,9 +49,6 @@ microaggregation(obj,variables,aggr=3,strata_variables=NULL,...)
   \item{trim}{ trimming percentage, if measure=trim }
   \item{varsort}{ variable for sorting, if method= single }
   \item{transf}{ transformation for data x }
-  
-  %\item{blow}{ if TRUE, the microaggregated data will have the same dimension as the original data set }
-  %\item{blowxm}{ the microaggregated data with the same dimension as the original one. }
 }
 \details{
 On \url{http://neon.vb.cbs.nl/casc/Glossary.htm} one can found the 
@@ -164,13 +161,15 @@ data(Tarragona)
 m1 <- microaggregation(Tarragona, method="onedims", aggr=3)
 ## summary(m1)
 data(testdata)
-m2 <- microaggregation(testdata[1:100,c("expend","income","savings")], method="mdav", aggr=4)
+m2 <- microaggregation(testdata[1:100,c("expend","income","savings")],
+  method="mdav", aggr=4)
 summary(m2)
 
 ## for objects of class sdcMicro:
 data(testdata2)
-sdc <- createSdcObj(testdata2, keyVars=c('urbrur','roof','walls','water','electcon','relat','sex'), 
-           numVars=c('expend','income','savings'), w='sampling_weight')
+sdc <- createSdcObj(testdata2,
+  keyVars=c('urbrur','roof','walls','water','electcon','relat','sex'), 
+  numVars=c('expend','income','savings'), w='sampling_weight')
 sdc <- microaggregation(sdc)
 
 }

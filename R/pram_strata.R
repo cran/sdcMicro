@@ -1,6 +1,8 @@
-setGeneric('pram_strata', function(obj, variables,...) {standardGeneric('pram_strata')})
+setGeneric('pram_strata', function(obj, variables=NULL,strata_variables=NULL,
+        weights=NULL,seed=NULL,missing=-999, pd=0.8, alpha=0.5) {standardGeneric('pram_strata')})
 setMethod(f='pram_strata', signature=c('sdcMicroObj'),
-    definition=function(obj, variables,...) { 
+    definition=function(obj, variables=NULL,strata_variables=NULL,
+        weights=NULL,seed=NULL,missing=-999, pd=0.8, alpha=0.5) { 
       ### Get data from manipKeyVars
       manipData <- get.sdcMicroObj(obj, type="manipKeyVars")
       keyVars <- colnames(obj@origData)[get.sdcMicroObj(obj, type="keyVars")]
@@ -11,20 +13,8 @@ setMethod(f='pram_strata', signature=c('sdcMicroObj'),
         strataVars <- c(length(keyVars):length(manipData))
       }
       
-      if(!"pd" %in% names(list(...))) {
-        pd <- 0.8
-      }else{
-        pd <- list(...)$pd
-      }   
-      
-      if(!"alpha" %in% names(list(...))) {
-        alpha <- 0.5
-      }else{
-        alpha <- list(...)$alpha
-      }
-      
       res <- pram_strataWORK(data=manipData,variables=variables,
-			  strata_variables=strataVars,pd=pd,alpha=alpha, ...)
+			  strata_variables=strataVars,pd=pd,alpha=alpha, missing=missing,seed=seed,weights=weights)
       manipData[,variables] <- res[,paste(variables,"_pram",sep="")]
       obj <- nextSdcObj(obj)
       
@@ -45,12 +35,16 @@ setMethod(f='pram_strata', signature=c('sdcMicroObj'),
       obj
     })
 setMethod(f='pram_strata', signature=c("data.frame"),
-    definition=function(obj, variables,...) { 
-      pram_strataWORK(data=obj,variables=variables,...)
+    definition=function(obj, variables=NULL,strata_variables=NULL,
+        weights=NULL,seed=NULL,missing=-999, pd=0.8, alpha=0.5) { 
+      pram_strataWORK(data=obj, variables=variables,strata_variables=strata_variables,
+          weights=weights,seed=seed,missing=missing,pd=pd,alpha=alpha)
     })
 setMethod(f='pram_strata', signature=c("matrix"),
-    definition=function(obj, variables,...) { 
-      pram_strataWORK(data=obj, variables=variables,...)
+    definition=function(obj, variables=NULL,strata_variables=NULL,
+        weights=NULL,seed=NULL,missing=-999, pd=0.8, alpha=0.5) { 
+      pram_strataWORK(data=obj, variables=variables,strata_variables=strata_variables,
+          weights=weights,seed=seed,missing=missing,pd=pd,alpha=alpha)
     })
 
 #require(sdcMicro)
@@ -63,7 +57,8 @@ setMethod(f='pram_strata', signature=c("matrix"),
 #x <- .Call("Pram",as.matrix(dat),-999,2,1,-1)
 ## only frequency
 #x <- .Call("Pram",as.matrix(dat),-999,0,0,-1)
-pram_strataWORK <- function(data,variables=NULL,strata_variables=NULL,weights=NULL,seed=NULL,missing=-999, pd=0.8, alpha=0.5){
+pram_strataWORK <- function(data,variables=NULL,strata_variables=NULL,
+    weights=NULL,seed=NULL,missing=-999, pd=0.8, alpha=0.5){
   if(is.null(variables))
     stop("Please define valid variables to pram!")
   if(0){

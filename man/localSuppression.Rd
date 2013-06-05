@@ -10,7 +10,7 @@
 Algorithm to achieve k-anonymity by performing local suppression.
 }
 \usage{
-localSuppression(obj,...)#, keyVars, k=2, importance=NULL)
+localSuppression(obj,k=2, importance=NULL,...)#, keyVars)
 }
 \section{Methods}{
 \describe{
@@ -29,13 +29,13 @@ localSuppression(obj,...)#, keyVars, k=2, importance=NULL)
 }}
 \arguments{
   \item{obj}{ an object of class sdcMicroObj or a data frame or matrix }
-  \item{...}{see arguments below}
-  \item{keyVars}{ numeric vector specifying indices of (categorical) key-variables }
   \item{k}{ threshold for k-anonymity }
   \item{importance}{ numeric vector of numbers between 1 and n (n=length of vector keyVars). 
   This vector represents the "importance" of variables that should be used for local suppression
   in order to obtain k-anonymity. key-variables with importance=1 will - if possible - not suppressed,
   key-variables with importance=n will be used whenever possible. }
+  \item{...}{see arguments below}
+  \item{keyVars}{ numeric vector specifying indices of (categorical) key-variables }
 }
 \details{
 The algorithm provides a k-anonymized data set by suppressing values in key 
@@ -60,8 +60,9 @@ plot(localS)
 
 ## for objects of class sdcMicro:
 data(testdata2)
-sdc <- createSdcObj(testdata2, keyVars=c('urbrur','roof','walls','water','electcon','relat','sex'), 
-           numVars=c('expend','income','savings'), w='sampling_weight')
+sdc <- createSdcObj(testdata2,
+  keyVars=c('urbrur','roof','walls','water','electcon','relat','sex'), 
+  numVars=c('expend','income','savings'), w='sampling_weight')
 sdc <- localSuppression(sdc)
 }
 \keyword{ manip }

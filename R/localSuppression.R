@@ -42,19 +42,20 @@ setMethod(f='localSuppression', signature=c("matrix"),
 
 
 localSuppressionWORK <- function(x, keyVars,  k=2, importance=NULL) {
-  my.dist <- function(dat, keyVars, ind) {
-    l <- lapply(1:length(keyVars), function(x) { dat[,keyVars[x]] != dat[ind,keyVars[x]] }) 
-    for (i in seq_along(l) ) {
-      xind <- which(is.na(l[[i]]))
-      if ( length(xind) > 0 )  {
-        l[[i]][xind] <- FALSE
-      }
-    }
-    dists <- Reduce("+", l)
-    dists[ind] <- 0
-    dists
-  }
-  
+	my.dist <- function(dat, keyVars, ind) {
+		l <- lapply(1:length(keyVars), function(x) { dat[,keyVars[x]] != dat[ind,keyVars[x]] }) 
+		for (i in seq_along(l) ) {
+			xind <- which(is.na(l[[i]]))
+			if ( length(xind) > 0 )  {
+				l[[i]][xind] <- FALSE
+			}
+		}
+		dists <- Reduce("+", l)
+		dists[ind] <- 0
+		dists
+	}
+  if(is.numeric(keyVars))
+    keyVars <- colnames(x)[keyVars]
   if ( is.null(importance) ) {
     xx <- apply(x[,keyVars,drop=FALSE], 2, function(x) { length(table(x)) } )
     importance <- match(xx, sort(xx, decreasing=FALSE))
@@ -65,9 +66,46 @@ localSuppressionWORK <- function(x, keyVars,  k=2, importance=NULL) {
   }
   
   # nr supps before doing anything
-  totalNABefore <- length(which(is.na(x)))
+  NABefore <- is.na(x)
+  totalNABefore <- length(which(NABefore))
   NAinKey <- apply(x[, keyVars], 2, function(x) length(which(is.na(x))))
+
+  ##############
+  #The dataset is reduced to a smaller dataset in the following way
+  #1)All missing values are initialized with the first unique value of the corresponding keyVariable
+  #2)fk is computed
+  #3)from groups with fk>k, all observations except k observations are removed
+  #4)Afterwards the old lS-Algo is applied
+  #5)The last step is to merge the smaller k-anonymized data set back to the original data set
+	#with initial NAs introduced again
+  x$idvarextraforsls <- 1:nrow(x)
+  xKeys <- data.table(x[,c(keyVars,"idvarextraforsls")])
+  for(kV in keyVars){
+    cmd <- paste("xKeys[is.na(",kV,"),",kV,":=unique(xKeys$",kV,")[1]]")
+    eval(parse(text=cmd))
+  }
+  cmd <- paste("xKeys <- xKeys[",paste("!is.na(",keyVars,")",collapse="&",sep=""),"]",sep="")
+  eval(parse(text=cmd))
+  setkeyv(xKeys,keyVars)
+  cmd <- paste("erg <- xKeys[,list(fk=.N),by=list(",paste(keyVars,collapse=","),")]",sep="")
+  eval(parse(text=cmd))
+  xKeys <- merge(xKeys,erg)
+  weg <- fkd <-idvarextraforsls <- fk <- NA#for CHECK-NOTES
   
+  erg <- xKeys[fk>k] # more than k
+  erg[,fkd:=fk-k]
+  if(nrow(erg)>0){
+    cmd <- paste("erg2 <- erg[,tail(.SD,fkd),by=list(",paste(keyVars,collapse=","),")]",sep="")
+    eval(parse(text=cmd))
+    xKeys <- data.table(x)
+    setkey(xKeys,"idvarextraforsls")
+    erg2 <- erg2[,list(idvarextraforsls)]
+    erg2[,weg:=1]
+    setkey(erg2,"idvarextraforsls")
+    xKeys <- merge(xKeys,erg2,all=TRUE)
+    x <- data.frame(xKeys[is.na(weg),])
+  }
+  ##############
   ff <- freqCalc(x, keyVars=keyVars)
   rk <- indivRisk(ff)
   runInd <- TRUE
@@ -108,7 +146,25 @@ localSuppressionWORK <- function(x, keyVars,  k=2, importance=NULL) {
       runInd <- FALSE
     } 
   }
+  ###
+  if(nrow(erg)>0){
+    xrem <- data.table(idvarextraforsls=x[,"idvarextraforsls"],weg=1)
+    x <- data.table(x[,-ncol(x)])
   
+    setkey(xrem,"idvarextraforsls")
+    xKeys[,weg:=NULL]
+    setkey(xKeys,"idvarextraforsls")
+    xKeys <- merge(xKeys,xrem,all=TRUE)
+    xKeys <- xKeys[is.na(weg),]
+    xKeys[,weg:=NULL]
+    x <- rbind(x,xKeys)
+    setkey(x,"idvarextraforsls")
+    x[,idvarextraforsls:=NULL]
+    x <- data.frame(x)
+    if(any(NABefore))
+      x[NABefore] <- NA
+  }
+  ##
   ## preparing the output:
   totalNA <- length(which(is.na(x)))
   supps <- apply(x[, keyVars], 2, function(x) length(which(is.na(x)))) - NAinKey

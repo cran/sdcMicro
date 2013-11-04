@@ -37,44 +37,50 @@ setClass(
 	representation=representation(			
 		origData='dataframeOrNULL',
 		keyVars='numericOrNULL',
+		pramVars='numericOrNULL',
 		numVars='numericOrNULL',
 		weightVar='numericOrNULL',
 		hhId='numericOrNULL',
 		strataVar='numericOrNULL',
 		sensibleVar='numericOrNULL',
 		manipKeyVars='dataframeOrNULL',
+		manipPramVars='dataframeOrNULL',
 		manipNumVars='dataframeOrNULL',
 		manipStrataVar='factorOrNULL',
-    originalRisk='listOrNULL',
-    risk='listOrNULL',
+    	originalRisk='listOrNULL',
+    	risk='listOrNULL',
 		utility='listOrNULL',
 		pram='listOrNULL',
 		localSuppression='listOrNULL',
 		options='listOrNULL',
-    additionalResults='listOrNULL',
+    	additionalResults='listOrNULL',
 		set='listOrNULL',
-		prev='sdcmicroOrNULL'
+		prev='sdcmicroOrNULL',
+    deletedVars="characterOrNULL"
 	),
 	prototype=prototype(
 		origData=NULL,
 		keyVars=NULL,
+		pramVars=NULL,
 		numVars=NULL,
 		weightVar=NULL,
 		hhId=NULL,
 		strataVar=NULL,
 		sensibleVar=NULL,
 		manipKeyVars=NULL,
+		manipPramVars=NULL,
 		manipNumVars=NULL,
 		manipStrataVar=NULL,
-    originalRisk=NULL,
-    risk=NULL,
+    	originalRisk=NULL,
+    	risk=NULL,
 		utility=NULL,
 		pram=NULL,
 		localSuppression=NULL,
 		options=NULL,
-    additionalResults=NULL,
+    	additionalResults=NULL,
 		set=NULL,
-		prev=NULL
+		prev=NULL,
+    deletedVars=NULL
 	),
 	validity=function(object) {	
 		return(TRUE)
@@ -82,5 +88,3 @@ setClass(
 )
 
 setIs("sdcMicroObj", "sdcmicroOrNULL")
-
-#obj <- new("sdcMicroObj")

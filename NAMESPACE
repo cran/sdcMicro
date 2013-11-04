@@ -1,15 +1,21 @@
 useDynLib(sdcMicro)
 import("methods")
 import("Rcpp")
-import("Rglpk")
 import("robustbase")
 import("MASS")
 import("car")
 import("cluster")
 import("e1071")
-
+import("tools")
+import("brew")
+import("knitr")
+import("data.table")
+import("xtable")
+importFrom("sets","set_power")
 exportClasses(
 	'sdcMicroObj'
+#	,
+#	'reportObj'
 )
 
 exportMethods(
@@ -18,6 +24,7 @@ exportMethods(
 	'get.sdcMicroObj',
 	'nextSdcObj',
 	'report',
+	#'calcReportData',
 	'set.sdcMicroObj',
 	'addNoise',
 	'mafast','microaggregation',
@@ -30,8 +37,7 @@ exportMethods(
 	'topBotCoding',
 	'suda2',
 	'rankSwap',
-	'report',
-    'shuffle',
+  'shuffle',
 	'localSuppression',
 	'globalRecode',
 	'LLmodGlobalRisk',
@@ -43,7 +49,8 @@ exportMethods(
   'varToFactor',
   'varToNumeric',
   'removeDirectID',
-  'extractManipData'
+  'extractManipData',
+  'microaggrGower'
 )
 
 
@@ -52,7 +59,10 @@ exportMethods(
 ##################################
 export(removeDirectID,extractManipData,
 varToFactor,varToNumeric,groupVars,renameVars,freq,
-    undolast,calcRisks,report,addNoise, dataGen, dRisk, dUtility, globalRecode, LLmodGlobalRisk, LocalRecProg,
+    undolast,calcRisks,
+    report,
+    #calcReportData,
+    addNoise, dataGen, dRisk, dUtility, globalRecode, LLmodGlobalRisk, LocalRecProg,
     createSdcObj,
     dRiskRMD,
     freqCalc,
@@ -70,7 +80,6 @@ varToFactor,varToNumeric,groupVars,renameVars,freq,
     print.micro,
     print.pram,
     print.suda2,
-    report,
     summary.freqCalc,
     summary.micro,
     summary.pram,
@@ -86,7 +95,9 @@ varToFactor,varToNumeric,groupVars,renameVars,freq,
     # deprecated functions
     localSupp2,
     localSupp2Wrapper,
-    print.pram_strata
+    print.pram_strata,
+    microaggrGower,sampleCat,maxCat
+    
 )
 
 S3method(print, indivRisk)

@@ -1,10 +1,12 @@
-setGeneric('microaggregation', function(obj,variables,aggr=3,strata_variables=NULL,method="mdav",weights=NULL, nc = 8,
+setGeneric('microaggregation', function(obj,variables=NULL,aggr=3,strata_variables=NULL,method="mdav",weights=NULL, nc = 8,
         clustermethod = "clara", opt = FALSE, measure = "mean", trim = 0, varsort = 1, transf = "log") {
       standardGeneric('microaggregation')})
 setMethod(f='microaggregation', signature=c('sdcMicroObj'),
-    definition=function(obj,variables,aggr=3,strata_variables=NULL,method="mdav",weights=NULL, nc = 8,
+    definition=function(obj,variables=NULL,aggr=3,strata_variables=NULL,method="mdav",weights=NULL, nc = 8,
         clustermethod = "clara", opt = FALSE, measure = "mean", trim = 0, varsort = 1, transf = "log") { 
       x <- get.sdcMicroObj(obj, type="manipNumVars")
+	  if(is.null(variables))
+		  variables <- colnames(x)
       if(!is.null(strata_variables)){
         sx <- get.sdcMicroObj(obj, type="origData")[,strata_variables[!strata_variables%in%variables],drop=FALSE]
         x <- cbind(x,sx)
@@ -19,7 +21,7 @@ setMethod(f='microaggregation', signature=c('sdcMicroObj'),
       obj <- nextSdcObj(obj)
       x[,variables] <- res$mx
       
-      obj <- set.sdcMicroObj(obj, type="manipNumVars", input=list(as.data.frame(x)))
+      obj <- set.sdcMicroObj(obj, type="manipNumVars", input=list(as.data.frame(x[,variables])))
       
       obj <- dRisk(obj)
 #      obj <- dRiskRMD(obj)
@@ -28,16 +30,20 @@ setMethod(f='microaggregation', signature=c('sdcMicroObj'),
       obj
     })
 setMethod(f='microaggregation', signature=c("data.frame"),
-    definition=function(obj,variables,aggr=3,strata_variables=NULL,method="mdav",weights=NULL, nc = 8,
+    definition=function(obj,variables=NULL,aggr=3,strata_variables=NULL,method="mdav",weights=NULL, nc = 8,
         clustermethod = "clara", opt = FALSE, measure = "mean", trim = 0, varsort = 1, transf = "log") { 
-      microaggregationWORK(x=obj,variables=variables,aggr=aggr,strata_variables=strata_variables,method=method,
+	if(is.null(variables))
+		variables <- colnames(obj)
+	microaggregationWORK(x=obj,variables=variables,aggr=aggr,strata_variables=strata_variables,method=method,
           weights=weights,nc=nc,clustermethod=clustermethod,opt=opt,measure=measure,trim=trim,varsort=varsort,
           transf=transf)
     })
 setMethod(f='microaggregation', signature=c("matrix"),
-    definition=function(obj,variables,aggr=3,strata_variables=NULL,method="mdav",weights=NULL, nc = 8,
+    definition=function(obj,variables=NULL,aggr=3,strata_variables=NULL,method="mdav",weights=NULL, nc = 8,
         clustermethod = "clara", opt = FALSE, measure = "mean", trim = 0, varsort = 1, transf = "log") { 
-      microaggregationWORK(x=obj,variables=variables,aggr=aggr,strata_variables=strata_variables,method=method,
+	if(is.null(variables))
+		variables <- colnames(obj)  
+	 microaggregationWORK(x=obj,variables=variables,aggr=aggr,strata_variables=strata_variables,method=method,
           weights=weights,nc=nc,clustermethod=clustermethod,opt=opt,measure=measure,trim=trim,varsort=varsort,
           transf=transf)
     })
@@ -49,6 +55,22 @@ microaggregationWORK <- function (x, variables=colnames(x),method = "mdav", aggr
 )
 #,blow = TRUE, blowxm = 0)
 {
+  factorOfTotals <- function(x, aggr) {
+    n <- dim(x)[1]
+    abgerundet <- floor(n/aggr)
+    fot <- n/abgerundet
+    return(fot)
+  }
+  if(length(variables)==1){
+    res <- list()
+    res$mx <- mafast(x,variables=variables,by=strata_variables,aggr=aggr,measure=eval(parse(text=measure)))
+    res$x <- x
+    res$method <- "mafast"
+    res$aggr <- aggr
+    res$measure <- measure
+    res$fot <- factorOfTotals(x,aggr)
+    return(res)
+  }
   blow=TRUE
   weightedQuantile <- function (x, weights = NULL, probs = seq(0, 1, 0.25), sorted = FALSE, na.rm = FALSE) {
     if (!is.numeric(x)) 
@@ -116,12 +138,6 @@ microaggregationWORK <- function (x, variables=colnames(x),method = "mdav", aggr
   #    warning("object$blow have been set to TRUE and \n
   #             object$xm == object$blowxm \n--------\n")
   #}
-  factorOfTotals <- function(x, aggr) {
-    n <- dim(x)[1]
-    abgerundet <- floor(n/aggr)
-    fot <- solve(abgerundet, n)
-    fot
-  }
   indexMicro <- function(x, aggr) {
     n <- dim(x)[1]
     if (n < 2 * aggr) {
@@ -680,7 +696,7 @@ microaggregationWORK <- function (x, variables=colnames(x),method = "mdav", aggr
       y[w, ] <- rep(colMeans(y[w, ]), each = length(w))
       for (i in 1:dim(x)[2]) {
         y[,i] <- as.numeric((y[, i] * csd[i]) + cm[i])
-        # eventuell C-Code ausf�hren: Bringt aber nicht viel und Probleme beim Vergleich mit der bisherigen Version
+        # eventuell C-Code ausfuehren: Bringt aber nicht viel und Probleme beim Vergleich mit der bisherigen Version
         #y[,i] <- as.numeric(.C("restandardise", erg=as.double(y[,i]), as.integer(nrow(x)), as.double(cm[i]), as.double(csd[i]))$erg)
       }
       

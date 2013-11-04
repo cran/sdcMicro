@@ -52,7 +52,7 @@ enum{
 //Suda2
 #include "Suda2.h"
 
-#include "Pram.h"
+//#include "Pram.h"
 
 #include "freqCalc.h"
 #include "Measure_Risk.h"

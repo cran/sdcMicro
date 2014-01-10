@@ -19,9 +19,9 @@ setMethod(f='microaggregation', signature=c('sdcMicroObj'),
           weights=weights,nc=nc,clustermethod=clustermethod,opt=opt,
           measure=measure,trim=trim,varsort=varsort,transf=transf)
       obj <- nextSdcObj(obj)
-      x[,variables] <- res$mx
+      x[,variables] <- res$mx[,variables]
       
-      obj <- set.sdcMicroObj(obj, type="manipNumVars", input=list(as.data.frame(x[,variables])))
+      obj <- set.sdcMicroObj(obj, type="manipNumVars", input=list(as.data.frame(x[,colnames(obj@origData)[obj@numVars],drop=FALSE])))
       
       obj <- dRisk(obj)
 #      obj <- dRiskRMD(obj)
@@ -69,6 +69,7 @@ microaggregationWORK <- function (x, variables=colnames(x),method = "mdav", aggr
     res$aggr <- aggr
     res$measure <- measure
     res$fot <- factorOfTotals(x,aggr)
+    class(res) <- "micro"
     return(res)
   }
   blow=TRUE
@@ -787,5 +788,5 @@ microaggregationWORK <- function (x, variables=colnames(x),method = "mdav", aggr
 #            measure = measure, trim = trim, varsort = varsort,
 #            transf = transf, blow = blow, blowxm = blowxm, fot = fot
   class(res1) <- "micro"  
-  invisible(res1)
+  return(res1)
 }

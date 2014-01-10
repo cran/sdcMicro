@@ -182,7 +182,6 @@ setMethod(f='calcReportData', signature=c('sdcMicroObj'), definition=function(ob
     repObj <- set.reportObj(repObj, "dataUtilityCont.show", list(FALSE))
     repObj <- set.reportObj(repObj, "riskNumKeyVars.show", list(FALSE))  
     repObj <- set.reportObj(repObj, "sessionInfo.show", list(FALSE))
-    
   }
   repObj <- set.reportObj(repObj, "title", list(title))
   
@@ -190,7 +189,8 @@ setMethod(f='calcReportData', signature=c('sdcMicroObj'), definition=function(ob
   repObj <- set.reportObj(repObj, "origData", list(x))
   y1 <- get.sdcMicroObj(obj, type="manipKeyVars")
   y2 <- get.sdcMicroObj(obj, type="manipNumVars")
-  optionss <- get.sdcMicroObj(obj, type="options")
+  #optionss <- get.sdcMicroObj(obj, type="options")
+	optionss <- obj@options
   
   #####################
   ### imported File ###
@@ -396,13 +396,13 @@ setMethod(f='calcReportData', signature=c('sdcMicroObj'), definition=function(ob
   }
   
   if ( get.reportObj(repObj, "dataUtilityCont.show") ) {
-    s <- apply(x[,y2cn], 2, summary, na.rm=TRUE) 
+    s <- apply(x[,y2cn,drop=FALSE], 2, summary, na.rm=TRUE) 
     ss <- apply(y2, 2, function(x) round(summary(x, na.rm=TRUE),1)) 
     colnames(ss) <- paste(colnames(ss),".m", sep="")
     pNum <- length(get.sdcMicroObj(obj, "numVars"))
     xx <- cbind(s,ss)
-    if ( pNum > 1 ) {
-      SEQ <- SEQinit <- c(1,pNum+1)
+    SEQ <- SEQinit <- c(1,pNum+1)
+    if ( pNum > 1 ) {      
       for(i in 1:(pNum-1)){
         SEQ <- c(SEQ, SEQinit+i)
       }
@@ -412,9 +412,9 @@ setMethod(f='calcReportData', signature=c('sdcMicroObj'), definition=function(ob
     repObj <- set.reportObj(repObj, "dataUtilityCont.diffEigen", list(round(obj@utility$eigen*100,2)))
     
     ### boxplot of differences
-    mi <- min(x[,y2cn],y2)
-    ma <- max(x[,y2cn],y2)
-	fn <- paste(outdir,"/Graph-",format(Sys.time(), "%d-%m-%Y-%H%M%S"),".png", sep="")
+    mi <- min(x[,y2cn,drop=FALSE],y2)
+    ma <- max(x[,y2cn,drop=FALSE],y2)
+		fn <- paste(outdir,"/Graph-",format(Sys.time(), "%d-%m-%Y-%H%M%S"),".png", sep="")
     png(filename=fn, height=400, width=600)
     b <- boxplot(x[,y2cn], boxwex=0.1, main="univariate comparison original vs. perturbed data", ylim=c(mi,ma))
     boxplot(y2, add=TRUE, at=1:ncol(y2)+0.2, boxwex=0.1, col="lightgrey", xaxt="n", xlab="")	
@@ -426,7 +426,7 @@ setMethod(f='calcReportData', signature=c('sdcMicroObj'), definition=function(ob
   
   ## R-code
   if ( "cmd" %in% names(optionss) ) {
-    repObj <- set.reportObj(repObj, "code", list(unlist(obj@options$cmd)))
+    repObj <- set.reportObj(repObj, "code", list(as.list(obj@options$cmd)))
   }
   
   ## information about current R-session
@@ -448,6 +448,16 @@ setMethod(f='report', signature=c('sdcMicroObj'),
       stop("possible values for 'type' are 'HTML','LATEX' and 'TEXT'!\n")
     }      
     
+	if ( format == "HTML" ) {
+		filename <- paste(filename,".html", sep="")
+	}
+	if ( format == "LATEX" ) {
+		filename <- paste(filename,".tex", sep="")
+	}
+	if ( format == "TEXT") {
+		filename <- paste(filename,".txt", sep="")
+	}
+	
     repObj <- calcReportData(obj, internal=internal, title=title, outdir=outdir)
     
     oldwd <- getwd()
@@ -461,9 +471,9 @@ setMethod(f='report', signature=c('sdcMicroObj'),
       mdOut <- "reportTemplate.md"
       
       brew(file=tpl, output=mdOut)
-      knit2html(stylesheet=css, input=mdOut, quiet=TRUE) 
+      knit2html(stylesheet=css, input=mdOut, output=filename, quiet=TRUE) 
       file.remove(mdOut)
-      xx <- file.remove("reportTemplate.txt")
+      #xx <- file.remove("reportTemplate.html")
       setwd(oldwd)
     }
     
@@ -476,10 +486,12 @@ setMethod(f='report', signature=c('sdcMicroObj'),
       for ( k in 1:length(xx) ) {
         xx[k] <- gsub("_","\\_", xx[k], fixed=TRUE)
       }
-      cat(xx, file=filename, sep="\n")
-      texi2pdf(filename, clean=TRUE)
-    }
-    
+	  tryCatch(texi2pdf(filename, clean=TRUE),  
+		error = function(e) {
+			cat("\npdflatex was not found in the (global) path.\nPlease install pdflatex or generate the report with format='HTML' or 'TXT'.\nThe .tex (",filename,") file was produced and is located in",outdir,"\n") 
+		}, 
+		finally = TRUE)
+    }    
     if ( format == "TEXT" ) {
       tpl <- system.file("templates", "template-report-text.brew", package="sdcMicro")
 	  brew(file=tpl, output=filename)

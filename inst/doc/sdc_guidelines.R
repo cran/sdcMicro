@@ -2,7 +2,7 @@
 ### Encoding: ISO8859-1
 
 ###################################################
-### code chunk number 1: sdc_guidelines.rnw:164-201
+### code chunk number 1: sdc_guidelines.rnw:191-228
 ###################################################
 #require(sdcMicro)
 #load("../Daten/ses.RData")	
@@ -27,7 +27,7 @@ f1 <- function(x){
 }
 #set.seed(123)
 #res <- f1(x)
-#save(res, file="../Daten/res.RData")
+#save(res, file="res.RData")
 load("res.RData")
 par(cex.lab=1.5, mar=c(5,4.5,1,0.1))
 plot(cbind(res$risk, res$utility), type="l", 
@@ -46,15 +46,20 @@ legend("right", legend=c("method1","method2"), lty=c(1,2))
 ###################################################
 ### code chunk number 2: freq
 ###################################################
+#require(devtools)
 require(sdcMicro)
 require(xtable)
 data(francdat)   ## toy data set
 sdc <- createSdcObj(francdat, keyVars=c('Key1','Key2','Key3','Key4'), numVars=c('Num1','Num2','Num3'), w='w')
 df <- cbind(francdat[,c(2,4,5,6,8)], get.sdcMicroObj(sdc, "risk")$individual)	
+df$Key3[df$Key3==5] <- 2
+
+colnames(df)[1:4] <- c("Age", "Location", "Sex", "Education")
+
 #colnames(df)[ncol(df)] <- expression(hat(F)[k])
 df <- xtable(df, digits=c(0,0,0,0,0,1,3,0,1), align = "|l|llll|l|l|ll|",
-	caption="Example of sample and estimated population frequency counts.", 
-	label="listingFreq")
+		caption="Example of sample and estimated population frequency counts.", 
+		label="listingFreq")
 
 
 ###################################################
@@ -66,11 +71,16 @@ print(df,include.rownames = getOption("xtable.include.rownames", TRUE), caption.
 ###################################################
 ### code chunk number 4: suda
 ###################################################
-data(francdat)
-x <- francdat[,c(2,4,5,6,8)]
-ff <- freqCalc(x, keyVars=1:4, w=5)
-s <- suda2(francdat, variables=1:4)
-df <- cbind(x[,1:4], fk=ff$fk, scores=s$score, disScores=s$disScore)
+data(francdat)   ## toy data set
+sdc <- createSdcObj(francdat, keyVars=c('Key1','Key2','Key3','Key4'), numVars=c('Num1','Num2','Num3'), w='w')
+df <- cbind(francdat[,c(2,4,5,6,8)], get.sdcMicroObj(sdc, "risk")$individual)	
+df$Key3[df$Key3==5] <- 2
+colnames(df)[1:4] <- c("Age", "Location", "Sex", "Education")
+
+s <- suda2(df, variables=1:4)
+ff <- freqCalc(df, keyVars=1:4)
+
+df <- cbind(df[,1:4], fk=ff$fk, scores=s$score, disScores=s$disScore)
 df <- xtable(df, digits=c(0,0,0,0,0,0,2,4), align = "|l|llll|l|ll|",
 	caption="Example of SUDA scores (scores) and DIS SUDA scores (disScores).", 
 	label="listingsuda")
@@ -83,56 +93,17 @@ print(df,include.rownames = getOption("xtable.include.rownames", TRUE), caption.
 
 
 ###################################################
-### code chunk number 6: all
+### code chunk number 6: sdc_guidelines.rnw:696-701
 ###################################################
-sdc <- createSdcObj(francdat, keyVars=c('Key1','Key2','Key3','Key4'), numVars=c('Num1','Num2','Num3'), w='w')
-df <- francdat[,c(2,4,5,6,7,8)]
-sdc <- ldiversity(sdc,ldiv_index="Num3")
-sdc <- suda2(sdc)
-df <- cbind(df, ldiv=sdc@risk$ldiversity[,1])
-df <- cbind(df, suda=sdc@risk$suda$score)
-df <- cbind(df, get.sdcMicroObj(sdc, "risk")$individual)
-df <- df[,c(1:6, 10:11, 7,8,9)]
-df <- xtable(df, digits=c(0,0,0,0,0,0,1,0,1,0,2,4), align = "|l|llll|l|l|lll|l|l|",
-	caption="Display of frequency counts, l-diversity, SUDA and individual risk. The continuous variable (Num3) was chosen as sensitive variable for $l$-diversity.", 
-	label="listingIndiv")
-
-
-###################################################
-### code chunk number 7: allprint
-###################################################
-print(df,include.rownames = getOption("xtable.include.rownames", TRUE), caption.placement="top")
-
-
-###################################################
-### code chunk number 8: sdc_guidelines.rnw:664-665
-###################################################
+data(testdata)
+sdc <- createSdcObj(testdata,
+		keyVars=c('urbrur','roof','walls','water','electcon','relat','sex'),
+		numVars=c('expend','income','savings'), w='sampling_weight', hhId ='ori_hid')
 print(sdc, "risk")
 
 
 ###################################################
-### code chunk number 9: sdc_guidelines.rnw:908-911
-###################################################
-set.seed(1234)
-A <- as.factor(rep(c("A1","A2","A3"), each=5))
-A
-
-
-###################################################
-### code chunk number 10: sdc_guidelines.rnw:916-918
-###################################################
-Apramed <- pram(A)
-Apramed	
-
-
-###################################################
-### code chunk number 11: sdc_guidelines.rnw:925-926
-###################################################
-summary(Apramed)	
-
-
-###################################################
-### code chunk number 12: microaggregation
+### code chunk number 7: microaggregation
 ###################################################
 df <- francdat[,c(1,3,7)]	
 df <- cbind(df, microaggregation(df, aggr=2)$mx)
@@ -143,8 +114,15 @@ df <- xtable(df, digits=c(0,2,3,0,2,2,1), align = "|l|lll|lll|",
 
 
 ###################################################
-### code chunk number 13: allprint
+### code chunk number 8: allprint
 ###################################################
 print(df,include.rownames = getOption("xtable.include.rownames", TRUE), caption.placement="top")
+
+
+###################################################
+### code chunk number 9: sdc_guidelines.rnw:1363-1365
+###################################################
+require(laeken, quiet=TRUE)
+data(ses)
 
 

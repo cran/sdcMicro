@@ -1,4 +1,4 @@
-e31a08454727adf59146141f7d2b2c54 *DESCRIPTION
+8bfdafb71ce4dfab5e71dee0d4f2c781 *DESCRIPTION
 20022b4e2bf077d6df7de3692d7df1ff *NAMESPACE
 0e85eb44b71765aa51c65c89a50e29cd *NEWS
 ff4328901e5981a5acf3e376451f32b2 *R/0classes.r
@@ -17,7 +17,7 @@ b07eba1f04a46a46d3c39d771ed43b50 *R/indivRisk.R
 5d23aa75eb477f50558c3d33650a5eed *R/localSupp.R
 c0afa7fcf04abb2aac5599a4417d73a5 *R/localSupp2.R
 ef43b2f951f73d4fcd2c4dc3a2a0738b *R/localSupp2Wrapper.R
-df2bde153407424933e004b4190e2401 *R/localSuppression.R
+c44762daa1844180fd9464b385c5bcca *R/localSuppression.R
 316ad1e484b0ec01a41eff03b4b7d643 *R/maG.R
 20c760fa04a8551f58a282d525d296de *R/mafast.R
 4fea3044646a12646760664c32c130c8 *R/mdav.R
@@ -46,7 +46,7 @@ c54940bcb099db89e3f96350a1208eaa *R/topBotCoding.R
 bcba47a0fb762d65192ccfb7163af7b8 *R/valTable.R
 fa9904646437d6602e264f44683e35bc *R/zzz.R
 d3802789b4429727a49ac68883d28528 *README.md
-bb7fbcbdc168c6c143309e055bf58091 *build/vignette.rds
+85c6476ed69cb850d1e644b3117647e6 *build/vignette.rds
 489b4ea5287c4fd60a96a404d5f03327 *data/CASCrefmicrodata.rda
 d5c432a90519d980d0913ff3c999e48c *data/EIA.rda
 0551b9299712faea23f9f741e5d7e2ea *data/Tarragona.rda
@@ -56,9 +56,9 @@ d84b7bb2dcbc0c32329499bdbdba9223 *data/free1.rda
 fe82b92979b216b5b106178e1b8d05ec *data/microData.rda
 43fa930e165fdb9694d43aa1647d5fd9 *data/testdata.RData
 2f4d1ca478a84ba2524a462084367170 *data/testdata2.RData
-49898a5d102f611268980fba246c74fd *inst/doc/sdc_guidelines.R
-50b95f60184f41f90bc1620ad3432ab0 *inst/doc/sdc_guidelines.pdf
-f40037b076bece94c1372395efba4da0 *inst/doc/sdc_guidelines.rnw
+313c2b9bd01fc0d42c2affe65e6d3d41 *inst/doc/sdc_guidelines.R
+22117b789a705ffac2797c013074b9e7 *inst/doc/sdc_guidelines.pdf
+7272d61608b6ebef162a1c598f32997e *inst/doc/sdc_guidelines.rnw
 414dbe1a1801e86ec90e3d245b059202 *inst/templates/report.css
 a5db176a65f3b170a74af934eadc96b3 *inst/templates/template-report-html.brew
 03e6cc6e3f76e7288066c8b8c021c0f4 *inst/templates/template-report-latex.brew
@@ -144,9 +144,13 @@ bb729b56c1186f12eeb341d6cefa73d6 *tests/globalRecoding_test.R
 de1bc9afaf54677c0b8e2dc2d08af27a *tests/reporting_test.R
 482b672f3cb4a5dbc43a3fdc2b1c2069 *vignettes/FinalLogoSmaller.pdf
 4b2e6889bfee51435ebdb397c55ee7ee *vignettes/da1.sty
+5fc2ac6e3e3e0434dc6cb017103cdd7a *vignettes/drei.pdf
+05429bf558cc62828fc95d179b1416f4 *vignettes/eins.pdf
 a01a0891c30e5492a714176380e1c470 *vignettes/imgs/ablauf.png
 957b0015adbd61ba3224b2f60a1235b9 *vignettes/imgs/intervals.pdf
 5f5bf9d23f2bb10f5557f1df444806c8 *vignettes/imgs/sdc_guidelines-001.pdf
-62d31639f6ef7e27330b8af3eb1426ae *vignettes/references.bib
+0a3d2c9c62c1b08329378c0c497ac504 *vignettes/references.bib
 3df59c0f79014f0324723fd206e79d6f *vignettes/res.RData
-f40037b076bece94c1372395efba4da0 *vignettes/sdc_guidelines.rnw
+7272d61608b6ebef162a1c598f32997e *vignettes/sdc_guidelines.rnw
+dd293a491d64a9e58117dcb629b2ac59 *vignettes/vier.pdf
+5bdc946694c7065db997276627dfecf9 *vignettes/zwei.pdf

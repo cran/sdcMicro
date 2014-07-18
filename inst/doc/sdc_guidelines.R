@@ -69,31 +69,7 @@ print(df,include.rownames = getOption("xtable.include.rownames", TRUE), caption.
 
 
 ###################################################
-### code chunk number 4: suda
-###################################################
-data(francdat)   ## toy data set
-sdc <- createSdcObj(francdat, keyVars=c('Key1','Key2','Key3','Key4'), numVars=c('Num1','Num2','Num3'), w='w')
-df <- cbind(francdat[,c(2,4,5,6,8)], get.sdcMicroObj(sdc, "risk")$individual)	
-df$Key3[df$Key3==5] <- 2
-colnames(df)[1:4] <- c("Age", "Location", "Sex", "Education")
-
-s <- suda2(df, variables=1:4)
-ff <- freqCalc(df, keyVars=1:4)
-
-df <- cbind(df[,1:4], fk=ff$fk, scores=s$score, disScores=s$disScore)
-df <- xtable(df, digits=c(0,0,0,0,0,0,2,4), align = "|l|llll|l|ll|",
-	caption="Example of SUDA scores (scores) and DIS SUDA scores (disScores).", 
-	label="listingsuda")
-
-
-###################################################
-### code chunk number 5: freqprint
-###################################################
-print(df,include.rownames = getOption("xtable.include.rownames", TRUE), caption.placement="top")
-
-
-###################################################
-### code chunk number 6: sdc_guidelines.rnw:696-701
+### code chunk number 4: sdc_guidelines.rnw:718-723
 ###################################################
 data(testdata)
 sdc <- createSdcObj(testdata,
@@ -103,7 +79,7 @@ print(sdc, "risk")
 
 
 ###################################################
-### code chunk number 7: microaggregation
+### code chunk number 5: microaggregation
 ###################################################
 df <- francdat[,c(1,3,7)]	
 df <- cbind(df, microaggregation(df, aggr=2)$mx)
@@ -114,13 +90,13 @@ df <- xtable(df, digits=c(0,2,3,0,2,2,1), align = "|l|lll|lll|",
 
 
 ###################################################
-### code chunk number 8: allprint
+### code chunk number 6: allprint
 ###################################################
 print(df,include.rownames = getOption("xtable.include.rownames", TRUE), caption.placement="top")
 
 
 ###################################################
-### code chunk number 9: sdc_guidelines.rnw:1363-1365
+### code chunk number 7: sdc_guidelines.rnw:1385-1387
 ###################################################
 require(laeken, quiet=TRUE)
 data(ses)

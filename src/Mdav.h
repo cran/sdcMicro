@@ -167,10 +167,18 @@ RcppExport SEXP Mdav(SEXP data,SEXP data2,SEXP g_MissingValue_R,SEXP weights_R,S
     pPrevIndex[i+1] = i;
   pPrevIndex[0] = -1;
 
-    //=== Core Loop
+    //=== Core Loop: It always removes to groups of observations of size k therefore it has to stop, when only NbRowLeft-g_K*2>=g_K
   int Loop = 0;
-  while (NbRowLeft >= g_K * 2)
+  int ngroups; // ngroups introduced to fix the bug that groups smaller than k remain in the last aggregation step after the while loop
+//  while (NbRowLeft- g_K * 2>=g_K)
+  while(NbRowLeft- g_K >=g_K)
   {
+    if(NbRowLeft- g_K * 2<g_K)
+      ngroups=1;
+    else
+      ngroups=2;
+//    Rprintf("NbRowLeft %d \n",NbRowLeft);
+//    Rprintf("g_K %d \n \n",g_K);
     ++Loop;
     //=== Calculate Center
     ClearMemT(pCenter, g_NbVar);
@@ -212,7 +220,7 @@ RcppExport SEXP Mdav(SEXP data,SEXP data2,SEXP g_MissingValue_R,SEXP weights_R,S
 //    ASSERT(k == NbRowLeft);
 
       // Find the K closest rows & average them, both from Farthest Row & Opposite Farthest Row
-    ForLoop (l, 2)
+    ForLoop (l, ngroups)
     {
         //=== Calculate Distances from Farthest Row
       int Farthest = FirstIndex, Closest = FirstIndex;
@@ -336,13 +344,12 @@ RcppExport SEXP Mdav(SEXP data,SEXP data2,SEXP g_MissingValue_R,SEXP weights_R,S
 
     }
 
-    NbRowLeft -= g_K * 2;
+    NbRowLeft -= g_K * ngroups;
 
   }
-
-    //=== Calculate Average of Remaining Rows
   if (NbRowLeft)
   {
+//    Rprintf("FINAL NbRowLeft %d \n",NbRowLeft);
     ClearMemT(pCenter, g_NbVar);
     ClearMemT(pNbNonMissingValue, g_NbVar);
 
@@ -384,11 +391,15 @@ RcppExport SEXP Mdav(SEXP data,SEXP data2,SEXP g_MissingValue_R,SEXP weights_R,S
 
 
   //=== Uninit
+  CleanDeleteT(g_pMissingValueDist);
+  CleanDeleteT(g_pWeight);
   CleanDeleteT(pNextIndex);
   CleanDeleteT(pPrevIndex);
   CleanDeleteT(pNextInHash);
   CleanDeleteT(pCenter);
   CleanDeleteT(pDist);
+  CleanDeleteT(pVar1);
+  CleanDeleteT(pVar2);
   CleanDeleteT(pNbNonMissingValue);
   return Rcpp::List::create(
       Rcpp::Named( "Res" ) = Res

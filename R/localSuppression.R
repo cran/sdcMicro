@@ -55,7 +55,7 @@
 #' \code{kAnon} is a more intutitive term for localSuppression because the aim is always
 #' to obtain k-anonymity for some parts of the data.
 #' @examples
-#'
+#' \dontrun{
 #' data(francdat)
 #' ## Local Suppression
 #' localS <- localSuppression(francdat, keyVar=c(4,5,6))
@@ -99,7 +99,7 @@
 #' ls <- kAnon(inp, keyVars=1:7, strataVars=8)
 #' print(ls)
 #' plot(ls, showTotalSupps=TRUE)
-#'
+#' }
 setGeneric("localSuppression", function(obj, k = 2, importance = NULL, combs=NULL, ...) {
   standardGeneric("localSuppression")
 })
@@ -153,13 +153,13 @@ definition=function(obj, k=2, importance=NULL, combs=NULL) {
 
 setMethod(f='localSuppression', signature=c("data.frame"),
 definition=function(obj, k=2, keyVars, strataVars=NULL, importance=NULL, combs=NULL) {
-  localSuppressionWORK(x=obj, keyVars=keyVars, strataVars=strataVars,
+  localSuppressionWORK(x=obj, keyVars=keyVars, k=k, strataVars=strataVars,
     importance=importance, combs=combs)
 })
 
 setMethod(f='localSuppression', signature=c("matrix"),
 definition=function(obj, keyVars, k=2, strataVars=NULL, importance=NULL, combs=NULL) {
-  localSuppressionWORK(x=as.data.frame(obj), keyVars=keyVars, strataVars=strataVars,
+  localSuppressionWORK(x=as.data.frame(obj), keyVars=keyVars, k=k, strataVars=strataVars,
     importance=importance, combs=combs)
 })
 
@@ -488,10 +488,11 @@ localSuppressionWORK <- function(x, keyVars, strataVars, k=2, combs, importance=
 #' @examples
 #'
 #' ## example from Capobianchi, Polettini and Lucarelli:
+#' \dontrun{
 #' data(francdat)
 #' l1 <- localSuppression(francdat, keyVars=c(2,4,5,6))
 #' l1
-#'
+#' }
 print.localSuppression <- function(x, ...) {
   byStrata <- !is.null(x$strataVars)
   pp <- "\n-----------------------\n"
@@ -545,6 +546,7 @@ print.localSuppression <- function(x, ...) {
 #' @examples
 #'
 #' ## example from Capobianchi, Polettini and Lucarelli:
+#' \dontrun{
 #' data(francdat)
 #' l1 <- localSuppression(francdat, keyVars=c(2,4,5,6))
 #' l1
@@ -560,7 +562,7 @@ print.localSuppression <- function(x, ...) {
 #' print(ls)
 #' plot(ls)
 #' plot(ls, showDetails=TRUE)
-#'
+#' }
 #' @export plot.localSuppression
 plot.localSuppression <- function(x, ...) {
   vals <- keyVars <- NULL

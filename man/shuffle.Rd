@@ -3,10 +3,6 @@
 \docType{methods}
 \name{shuffle}
 \alias{shuffle}
-\alias{shuffle,data.frame-method}
-\alias{shuffle,matrix-method}
-\alias{shuffle,sdcMicroObj-method}
-\alias{shuffle-methods}
 \title{Shuffling and EGADP}
 \usage{
 shuffle(obj, form, method = "ds", weights = NULL, covmethod = "spearman",
@@ -74,14 +70,7 @@ In this version, the covariance method chosen is used for any
 covariance and correlation estimations in the whole gadp and shuffling
 function.
 }
-\section{Methods}{
- \describe{
-\item{list("signature(obj = \"data.frame\")")}{}
-\item{list("signature(obj = \"matrix\")")}{}
-\item{list("signature(obj = \"sdcMicroObj\")")}{}}
-}
 \examples{
-
 data(Prestige,package="car")
 form <- formula(income + education ~ women + prestige + type, data=Prestige)
 sh <- shuffle(obj=Prestige,form)
@@ -99,10 +88,9 @@ sdc <- createSdcObj(testdata2,
   numVars=c('expend','income','savings'), w='sampling_weight')
 sdc <- shuffle(sdc, method=c('ds'),regmethod= c('lm'), covmethod=c('spearman'),
 		form=savings+expend ~ urbrur+walls)
-
 }
 \author{
-Matthias Templ, Alexander Kowarik
+Matthias Templ, Alexander Kowarik, Bernhard Meindl
 }
 \references{
 K. Muralidhar, R. Parsa, R. Saranthy (1999). A general additive

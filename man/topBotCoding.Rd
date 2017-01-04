@@ -3,16 +3,12 @@
 \docType{methods}
 \name{topBotCoding}
 \alias{topBotCoding}
-\alias{topBotCoding,ANY-method}
-\alias{topBotCoding,sdcMicroObj-method}
-\alias{topBotCoding-methods}
 \title{Top and Bottom Coding}
 \usage{
 topBotCoding(obj, value, replacement, kind = "top", column = NULL)
 }
 \arguments{
-\item{obj}{vector or one-dimensional matrix or data.frame or object of class
-\code{\link{sdcMicroObj-class}}}
+\item{obj}{a numeric vector, a \code{data.frame} or a \code{\link{sdcMicroObj-class}}-object}
 
 \item{value}{limit, from where it should be top- or bottom-coded}
 
@@ -20,7 +16,7 @@ topBotCoding(obj, value, replacement, kind = "top", column = NULL)
 
 \item{kind}{top or bottom}
 
-\item{column}{xxx}
+\item{column}{variable name in case the input is a \code{data.frame} or an object of class \code{\link{sdcMicroObj-class}}.}
 }
 \value{
 Top or bottom coded data or modified \code{\link{sdcMicroObj-class}}.
@@ -29,17 +25,20 @@ Top or bottom coded data or modified \code{\link{sdcMicroObj-class}}.
 Function for Top and Bottom Coding.
 }
 \details{
-Extreme values are replaced by one value to reduce the disclosure risk.
+Extreme values larger or lower than \code{value} are replaced by a different value (\code{replacement} in order to reduce the disclosure risk.
 }
-\section{Methods}{
- \describe{
-\item{list("signature(obj = \"ANY\")")}{}
-\item{list("signature(obj = \"sdcMicroObj\")")}{}}
+\note{
+top-/bottom coding of factors is no longer possible as of sdcMicro >=4.7.0
 }
 \examples{
-
 data(free1)
-topBotCoding(free1[,"DEBTS"], value=9000, replacement=9100, kind="top")
+res <- topBotCoding(free1[,"DEBTS"], value=9000, replacement=9100, kind="top")
+max(res)
+
+data(testdata)
+range(testdata$age)
+testdata <- topBotCoding(testdata, value=80, replacement=81, kind="top", column="age")
+range(testdata$age)
 
 ## for objects of class sdcMicro:
 data(testdata2)
@@ -47,10 +46,9 @@ sdc <- createSdcObj(testdata2, keyVars=c('urbrur','roof','walls','water','electc
            numVars=c('expend','income','savings'), w='sampling_weight')
 sdc <- topBotCoding(sdc, value=500000, replacement=1000, column="income")
 testdataout <- extractManipData(sdc)
-
 }
 \author{
-Matthias Templ
+Matthias Templ and Bernhard Meindl
 }
 \seealso{
 \code{\link{indivRisk}}

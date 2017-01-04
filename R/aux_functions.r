@@ -8,15 +8,18 @@ standardizeInput <- function(obj, v) {
   if (class(obj) != "sdcMicroObj") {
     stop("obj must be an object of class 'sdcMicroObj'!\n")
   }
+  if (is.null(v)) {
+    return(NULL)
+  }
 
   if (is.numeric(v)) {
-    if (all(v %in% 1:ncol(get.sdcMicroObj(obj, type = "origData")))) {
+    if (all(v %in% 1:ncol(get.sdcMicroObj(obj, type="origData")))) {
       return(v)
     } else {
       stop("please specify valid column-indices!\n")
     }
   } else if (is.character(v)) {
-    m <- match(v, colnames(get.sdcMicroObj(obj, type = "origData")))
+    m <- match(v, colnames(get.sdcMicroObj(obj, type="origData")))
     if (!any(is.na(m))) {
       return(m)
     } else {
@@ -43,7 +46,17 @@ standardizeInput <- function(obj, v) {
 #' @param hhId Index or name of the cluster ID (if available).
 #' @param strataVar Indices or names of stratification variables.
 #' @param sensibleVar Indices or names of sensible variables (for l-diversity)
-#' @param options additional options.
+#' @param excludeVars which variables of \code{dat} should not be included in
+#' result-object? Users may specify a vector of variable-names available in \code{dat}
+#' that were not specified in either \code{keyVars}, \code{numVars}, \code{pramVars},
+#' \code{ghostVars}, \code{hhId}, \code{strataVar} or \code{sensibleVar}.
+#' @param options additional options (if specified, a list must be used as input)
+#' @param seed (numeric) number specifiying the seed which will be set to allow for
+#' reproducablity. The number will be rounded and saved as element \code{seed} in slot \code{options}.
+#' @param randomizeRecords (logical) if \code{TRUE}, the order of observations in the input microdata set
+#' will be randomized.
+#' @param alpha numeric between 0 and 1 specifying the fraction on how much keys containing \code{NAs} should
+#' contribute to the frequency calculation which is also crucial for risk-estimation.
 #' @export
 #' @examples
 #' ## we can also specify ghost (linked) variables
@@ -54,11 +67,11 @@ standardizeInput <- function(obj, v) {
 #' testdata$electcon2 <- testdata$electcon
 #' testdata$electcon3 <- testdata$electcon
 #' testdata$water2 <- testdata$water
-
+#'
 #' keyVars <- c("urbrur","roof","walls","water","electcon","relat","sex")
 #' numVars <- c("expend","income","savings")
 #' w <- "sampling_weight"
-
+#'
 #' ## we want to make sure that some variables not used as key-variables
 #' ## have the same suppression pattern as variables that have been
 #' ## selected as key variables. Thus, we are using 'ghost'-variables.
@@ -89,49 +102,91 @@ standardizeInput <- function(obj, v) {
 #' all(is.na(manipKeyVars$electcon) == is.na(manipGhostVars$electcon3))
 #' all(is.na(manipKeyVars$water) == is.na(manipGhostVars$water2))
 #'
-createSdcObj <- function(dat, keyVars, numVars = NULL, pramVars = NULL, ghostVars = NULL, weightVar = NULL,
-  hhId = NULL, strataVar = NULL, sensibleVar = NULL, options = NULL) {
+#' ## exclude some variables
+#' obj <- createSdcObj(testdata, keyVars=c("urbrur","roof","walls"), numVars="savings",
+#'    weightVar=w, excludeVars=c("relat","electcon","hhcivil","ori_hid","expend"))
+#' colnames(get.sdcMicroObj(obj, "origData"))
+createSdcObj <- function(dat, keyVars, numVars=NULL, pramVars=NULL, ghostVars=NULL, weightVar=NULL,
+  hhId=NULL, strataVar=NULL, sensibleVar=NULL, excludeVars=NULL, options=NULL, seed=NULL,
+  randomizeRecords=FALSE, alpha=1) {
 
   obj <- new("sdcMicroObj")
+  options <- list()
+  if (!is.null(seed) && is.numeric(seed)) {
+    ss <- round(seed)
+    set.seed(ss)
+    options$seed <- ss
+  } else {
+    options$seed <- NA
+  }
+
   if (!is.data.frame(dat)) {
     dat <- as.data.frame(dat)
   }
+  if (randomizeRecords==TRUE) {
+    dat <- dat[sample(1:nrow(dat)),]
+    rownames(dat) <- NULL
+  }
+  options$randomizeRecords <- randomizeRecords
+  obj <- set.sdcMicroObj(obj, type="origData", input=list(dat))
 
-  obj <- set.sdcMicroObj(obj, type = "origData", input = list(dat))
+  usedVars <- c(standardizeInput(obj, keyVars),
+    standardizeInput(obj, numVars), standardizeInput(obj, pramVars),
+    standardizeInput(obj, weightVar), standardizeInput(obj, hhId),
+    standardizeInput(obj, strataVar), standardizeInput(obj, sensibleVar))
+  if (!is.null(ghostVars )) {
+    for ( i in seq_along(ghostVars)) {
+      usedVars <- c(usedVars, standardizeInput(obj, ghostVars[[i]][[2]]))
+    }
+  }
+  usedVars <- unique(usedVars)
+  # exclude variables if required
+  if (!is.null(excludeVars)) {
+    excludeVarsInd <- standardizeInput(obj, excludeVars)
+    if ( any(excludeVarsInd %in% usedVars) ) {
+      stop("You have specified variables in 'excludeVars' that cannot be removed!\n")
+    }
+    obj@origData <- obj@origData[,-c(excludeVarsInd),drop=FALSE]
+    obj@deletedVars <- excludeVars
+    dat <- get.sdcMicroObj(obj, type="origData")
+  }
+
   # key-variables
   keyVarInd <- standardizeInput(obj, keyVars)
-  TFcharacter <- lapply(dat[, keyVarInd, drop = FALSE], class) %in% "character"
+  TFcharacter <- lapply(dat[, keyVarInd, drop=FALSE], class) %in% "character"
   if (any(TFcharacter)) {
     for (kvi in which(TFcharacter)) {
       dat[, keyVarInd[kvi]] <- as.factor(dat[, keyVarInd[kvi]])
     }
   }
 
-  obj <- set.sdcMicroObj(obj, type = "keyVars", input = list(keyVarInd))
-  obj <- set.sdcMicroObj(obj, type = "manipKeyVars", input = list(dat[, keyVarInd, drop = FALSE]))
+  obj <- set.sdcMicroObj(obj, type="keyVars", input=list(keyVarInd))
+  obj <- set.sdcMicroObj(obj, type="manipKeyVars", input=list(dat[, keyVarInd, drop=FALSE]))
 
   if (!is.null(pramVars)) {
     pramVarInd <- standardizeInput(obj, pramVars)
-    obj <- set.sdcMicroObj(obj, type = "pramVars", input = list(pramVarInd))
+    obj <- set.sdcMicroObj(obj, type="pramVars", input=list(pramVarInd))
 
     # variable only consists of NA values?
     all.na <- which(sapply(obj@origData[, pramVars], function(x) {
       all(is.na(x))
     }))
     if (length(all.na) > 0) {
-      warning("at least one pramVar only contains NA values! --> we do not use this variable!\n")
-      obj <- set.sdcMicroObj(obj, type = "pramVars", list(get.sdcMicroObj(obj, type = "pramVars")[-all.na]))
+      warnMsg <- "at least one pramVar only contains NA values! --> we do not use this variable!\n"
+      obj <- addWarning(obj, warnMsg=warnMsg, method="createSdcObj", variable=NA)
+      warning(warnMsg)
+      obj <- set.sdcMicroObj(obj, type="pramVars", list(get.sdcMicroObj(obj, type="pramVars")[-all.na]))
       pramVarInd <- pramVarInd[-all.na]
     }
-    pramData <- dat[, pramVarInd, drop = FALSE]
-    obj <- set.sdcMicroObj(obj, type = "manipPramVars", input = list(dat[, pramVarInd,
-      drop = FALSE]))
+    pramData <- dat[, pramVarInd, drop=FALSE]
+    obj <- set.sdcMicroObj(obj, type="manipPramVars", input=list(dat[, pramVarInd,
+      drop=FALSE]))
   }
   # numeric-variables
   if (!is.null(numVars)) {
     numVarInd <- standardizeInput(obj, numVars)
-    obj <- set.sdcMicroObj(obj, type = "numVars", input = list(numVarInd))
-    obj <- set.sdcMicroObj(obj, type = "manipNumVars", input = list(dat[, numVarInd, drop = FALSE]))
+    obj <- set.sdcMicroObj(obj, type="numVars", input=list(numVarInd))
+    obj <- set.sdcMicroObj(obj, type="manipNumVars", input=list(dat[, numVarInd, drop=FALSE]))
   }
 
   # ghostVars
@@ -140,7 +195,7 @@ createSdcObj <- function(dat, keyVars, numVars = NULL, pramVars = NULL, ghostVar
       gV <- standardizeInput(obj, ghostVars[[i]][[1]])
       sV <- standardizeInput(obj, ghostVars[[i]][[2]])
       if ( length(gV) != 1 ) {
-        stop("only one (existing) key-variable name can be specified as idenpendent variables in a ghostVars-element!\n")
+        stop("only one (existing) key variable name can be specified as idenpendent variables in a ghostVars-element!\n")
       }
       if ( any(sV %in% keyVarInd) ) {
         stop("one variables that are no categorical key variables can be specified as dependent variables in a ghostVars element.\n")
@@ -150,32 +205,31 @@ createSdcObj <- function(dat, keyVars, numVars = NULL, pramVars = NULL, ghostVar
     }
     obj <- set.sdcMicroObj(obj, type="ghostVars", input=list(ghostVars))
     ghostVarInd <- unlist(lapply(ghostVars, function(x) { x[[2]]}))
-    obj <- set.sdcMicroObj(obj, type = "manipGhostVars", input = list(dat[, ghostVarInd, drop = FALSE]))
+    obj <- set.sdcMicroObj(obj, type ="manipGhostVars", input=list(dat[, ghostVarInd, drop=FALSE]))
   }
 
   # weight-variable
   if (!is.null(weightVar)) {
     weightVarInd <- standardizeInput(obj, weightVar)
-    obj <- set.sdcMicroObj(obj, type = "weightVar", input = list(weightVarInd))
+    obj <- set.sdcMicroObj(obj, type="weightVar", input=list(weightVarInd))
   }
   # hhId-variable
   if (!is.null(hhId)) {
     hhIdInd <- standardizeInput(obj, hhId)
-    obj <- set.sdcMicroObj(obj, type = "hhId", input = list(hhIdInd))
+    obj <- set.sdcMicroObj(obj, type="hhId", input=list(hhIdInd))
   }
   # strata-variable
   if (!is.null(strataVar)) {
     strataVarInd <- standardizeInput(obj, strataVar)
-    obj <- set.sdcMicroObj(obj, type = "strataVar", input = list(strataVarInd))
+    obj <- set.sdcMicroObj(obj, type="strataVar", input=list(strataVarInd))
   }
   # sensible-variable
   if (!is.null(sensibleVar)) {
     sensibleVarInd <- standardizeInput(obj, sensibleVar)
-    obj <- set.sdcMicroObj(obj, type = "sensibleVar", input = list(sensibleVarInd))
+    obj <- set.sdcMicroObj(obj, type="sensibleVar", input=list(sensibleVarInd))
   }
-  if (!is.null(options)) {
-    obj <- set.sdcMicroObj(obj, type = "options", input = list(options))
-  }
+  options$alpha <- alpha
+  obj <- set.sdcMicroObj(obj, type="options", input=list(options))
 
   obj <- measure_risk(obj)
   obj@originalRisk <- obj@risk
@@ -200,30 +254,44 @@ computeNumberPrev <- function(obj) {
 deletePrevSave <- function(obj, m) {
   nprev <- computeNumberPrev(obj)
   if (m >= 1 && m <= nprev) {
-    cmd <- paste("obj@", paste(rep("prev", m), collapse = "@"), "<-NULL", sep = "")
-    eval(parse(text = cmd))
+    cmd <- paste("obj@", paste(rep("prev", m), collapse="@"), "<-NULL", sep="")
+    eval(parse(text=cmd))
   }
   return(obj)
 }
 
-setGeneric("nextSdcObj", function(obj) {
-  standardGeneric("nextSdcObj")
+
+#' nextSdcObj
+#'
+#' internal function used to provide the undo-functionality.
+#'
+#' @param obj a \code{\link{sdcMicroObj-class}} object
+#' @return a modified \code{\link{sdcMicroObj-class}} object
+#' @export
+#' @docType methods
+nextSdcObj <- function(obj) {
+  nextSdcObjX(obj)
+}
+setGeneric("nextSdcObjX", function(obj) {
+  standardGeneric("nextSdcObjX")
 })
 
-setMethod(f = "nextSdcObj", signature = c("sdcMicroObj"), definition = function(obj) {
-  options <- get.sdcMicroObj(obj, type = "options")
+setMethod(f="nextSdcObjX", signature=c("sdcMicroObj"), definition=function(obj) {
+  options <- get.sdcMicroObj(obj, type="options")
   if (("noUndo" %in% options)) {
     return(obj)
   }
   if (nrow(obj@origData) > 1e+05) {
-    warning("No previous states are saved because your data set has more than 100 000 observations.")
+    warnMsg <- "No previous states are saved because your data set has more than 100 000 observations.\n"
+    obj <- addWarning(obj, warnMsg=warnMsg, method="nextSdcObj", variable=NA)
+    warning(warnMsg)
     return(obj)
   }
   if (length(grep("maxUndo", options)) > 0)
-    maxUndo <- as.numeric(substr(options[grep("maxUndo", options)], 9, stop = nchar(options[grep("maxUndo",
-      options)], type = "width"))) else maxUndo <- 1
+    maxUndo <- as.numeric(substr(options[grep("maxUndo", options)], 9, stop=nchar(options[grep("maxUndo",
+      options)], type="width"))) else maxUndo <- 1
   obj <- deletePrevSave(obj, maxUndo)
-  obj <- set.sdcMicroObj(obj, type = "prev", input = list(obj))
+  obj <- set.sdcMicroObj(obj, type="prev", input=list(obj))
   return(obj)
 })
 
@@ -238,29 +306,27 @@ setMethod(f = "nextSdcObj", signature = c("sdcMicroObj"), definition = function(
 #' an sdc method is applied.
 #'
 #' @name calcRisks
-#' @aliases calcRisks-methods calcRisks calcRisks,sdcMicroObj-method
-#' @docType methods
 #' @param obj an object of class \code{\link{sdcMicroObj-class}}
 #' @param ... no arguments at the moment
-#' @section Methods: \describe{
-#' \item{list("signature(obj = \"sdcMicroObj\")")}{}}
 #' @seealso \code{\link{sdcMicroObj-class}}
-#' @keywords methods
 #' @export
 #' @examples
-#'
 #' data(testdata2)
 #' sdc <- createSdcObj(testdata2,
 #'   keyVars=c('urbrur','roof','walls','water','electcon','relat','sex'),
 #'   numVars=c('expend','income','savings'), w='sampling_weight')
 #' sdc <- calcRisks(sdc)
 #'
-setGeneric("calcRisks", function(obj, ...) {
-  standardGeneric("calcRisks")
+calcRisks <- function(obj, ...) {
+  calcRisksX(obj=obj, ...)
+}
+
+setGeneric("calcRisksX", function(obj, ...) {
+  standardGeneric("calcRisksX")
 })
 
-setMethod(f = "calcRisks", signature = c("sdcMicroObj"), definition = function(obj, ...) {
-  risk <- get.sdcMicroObj(obj, type = "risk")
+setMethod(f="calcRisksX", signature=c("sdcMicroObj"), definition=function(obj, ...) {
+  risk <- get.sdcMicroObj(obj, type="risk")
   modelSet <- (!is.null(risk$model))
   suda2Set <- (!is.null(risk$suda2))
   obj <- measure_risk(obj)
@@ -269,12 +335,12 @@ setMethod(f = "calcRisks", signature = c("sdcMicroObj"), definition = function(o
     if (!is.null(risk$model$inclProb)) {
       inclProb <- risk$model$inclProb
     }
-    obj <- LLmodGlobalRisk(obj, inclProb = inclProb)
+    obj <- LLmodGlobalRisk(obj, inclProb=inclProb)
   }
   if (suda2Set) {
     obj <- suda2(obj)
   }
-  if (length(get.sdcMicroObj(obj, type = "manipNumVars")) > 0) {
+  if (length(get.sdcMicroObj(obj, type="manipNumVars")) > 0) {
     obj <- dRisk(obj)
   }
   obj
@@ -284,30 +350,32 @@ setMethod(f = "calcRisks", signature = c("sdcMicroObj"), definition = function(o
 #'
 #' Extract the manipulated data from an object of class \code{\link{sdcMicroObj-class}}
 #'
-#'
 #' @name extractManipData
-#' @aliases extractManipData extractManipData-methods
-#' extractManipData,sdcMicroObj-method
-#' @docType methods
 #' @param obj object of class \code{\link{sdcMicroObj-class}}
 #' @param ignoreKeyVars If manipulated KeyVariables should be returned or the
 #' unchanged original variables
-#' @param ignorePramVars If manipulated PramVariables should be returned or the
+#' @param ignorePramVars if manipulated PramVariables should be returned or the
 #' unchanged original variables
-#' @param ignoreNumVars If manipulated NumericVariables should be returned or
+#' @param ignoreNumVars if manipulated NumericVariables should be returned or
 #' the unchanged original variables
-#' @param ignoreGhostVars If manipulated Ghost (linked) Variables should be returned or
+#' @param ignoreGhostVars if manipulated Ghost (linked) Variables should be returned or
 #' the unchanged original variables
-#' @param ignoreStrataVar If manipulated StrataVariables should be returned or
+#' @param ignoreStrataVar if manipulated StrataVariables should be returned or
 #' the unchanged original variables
-#' @return a data frame
-#' @section Methods: \describe{
-#' \item{list("signature(obj = \"sdcMicroObj\")")}{}}
+#' @param randomizeRecords (logical) specifies, if the output records should be randomized. The following
+#' options are possible:
+#' \itemize{
+#' \item {'no'}{default, no randomization takes place}
+#' \item {'simple'}{records are just randomly swapped.}
+#' \item {'byHH'}{if slot 'hhId' is not \code{NULL}, the clusters defined by this variable are randomized across the dataset. If
+#' slot 'hhId' is \code{NULL}, the records or the dataset are randomly changed.}
+#' \item {'withinHH'}{if slot 'hhId' is not \code{NULL}, the clusters defined by this variable are randomized across the dataset and
+#' additionally, the order of records within the clusters are also randomly changed. If slot 'hhId' is \code{NULL}, the records or the dataset are
+#' randomly changed.}}
+#' @return a \code{data.frame} containing the anonymized data set
 #' @author Alexander Kowarik, Bernhard Meindl
-#' @keywords methods
 #' @export
 #' @examples
-#'
 #' ## for objects of class sdcMicro:
 #' data(testdata2)
 #' sdc <- createSdcObj(testdata,
@@ -315,15 +383,23 @@ setMethod(f = "calcRisks", signature = c("sdcMicroObj"), definition = function(o
 #'   numVars=c('expend','income','savings'), w='sampling_weight')
 #' sdc <- removeDirectID(sdc, var="age")
 #' dataM <- extractManipData(sdc)
-#'
-setGeneric("extractManipData", function(obj, ignoreKeyVars = FALSE, ignorePramVars = FALSE,
-  ignoreNumVars = FALSE, ignoreGhostVars = FALSE, ignoreStrataVar = FALSE) {
-  standardGeneric("extractManipData")
+extractManipData <- function(obj, ignoreKeyVars=FALSE, ignorePramVars=FALSE, ignoreNumVars=FALSE, ignoreGhostVars=FALSE, ignoreStrataVar=FALSE, randomizeRecords="no") {
+  extractManipDataX(obj, ignoreKeyVars=ignoreKeyVars, ignorePramVars=ignorePramVars, ignoreNumVars=ignoreNumVars,
+    ignoreGhostVars=ignoreGhostVars, ignoreStrataVar=ignoreStrataVar, randomizeRecords=randomizeRecords)
+}
+
+setGeneric("extractManipDataX", function(obj, ignoreKeyVars=FALSE, ignorePramVars=FALSE,
+  ignoreNumVars=FALSE, ignoreGhostVars=FALSE, ignoreStrataVar=FALSE, randomizeRecords="no") {
+  standardGeneric("extractManipDataX")
 })
 
-setMethod(f = "extractManipData", signature = c("sdcMicroObj"), definition = function(obj,
-  ignoreKeyVars = FALSE, ignorePramVars = FALSE, ignoreNumVars = FALSE,
-  ignoreGhostVars = FALSE, ignoreStrataVar = FALSE) {
+setMethod(f="extractManipDataX", signature=c("sdcMicroObj"), definition=function(obj,
+  ignoreKeyVars=FALSE, ignorePramVars=FALSE, ignoreNumVars=FALSE,
+  ignoreGhostVars=FALSE, ignoreStrataVar=FALSE, randomizeRecords="no") {
+  hhid <- clusterid <- newid <- N <- id <- NULL
+  if (!randomizeRecords %in% c("no","simple","byHH", "withinHH")) {
+    stop("invalid value in argument 'randomizeRecords'\n")
+  }
   o <- get.sdcMicroObj(obj, type="origData")
   k <- get.sdcMicroObj(obj, type="manipKeyVars")
   p <- get.sdcMicroObj(obj, type="manipPramVars")
@@ -346,5 +422,68 @@ setMethod(f = "extractManipData", signature = c("sdcMicroObj"), definition = fun
       o[, colnames(k)[i]] <- as.factor(o[, colnames(k)[i]])
     }
   }
+
+  if (randomizeRecords!="no") {
+    hhId <- get.sdcMicroObj(obj, "hhId")
+    if (is.null(hhId) | randomizeRecords=="simple") {
+      # just simple randomization
+      o <- o[sample(1:nrow(o)),]
+    } else {
+      tmp <- data.table(id=1:nrow(o), clusterid=o[[hhid]])
+      setkey(tmp, clusterid)
+
+      if (randomizeRecords=="withinHH") {
+        tmp <- tmp[,lapply(.SD, function(x) {
+          if(length(x)==1) { return(x)} else { return(sample(x))}
+        }), by=key(tmp), .SDcols="id"]
+      }
+      neworder <- tmp[,.N, by=key(tmp)]
+      neworder[,clusterid:=sample(clusterid)]
+      neworder[,newid:=.I]
+      neworder[,N:=NULL]
+      tmp <- tmp[neworder]
+
+      if (randomizeRecords=="byHH") {
+        setkey(tmp, newid, id)
+      }
+      if (randomizeRecords=="withinHH") {
+        setkey(tmp, newid)
+      }
+      o <- o[tmp$id,]
+
+      # randomize order of clusters
+      if (randomizeRecords=="byHH") {
+        setkey(tmp, newid, id)
+        o <- o[tmp$id,]
+      }
+    }
+    rownames(o) <- NULL
+  }
   return(o)
 })
+
+addWarning <- function(obj, warnMsg, method, variable=NA) {
+  if (!class(obj)=="sdcMicroObj") {
+    stop("'obj' must be a of class 'sdcMicroObj'!\n")
+  }
+  if (!is.character(method)) {
+    stop("'method' must be a of class 'character'!\n")
+  }
+  if (!is.character(warnMsg)) {
+    stop("'warnMsg' must be a of class 'character'!\n")
+  }
+  addRes <- get.sdcMicroObj(obj, type="additionalResults")
+  df <- data.frame(warnMsg=warnMsg, method=method, variable=variable, stringsAsFactors=FALSE)
+  if (is.null(addRes)) {
+    addRes <- list()
+    addRes$sdcMicro_warnings <- df
+  } else {
+    if (is.null(addRes$sdcMicro_warnings)) {
+      addRes$sdcMicro_warnings <- df
+    } else {
+      addRes$sdcMicro_warnings <- rbind(addRes$sdcMicro_warnings, df)
+    }
+  }
+  obj <- set.sdcMicroObj(obj, type="additionalResults", list(addRes))
+  obj
+}

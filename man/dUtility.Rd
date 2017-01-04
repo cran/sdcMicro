@@ -3,10 +3,6 @@
 \docType{methods}
 \name{dUtility}
 \alias{dUtility}
-\alias{dUtility,data.frame-method}
-\alias{dUtility,matrix-method}
-\alias{dUtility,sdcMicroObj-method}
-\alias{dUtility-methods}
 \title{data utility}
 \usage{
 dUtility(obj, ...)
@@ -33,15 +29,9 @@ values and the perturbed ones, scaled by the standard deviation.  Method
 \sQuote{eigen} and \sQuote{robeigen} compares the eigenvalues and robust
 eigenvalues form the original data and the perturbed data.
 }
-\section{Methods}{
- \describe{
-\item{list("signature(obj = \"data.frame\")")}{}
-\item{list("signature(obj = \"matrix\")")}{}
-\item{list("signature(obj = \"sdcMicroObj\")")}{}}
-}
 \examples{
-
 data(free1)
+free1 <- as.data.frame(free1)
 m1 <- microaggregation(free1[, 31:34], method="onedims", aggr=3)
 m2 <- microaggregation(free1[, 31:34], method="pca", aggr=3)
 dRisk(obj=free1[, 31:34], xm=m1$mx)

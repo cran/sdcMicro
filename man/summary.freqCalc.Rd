@@ -35,7 +35,7 @@ f$Fk
 indivf <- indivRisk(f)
 indivf$rk
 ## Local Suppression
-localS <- localSupp(f, keyVar=2, indivRisk=indivf$rk, threshold=0.25)
+localS <- localSupp(f, keyVar=2, threshold=0.25)
 f2 <- freqCalc(localS$freqCalc, keyVars=c(4,5,6), w=8)
 summary(f2)
 

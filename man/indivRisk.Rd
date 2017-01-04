@@ -17,20 +17,18 @@ indivRisk(x, method = "approx", qual = 1, survey = TRUE)
 }
 \value{
 \itemize{
-\item{rk}{ base individual risk }
-\item{method }{method}
-\item{qual}{final correction factor}
-\item{fk}{frequency count}
-\item{knames}{colnames of the key variables}}
+\item{rk: }{ base individual risk }
+\item{method: }{method}
+\item{qual: }{final correction factor}
+\item{fk: }{frequency count}
+\item{knames: }{colnames of the key variables}}
 }
 \description{
-Individual risk computation.
-}
-\details{
 Estimation of the risk for each observation. After the risk is computed one
 can use e.g. the function localSuppr() for the protection of values of high
 risk.  Further details can be found at the link given below.
-
+}
+\details{
 S4 class sdcMicro objects are only supported by function \emph{measure_risk}
 that also estimates the individual risk with the same method.
 }

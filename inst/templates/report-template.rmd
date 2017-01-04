@@ -1,13 +1,14 @@
 ---
 output:
-  html_document:
-    mathjax: null
-    theme: united
-    highlight: tango
-    css: report.css
-  pdf_document:
-    fig_width: 5
-    fig_height: 5
+  prettydoc::html_pretty:
+    theme: architect
+    highlight: github
+params: 
+    set_title: "My Title!"
+---
+
+---
+title: `r get.reportObj(repObj, "title")`
 ---
 
 ```{r, echo=F}
@@ -25,8 +26,6 @@ diffBP <- function(inp) {
 }
 ```
 
-# `r get.reportObj(repObj, "title")`
-
 ```{r, eval=TRUE, echo=FALSE}
 modifications <- get.reportObj(repObj, "modifications") 
 ```
@@ -34,36 +33,37 @@ modifications <- get.reportObj(repObj, "modifications")
 ```{r, echo=FALSE, results="asis"}
 nrObs <- get.reportObj(repObj, "nrObs")
 impFile <- get.reportObj(repObj, "impFile")
+delVars <- get.reportObj(repObj, "delVars")
 
 cat(paste0("## Input Data\n"))
 cat(paste0("The data set consists of **",nrObs,"** observations"))
 if ( !is.null(impFile) ) {
-  cat(paste0(" and was imported from **", impFile,"**"))
+  cat(paste0(" and was imported from **", impFile,"**."))
 } 
-cat(".\n\n")
+cat("\n\n")
 ```
 
 ```{r, echo=FALSE, results="asis"}
 if ( !is.null(modifications$delDirect) ) {
-  cat(paste0("## Deleted direct identifiers\n"))
-  cat(paste0("The following direct identifying variables have been deleted from the data set:\n"))
+  cat(paste0("## Deleted variables\n"))
+  cat(paste0("The following (direct identifying) variables have been deleted from the data set:\n\n"))
   cat(paste0("- *",paste(modifications$delDirect, collapse="* | *"),"*"))
 }
 ```
 
 ```{r, echo=FALSE, results="asis"}
 impVars <- get.reportObj(repObj, "importantVariables")
-cat(paste0("## Information on selected important (Key) Variables\n"))
-cat(paste0("- **Categorical Key-Variable(s)**: *", paste(impVars$catVars, collapse="* | *"),"*\n")) 
-cat(paste0("- **Continuous Key-Variable(s)**: *", paste(impVars$numVars, collapse="* | *"),"*\n")) 
-cat(paste0("- **Weight-Variable**: *", paste(impVars$weightVar, collapse="* | *"),"*\n")) 
+cat(paste0("## Information on selected important (key) variables\n"))
+cat(paste0("- **Categorical key variable(s)**: *", paste(impVars$catVars, collapse="* | *"),"*\n")) 
+cat(paste0("- **Continuous key variable(s)**: *", paste(impVars$numVars, collapse="* | *"),"*\n")) 
+cat(paste0("- **Weight variable**: *", paste(impVars$weightVar, collapse="* | *"),"*\n")) 
 cat(paste0("- **householdID**: *", paste(impVars$hhId, collapse="* | *"),"*\n")) 
 cat(paste0("- **strataVariable(s)**: *", paste(impVars$strataVars, collapse="* | *"),"*\n")) 
 
 #sensVar <- get.reportObj(repObj, "sensiblecn")
 if ( !is.null(impVars$sensibleVar ) ) {
-  cat(paste0("- **sensitive Variable(s) for l-diversity**: "))
-  cat(paste0("*",paste(impVars$sensibleVar, collapse="* | *"),"*"))
+  cat(paste0("- **Sensitive variable(s) for l-diversity**: "))
+  cat(paste0("*",paste(impVar$sensibleVar, collapse="* | *"),"*"))
 }
 cat("\n\n")
 ```
@@ -138,7 +138,7 @@ if ( show_indivrisk ) {
   riskNumKeyVars <- get.reportObj(repObj, "riskNumKeyVars")
   if ( is.list(riskNumKeyVars) ) {
     cat(paste0("### Disclosure Risk Continuous Scaled Variables\n"))
-    cat(paste0("The (distance-based) disclosure risk for continous key-variables is between "))
+    cat(paste0("The (distance-based) disclosure risk for continous key variables is between "))
     cat(paste0("0.000% and ",riskNumKeyVars$risk,"% in the modified data.\n\n"))
     cat(paste0("In the original data, the risk is assumed to be approximately 100.000%.\n\n"))
   }
@@ -234,13 +234,12 @@ if ( !is.null(sI) ) {
 ```
 
 # Disclaimer
-**R**-Packages **sdcMicro** and **sdcMicroGUI** are actively developed and maintained by
+**R**-Package [**sdcMicro**](https://cran.r-project.org/web/packages/sdcMicro/) is actively developed and maintained by
 [**www.statistik.at**](http://www.statistik.at "Statistics Austria") and [**www.data-analysis.at**](http://www.data-analysis.at "www.data-analysis.at").
 
 Please use the issue-tracker on *github* to report any issues:
 
 - [**Issue-Tracker for sdcMicro**](https://github.com/alexkowa/sdcMicro/issues)
-- [**Issue-Tracker for sdcMicroGUI**](https://github.com/alexkowa/sdcMicroGUI/issues)
 
 --------------------------------------
 This report was generated on `r format(Sys.time(), "%a, %d/%m/%Y at %H:%M:%S")`.

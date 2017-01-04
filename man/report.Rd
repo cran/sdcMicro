@@ -3,37 +3,33 @@
 \docType{methods}
 \name{report}
 \alias{report}
-\alias{report,sdcMicroObj-method}
-\alias{report-methods}
-\title{Generate a HTML/LATEX output from an sdcMicroObj}
+\title{Generate an Html-report from an sdcMicroObj}
 \usage{
-report(obj, outdir = getwd(), filename = "SDC-Report", format = "HTML",
-  title = "SDC-Report", internal = FALSE)
+report(obj, outdir = getwd(), filename = "SDC-Report",
+  title = "SDC-Report", internal = FALSE, verbose = FALSE)
 }
 \arguments{
-\item{obj}{an object of class \code{\link{sdcMicroObj-class}} or 'reportObj'}
+\item{obj}{an object of class \code{\link{sdcMicroObj-class}} or \code{reportObj}}
 
 \item{outdir}{output folder}
 
 \item{filename}{output filename}
 
-\item{format}{HTML, TEXT or LATEX}
-
 \item{title}{Title for the report}
 
 \item{internal}{TRUE/FALSE, if TRUE a detailled internal report is produced,
 else a non-disclosive overview}
+
+\item{verbose}{TRUE/FALSE, if TRUE, some additional information is printed.}
 }
 \description{
 Summary statistics of the original and the perturbed data set
 }
 \details{
-The application of this function provides you with a html, text or
-pdf-report for your sdcMicro object that contains useful summaries about the
-anonymization process.
+The application of this function provides you with a html-report for your
+sdcMicro object that contains useful summaries about the anonymization process.
 }
 \examples{
-
 \dontrun{
 data(testdata2)
 sdc <- createSdcObj(testdata2,
@@ -41,7 +37,6 @@ sdc <- createSdcObj(testdata2,
   numVars=c('expend','income','savings'), w='sampling_weight')
 report(sdc)
 }
-
 }
 \author{
 Matthias Templ, Bernhard Meindl

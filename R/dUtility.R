@@ -9,8 +9,6 @@
 #' eigenvalues form the original data and the perturbed data.
 #'
 #' @name dUtility
-#' @aliases dUtility-methods dUtility,data.frame-method dUtility,matrix-method
-#' dUtility,sdcMicroObj-method dUtility
 #' @docType methods
 #' @param obj original data or object of class \code{\link{sdcMicroObj-class}}
 #' @param ... see arguments below
@@ -19,10 +17,6 @@
 #' \item{method}{method IL1 or eigen. More methods are implemented in
 #' summary.micro()}}
 #' @return data utility or modified entry for data utility the \code{\link{sdcMicroObj-class}}.
-#' @section Methods: \describe{
-#' \item{list("signature(obj = \"data.frame\")")}{}
-#' \item{list("signature(obj = \"matrix\")")}{}
-#' \item{list("signature(obj = \"sdcMicroObj\")")}{}}
 #' @author Matthias Templ
 #' @seealso \code{\link{dRisk}}, \code{\link{dRiskRMD}}
 #' @references for IL1s: see
@@ -34,8 +28,8 @@
 #' @keywords manip
 #' @export
 #' @examples
-#'
 #' data(free1)
+#' free1 <- as.data.frame(free1)
 #' m1 <- microaggregation(free1[, 31:34], method="onedims", aggr=3)
 #' m2 <- microaggregation(free1[, 31:34], method="pca", aggr=3)
 #' dRisk(obj=free1[, 31:34], xm=m1$mx)
@@ -60,12 +54,14 @@
 #' ## sdc <- dUtility(sdc)
 #' ## and already stored in sdc
 #'
-setGeneric("dUtility", function(obj, ...) {
-  standardGeneric("dUtility")
+dUtility <- function(obj, ...) {
+  dUtilityX(obj=obj, ...)
+}
+setGeneric("dUtilityX", function(obj, ...) {
+  standardGeneric("dUtilityX")
 })
 
-setMethod(f = "dUtility", signature = c("sdcMicroObj"),
-definition = function(obj, ...) {
+setMethod(f="dUtilityX", signature=c("sdcMicroObj"), definition=function(obj, ...) {
   numVars <- get.sdcMicroObj(obj, type = "numVars")
   x <- get.sdcMicroObj(obj, type = "origData")[, numVars, drop = F]
   xm <- get.sdcMicroObj(obj, type = "manipNumVars")
@@ -77,17 +73,15 @@ definition = function(obj, ...) {
   obj
 })
 
-setMethod(f = "dUtility", signature = c("data.frame"), definition = function(obj, ...) {
-  dUtilityWORK(x = obj, ...)
-})
-
-setMethod(f = "dUtility", signature = c("matrix"), definition = function(obj, ...) {
+setMethod(f="dUtilityX", signature=c("data.frame"), definition=function(obj, ...) {
   dUtilityWORK(x = obj, ...)
 })
 
 dUtilityWORK <- function(x, xm, method = "IL1") {
   if (dim(x)[1] != dim(xm)[1]) {
-    warning("dimension of perturbed data and original data are different")
+    warnMsg <- "dimension of perturbed data and original data are different\n"
+    obj <- addWarning(obj, warnMsg=warnMsg, method="dUtility", variable=NA)
+    warning(warnMsg)
     xm <- xm[1:dim(x)[1], ]
   }
   if (method == "IL1") {

@@ -19,6 +19,8 @@ Print method for objects from class pram
 }
 \author{
 Bernhard Meindl, Matthias Templ
+
+Matthias Templ and Bernhard Meindl
 }
 \seealso{
 \code{\link{pram}}

@@ -1,7 +1,5 @@
 #' Individual Risk computation
 #'
-#' Individual risk computation.
-#'
 #' Estimation of the risk for each observation. After the risk is computed one
 #' can use e.g. the function localSuppr() for the protection of values of high
 #' risk.  Further details can be found at the link given below.
@@ -15,11 +13,11 @@
 #' @param survey TRUE, if we have survey data and FALSE if we deal with a population.
 #' @return
 #' \itemize{
-#' \item{rk}{ base individual risk }
-#' \item{method }{method}
-#' \item{qual}{final correction factor}
-#' \item{fk}{frequency count}
-#' \item{knames}{colnames of the key variables}}
+#' \item{rk: }{ base individual risk }
+#' \item{method: }{method}
+#' \item{qual: }{final correction factor}
+#' \item{fk: }{frequency count}
+#' \item{knames: }{colnames of the key variables}}
 #' @note The base individual risk method was developed by Benedetti,
 #' Capobianchi and Franconi
 #' @author Matthias Templ. Bug in method \dQuote{exact} fixed since version
@@ -147,12 +145,10 @@ indivRisk <- function(x, method = "approx", qual = 1, survey = TRUE) {
 #'
 #' ## example from Capobianchi, Polettini and Lucarelli:
 #' data(francdat)
-#' f <- freqCalc(francdat, keyVars=c(2,4,5,6),w=8)
-#' f
-#' f$fk
-#' f$Fk
+#' f1 <- freqCalc(francdat, keyVars=c(2,4,5,6),w=8)
+#' data.frame(fk=f1$fk, Fk=f1$Fk)
 #' ## individual risk calculation:
-#' indivRisk(f)
+#' indivRisk(f1)
 #'
 print.indivRisk <- function(x, ...) {
   # cat('\n ----- individual risk ----- \n')

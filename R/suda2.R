@@ -9,10 +9,8 @@
 #' the risk of the corresponding observation.
 #'
 #' @name suda2
-#' @aliases suda2-methods suda2,data.frame-method suda2,matrix-method
-#' suda2,sdcMicroObj-method suda2
 #' @docType methods
-#' @param obj object of class \code{data.frame} or object of class \code{\link{sdcMicroObj-class}}
+#' @param obj object of class \code{data.frame} or a \code{\link{sdcMicroObj-class}}-object
 #' @param ... see arguments below
 #' \itemize{
 #' \item{\code{variables}: }{Categorical (key) variables. Either the column names or and
@@ -41,10 +39,6 @@
 #'  \item \code{contribution}: contains the risk of this level within the variable.)
 #'  }
 #' }}
-#' @section Methods: \describe{
-#' \item{list("signature(obj = \"data.frame\")")}{}
-#' \item{list("signature(obj = \"matrix\")")}{}
-#' \item{list("signature(obj = \"sdcMicroObj\")")}{}}
 #' @author Alexander Kowarik and Bernhard Meindl (based on the C++ code from the Organisation For
 #' Economic Co-Operation And Development.
 #'
@@ -65,14 +59,14 @@
 #' algorithm for statistical disclosure assessment. \emph{Data Min Knowl Disc}
 #' 16:165 -- 196
 #' @keywords manip
+#' @rdname suda2
 #' @export
 #' @examples
-#'
 #' \dontrun{
 #' data(testdata2)
 #' data_suda2 <- suda2(testdata2,variables=c("urbrur","roof","walls","water","sex"))
 #' data_suda2
-#' str(data_suda)
+#' str(data_suda2)
 #' summary(data_suda2)
 #'
 #' ## for objects of class sdcMicro:
@@ -82,13 +76,15 @@
 #'   numVars=c('expend','income','savings'), w='sampling_weight')
 #' sdc <- suda2(sdc)
 #' }
-#'
-setGeneric("suda2", function(obj, ...) {
-  standardGeneric("suda2")
+suda2 <- function(obj, ...) {
+  suda2X(obj=obj, ...)
+}
+
+setGeneric("suda2X", function(obj, ...) {
+  standardGeneric("suda2X")
 })
 
-setMethod(f = "suda2", signature = c("sdcMicroObj"),
-definition = function(obj, ...) {
+setMethod(f="suda2X", signature=c("sdcMicroObj"), definition=function(obj, ...) {
   manipData <- get.sdcMicroObj(obj, type = "manipKeyVars")
   keyVars <- colnames(manipData)
 
@@ -99,13 +95,7 @@ definition = function(obj, ...) {
   obj
 })
 
-setMethod(f = "suda2", signature = c("data.frame"),
-definition = function(obj, ...) {
-  suda2WORK(data = obj, ...)
-})
-
-setMethod(f = "suda2", signature = c("matrix"),
-definition = function(obj, ...) {
+setMethod(f="suda2X", signature=c("data.frame"), definition = function(obj, ...) {
   suda2WORK(data = obj, ...)
 })
 
@@ -155,6 +145,7 @@ suda2WORK <- function(data, variables = NULL, missing = -999, DisFraction = 0.01
   if (length(variables) <= 2) {
     warn_s <- "This version of Suda2 can find MSUs only in Dataset with more than 2 variables."
     warn_s <- paste0(warn_s,"\nDummy variables have been added and the result might be wrong!")
+    obj <- addWarning(obj, warnMsg=warn_s, method="suda2", variable=NA)
     warning(warn_s)
   }
   invisible(res)
@@ -182,9 +173,10 @@ suda2WORK <- function(data, variables = NULL, missing = -999, DisFraction = 0.01
 #'
 print.suda2 <- function(x, ...) {
   SEQ <- seq(0, 0.7, 0.1) + .Machine$double.eps
-  DISSudaScore <- c("0",paste(">", c("0.0",seq(0.1, 0.7, 0.1))))
+  DISSudaScore <- c("== 0", "(0.0, 0.1]","(0.1, 0.2]", "(0.2, 0.3]", "(0.3, 0.4]", "(0.4, 0.5]", "(0.5, 0.6]", "(0.6, 0.7]","> 0.7")
   tab <- table(cut(x$disScore, breaks = c(-1, SEQ, Inf)))
-  res <- data.frame(thresholds = DISSudaScore, number = as.numeric(tab))
+  res <- data.frame(interval = DISSudaScore, "number of records" = as.numeric(tab))
+  colnames(res) <- c("Interval", "Number of records")
   cat("\nDis suda scores table: \n")
   cat("- - - - - - - - - - - \n")
   print(res)

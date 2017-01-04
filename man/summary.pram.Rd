@@ -24,14 +24,14 @@ Shows various information about the transitions.
 \examples{
 
 data(free1)
-x <- free1[,"MARSTAT"]
+x <- as.factor(free1[,"MARSTAT"])
 x2 <- pram(x)
 x2
 summary(x2)
 
 }
 \author{
-Matthias Templ
+Matthias Templ and Bernhard Meindl
 }
 \references{
 Templ, M.  \emph{Statistical Disclosure Control for Microdata

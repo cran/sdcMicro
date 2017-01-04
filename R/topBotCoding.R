@@ -2,30 +2,30 @@
 #'
 #' Function for Top and Bottom Coding.
 #'
-#' Extreme values are replaced by one value to reduce the disclosure risk.
+#' Extreme values larger or lower than \code{value} are replaced by a different value (\code{replacement} in order to reduce the disclosure risk.
 #'
 #' @name topBotCoding
-#' @aliases topBotCoding-methods topBotCoding,ANY-method
-#' topBotCoding,sdcMicroObj-method topBotCoding
 #' @docType methods
-#' @param obj vector or one-dimensional matrix or data.frame or object of class
-#' \code{\link{sdcMicroObj-class}}
+#' @param obj a numeric vector, a \code{data.frame} or a \code{\link{sdcMicroObj-class}}-object
 #' @param value limit, from where it should be top- or bottom-coded
 #' @param replacement replacement value.
 #' @param kind top or bottom
-#' @param column xxx
+#' @param column variable name in case the input is a \code{data.frame} or an object of class \code{\link{sdcMicroObj-class}}.
 #' @return Top or bottom coded data or modified \code{\link{sdcMicroObj-class}}.
-#' @section Methods: \describe{
-#' \item{list("signature(obj = \"ANY\")")}{}
-#' \item{list("signature(obj = \"sdcMicroObj\")")}{}}
-#' @author Matthias Templ
+#' @author Matthias Templ and Bernhard Meindl
 #' @seealso \code{\link{indivRisk}}
 #' @keywords manip
+#' @note top-/bottom coding of factors is no longer possible as of sdcMicro >=4.7.0
 #' @export
 #' @examples
-#'
 #' data(free1)
-#' topBotCoding(free1[,"DEBTS"], value=9000, replacement=9100, kind="top")
+#' res <- topBotCoding(free1[,"DEBTS"], value=9000, replacement=9100, kind="top")
+#' max(res)
+#'
+#' data(testdata)
+#' range(testdata$age)
+#' testdata <- topBotCoding(testdata, value=80, replacement=81, kind="top", column="age")
+#' range(testdata$age)
 #'
 #' ## for objects of class sdcMicro:
 #' data(testdata2)
@@ -33,70 +33,76 @@
 #'            numVars=c('expend','income','savings'), w='sampling_weight')
 #' sdc <- topBotCoding(sdc, value=500000, replacement=1000, column="income")
 #' testdataout <- extractManipData(sdc)
-#'
-setGeneric('topBotCoding', function(obj, value, replacement, kind="top", column=NULL) {standardGeneric('topBotCoding')})
-setMethod(f='topBotCoding', signature=c('sdcMicroObj'),
+topBotCoding <- function(obj, value, replacement, kind="top", column=NULL) {
+  topBotCodingX(obj=obj, value=value, replacement=replacement, kind=kind, column=column)
+}
+
+setGeneric('topBotCodingX', function(obj, value, replacement, kind="top", column=NULL) {
+  standardGeneric('topBotCodingX')
+})
+
+setMethod(f='topBotCodingX', signature=c('sdcMicroObj'),
 definition=function(obj, value, replacement, kind="top", column=NULL) {
+  obj <- nextSdcObj(obj)
   manipNumVars <- get.sdcMicroObj(obj, type="manipNumVars")
   manipKeyVars <- get.sdcMicroObj(obj, type="manipKeyVars")
+  manipPramVars <- get.sdcMicroObj(obj, type="manipPramVars")
   o <- get.sdcMicroObj(obj, type="origData")
-  obj <- nextSdcObj(obj)
+  if (length(column)!=1) {
+    stop("length of argument 'column' > 1\n")
+  }
+  if (!column %in% colnames(o)) {
+    stop("variable specified in 'column' can not be found!\n")
+  }
   if(column%in%colnames(manipNumVars)){
     x <- manipNumVars[,column]
-    manipNumVars[,column] <- topBotCodingWORK(x, value=value,replacement=replacement,kind=kind,column=column)
+    manipNumVars[,column] <- topBotCoding(x, value=value,replacement=replacement,kind=kind)
     obj <- set.sdcMicroObj(obj, type="manipNumVars", input=list(manipNumVars))
     obj <- dRisk(obj)
     obj <- dUtility(obj)
   }else if(column%in%colnames(manipKeyVars)){
-    #warning("topBotCoding on a categorical key variable, but variable should be a numeric key variable")
     x <- manipKeyVars[,column]
-    if(!is.numeric(x))
-      stop("Only numeric variables can be top or bottom coded.")
-    manipKeyVars[,column] <- topBotCodingWORK(x, value=value,replacement=replacement,kind=kind,column=column)
+    manipKeyVars[,column] <- topBotCoding(x, value=value,replacement=replacement,kind=kind)
     obj <- set.sdcMicroObj(obj, type="manipKeyVars", input=list(manipKeyVars))
     obj <- measure_risk(obj)
   } else if(column%in%colnames(manipPramVars)){
     x <- manipPramVars[,column]
-    if(!is.numeric(x))
-      stop("Only numeric variables can be top or bottom coded.")
-    manipPramVars[,column] <- topBotCodingWORK(x, value=value,replacement=replacement,kind=kind,column=column)
+    manipPramVars[,column] <- topBotCoding(x, value=value,replacement=replacement,kind=kind)
     obj <- set.sdcMicroObj(obj, type="manipPramVars", input=list(manipPramVars))
     obj <- measure_risk(obj)
   } else if(column%in%colnames(o)){
-    stop("topBotCoding on variable which is neither a categorical nor a numeric key variable.")
-  }else
-    stop("variable could not be found in the data set")
+    #message("topBotCoding on variable which is neither a categorical nor a numeric key variable.")
+    x <- o[[column]]
+    o[[column]] <- topBotCoding(x, value=value,replacement=replacement,kind=kind)
+    obj <- set.sdcMicroObj(obj, type="origData", input=list(o))
+  }
   invisible(obj)
 })
 
-setMethod(f='topBotCoding', signature=c("ANY"),
-definition=function(obj, value, replacement, kind="top", column=NULL) {
-  topBotCodingWORK(x=obj,value, replacement, kind=kind, column=column)
+setMethod(f='topBotCodingX', signature=c("data.frame"),
+definition=function(obj, value, replacement, kind="top", column=column) {
+  if (length(column)!=1) {
+    stop("length of argument 'column' > 1\n")
+  }
+  v <- obj[[column]]
+  if ( !is.numeric(v)) {
+    stop("specified column is not numeric. topBotCoding() can only be applied to numeric variables!\n")
+  }
+  v <- topBotCoding(obj=v,value=value, replacement=replacement, kind=kind) # 'numeric-method'
+  obj[[column]] <- v
+  obj
 })
 
-topBotCodingWORK <- function(x, value, replacement, kind="top", column=NULL){ #COLUMN FOR COMPATIBILITY WITH V4
-  if( class(x) == "data.frame" ){
-    if( kind == "top"){
-      x[x > value, ] <- replacement
-    } else{
-      x[x < value, ] <- replacement
-    }
-  }
-  if( class(x) %in% c("numeric","integer") ){
-    if( kind == "top"){
-      x[x > value ] <- replacement
-    } else{
-      x[x < value ] <- replacement
-    }
-  }
-  if( class(x) == "factor"){
-    x <- as.numeric(as.character(x))
-    if( kind == "top"){
-      x[x > value ] <- replacement
-    } else{
-      x[x < value ] <- replacement
-    }
-    x <- as.factor(x)
+setMethod(f='topBotCodingX', signature=c("numeric"),
+definition=function(obj, value, replacement, kind="top") {
+  topBotCodingWORK(x=obj,value, replacement, kind=kind)
+})
+
+topBotCodingWORK <- function(x, value, replacement, kind="top"){ #COLUMN FOR COMPATIBILITY WITH V4
+  if( kind == "top"){
+    x[x > value] <- replacement
+  } else{
+    x[x < value] <- replacement
   }
   invisible(x)
 }

@@ -3,17 +3,13 @@
 \docType{methods}
 \name{rankSwap}
 \alias{rankSwap}
-\alias{rankSwap,data.frame-method}
-\alias{rankSwap,matrix-method}
-\alias{rankSwap,sdcMicroObj-method}
-\alias{rankSwap-methods}
 \title{Rank Swapping}
 \usage{
 rankSwap(obj, variables = NULL, TopPercent = 5, BottomPercent = 5,
   K0 = -1, R0 = 0.95, P = 0, missing = NA, seed = NULL)
 }
 \arguments{
-\item{obj}{object of class sdcMicroObj or matrix or data frame}
+\item{obj}{a \code{\link{sdcMicroObj-class}}-object or a \code{data.frame}}
 
 \item{variables}{names or index of variables for that rank swapping is
 applied.  For an object of class \code{\link{sdcMicroObj-class}}, all numeric key variables are
@@ -34,7 +30,7 @@ swapping, and \eqn{N_S}{N_S} is the sample size of the subset.}
 
 \item{R0}{Multivariate preservation factor. Preserves the correlation
 between variables within a certain range based on the given constant R0.  We
-can specify the preservation factor as \eqn{R_0 = \frac{R_1}{R_2}}{R_0 =
+can specify the preservation factor as \eqn{R_0=\frac{R_1}{R_2}}{R_0 =
 R_1/R_2} where \eqn{R_1}{R_1} is the correlation coefficient of the two
 fields after swapping, and \eqn{R_2}{R_2} is the correlation coefficient of
 the two fields before swapping.}
@@ -68,12 +64,6 @@ swapped values, which cannot differ, by definition, by more than \eqn{P}{P}
 percent of the total number of observations.  R0 and K0 are only used if
 positive. Only one of the two are used (R0 is prefered if both are
 positive).
-}
-\section{Methods}{
- \describe{
-\item{list("signature(obj = \"data.frame\")")}{}
-\item{list("signature(obj = \"matrix\")")}{}
-\item{list("signature(obj = \"sdcMicroObj\")")}{}}
 }
 \examples{
 data(testdata2)

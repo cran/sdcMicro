@@ -1,4 +1,11 @@
-setMethod(f = "show", signature = "sdcMicroObj",
+#' Show
+#'
+#' show a sdcMicro object
+#' @param object an sdcmicro obj
+#'
+#' @return a sdcMicro object
+#' @export
+setMethod(f="show", signature="sdcMicroObj",
 definition = function(object) {
   print(object, type="general")
 
@@ -9,10 +16,10 @@ definition = function(object) {
   if (length(object@numVars) > 0) {
     print(object, type="numrisk")
   }
-  if ( !is.null(object@pram) ) {
+  if (!is.null(object@pram)) {
     print(object, type="pram")
   }
-  if ( !is.null(object@localSuppression) ) {
+  if (!is.null(object@localSuppression)) {
     print(object, type="ls")
   }
 })

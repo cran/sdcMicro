@@ -40,7 +40,7 @@ This function computes several measures of information loss, such as
 \examples{
 
 data(Tarragona)
-m1 <- microaggregation(Tarragona, method="onedims", aggr=3)
+m1 <- microaggregation(Tarragona, method='onedims', aggr=3)
 ## summary(m1)
 
 }

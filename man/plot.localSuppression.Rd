@@ -22,9 +22,7 @@ Barplot for objects from class localSuppression.
 Just look at the resulting plot.
 }
 \examples{
-
 ## example from Capobianchi, Polettini and Lucarelli:
-\dontrun{
 data(francdat)
 l1 <- localSuppression(francdat, keyVars=c(2,4,5,6))
 l1
@@ -40,7 +38,7 @@ ls <- localSuppression(inp, keyVars=1:7, strataVars=8)
 print(ls)
 plot(ls)
 plot(ls, showDetails=TRUE)
-}
+
 }
 \author{
 Bernhard Meindl, Matthias Templ

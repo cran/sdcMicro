@@ -3,35 +3,22 @@
 \docType{class}
 \name{sdcMicroObj-class}
 \alias{createSdcObj}
-\alias{get.sdcMicroObj}
-\alias{get.sdcMicroObj,sdcMicroObj,character-method}
-\alias{nextSdcObj}
-\alias{nextSdcObj,sdcMicroObj-method,}
 \alias{sdcMicroObj-class}
-\alias{set.sdcMicroObj}
-\alias{set.sdcMicroObj,sdcMicroObj,character,listOrNULL-method}
-\alias{show}
-\alias{show,sdcMicroObj-method}
+\alias{strataVar<-}
+\alias{strataVar<-,sdcMicroObj,characterOrNULL-method}
 \alias{undolast}
-\alias{undolast,sdcMicroObj-method}
 \title{Class \code{"sdcMicroObj"}}
 \usage{
 createSdcObj(dat, keyVars, numVars = NULL, pramVars = NULL,
   ghostVars = NULL, weightVar = NULL, hhId = NULL, strataVar = NULL,
-  sensibleVar = NULL, options = NULL)
-
-get.sdcMicroObj(object, type)
-
-set.sdcMicroObj(object, type, input)
+  sensibleVar = NULL, excludeVars = NULL, options = NULL, seed = NULL,
+  randomizeRecords = FALSE, alpha = 1)
 
 undolast(object)
 
-\S4method{get.sdcMicroObj}{sdcMicroObj,character}(object, type)
+strataVar(object) <- value
 
-\S4method{set.sdcMicroObj}{sdcMicroObj,character,listOrNULL}(object, type,
-  input)
-
-\S4method{undolast}{sdcMicroObj}(object)
+\S4method{strataVar}{sdcMicroObj,characterOrNULL}(object) <- value
 }
 \arguments{
 \item{dat}{The microdata set. A numeric matrix or data frame containing the data.}
@@ -58,37 +45,39 @@ suppression pattern for each key-variable is transferred to the depending variab
 
 \item{sensibleVar}{Indices or names of sensible variables (for l-diversity)}
 
-\item{options}{additional options.}
+\item{excludeVars}{which variables of \code{dat} should not be included in
+result-object? Users may specify a vector of variable-names available in \code{dat}
+that were not specified in either \code{keyVars}, \code{numVars}, \code{pramVars},
+\code{ghostVars}, \code{hhId}, \code{strataVar} or \code{sensibleVar}.}
 
-\item{object}{an object of class \code{sdcMicroObj}}
+\item{options}{additional options (if specified, a list must be used as input)}
 
-\item{type}{a character vector of length 1 defining what to calculate|return|modify. Allowed types are:}
-\itemize{
-\item origData: set slot 'origData' of argument \code{object}}
+\item{seed}{(numeric) number specifiying the seed which will be set to allow for
+reproducablity. The number will be rounded and saved as element \code{seed} in slot \code{options}.}
 
-\item{input}{a list depending on argument \code{type}.}
-\itemize{
-\item type==dataOrig: a list containing original microdata}
+\item{randomizeRecords}{(logical) if \code{TRUE}, the order of observations in the input microdata set
+will be randomized.}
+
+\item{alpha}{numeric between 0 and 1 specifying the fraction on how much keys containing \code{NAs} should
+contribute to the frequency calculation which is also crucial for risk-estimation.}
+
+\item{object}{a \code{\link{sdcMicroObj-class}} object}
+
+\item{value}{\code{NULL} or a character vector of length 1 specifying a valid variable name}
 }
 \value{
-an object of class \code{sdcMicroObj}
+a \code{\link{sdcMicroObj-class}} object
 
-an object of class \code{sdcMicroObj}
+an object of class \code{sdcMicroObj} with modified slot \code{@strataVar}
 }
 \description{
 Class to save all information about the SDC process
 
-modify \code{sdcMicroObj}-objects depending on argument \code{type}
-
 undo last changes to \code{sdcMicroObj}-objects if possible
 note that this will only work if the user makes use of the prev slot or uses the sdcMicroObj functions
-}
-\note{
-internal function
 
-internal function
-
-internal function
+\code{strataVar<-} allows to modify the variable which is used if anonymization limitation
+techniques are applied independent for each characteristic of the defined strata.
 }
 \section{Objects from the Class}{
  Objects can be created by calls of the form
@@ -184,9 +173,11 @@ data(testdata)
 testdata$electcon2 <- testdata$electcon
 testdata$electcon3 <- testdata$electcon
 testdata$water2 <- testdata$water
+
 keyVars <- c("urbrur","roof","walls","water","electcon","relat","sex")
 numVars <- c("expend","income","savings")
 w <- "sampling_weight"
+
 ## we want to make sure that some variables not used as key-variables
 ## have the same suppression pattern as variables that have been
 ## selected as key variables. Thus, we are using 'ghost'-variables.
@@ -217,15 +208,13 @@ all(is.na(manipKeyVars$electcon) == is.na(manipGhostVars$electcon2))
 all(is.na(manipKeyVars$electcon) == is.na(manipGhostVars$electcon3))
 all(is.na(manipKeyVars$water) == is.na(manipGhostVars$water2))
 
+## exclude some variables
+obj <- createSdcObj(testdata, keyVars=c("urbrur","roof","walls"), numVars="savings",
+   weightVar=w, excludeVars=c("relat","electcon","hhcivil","ori_hid","expend"))
+colnames(get.sdcMicroObj(obj, "origData"))
 }
 \author{
 Bernhard Meindl, Alexander Kowarik, Matthias Templ, Elias Rut
-
-Bernhard Meindl \email{bernhard.meindl@statistik.gv.at}
-
-Bernhard Meindl \email{bernhard.meindl@statistik.gv.at}
-
-Elias Rut
 }
 \keyword{classes}
 

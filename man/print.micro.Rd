@@ -16,12 +16,13 @@ information about method and aggregation level from objects of class
 micro.
 }
 \description{
-Print method for objects from class micro.
+printing an object of class \code{micro}
 }
 \examples{
 
 data(free1)
-m1 <- microaggregation(free1[, 31:34], method="onedims", aggr=3)
+free1 <- as.data.frame(free1)
+m1 <- microaggregation(free1[, 31:34], method='onedims', aggr=3)
 m1
 
 }

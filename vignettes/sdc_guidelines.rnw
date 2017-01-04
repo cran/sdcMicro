@@ -1761,9 +1761,4 @@ We applied different anonymization methods independently.
 The anonymization by Recoding $+$ local suppression $+$ microaggregation performs best and the confidence intervals obtained from the anonymised data cover the confidence intervals obtained from the original data almost always completely.
 Almost as good is the quality of data anonymized by recoding $+$ local suppression $+$ adding correlated noise. The results from invariant pram $+$ microaggregation are good for all coefficients except those are related to \textit{economic activitiy}. This is not surprising since this variable was one of the variables which was pramed.
 Some few coefficients are well perserved from the recoding $+$ local suppression $+$ shuffling anonymized data, but others are not. The reason is that even if the distribution of the continuous shuffled variables are well perserved, the relation to other variables that are not included in the shuffling model might be not preserved. A better model would probably lead to better results.
-
-
-
-
-
 \end{document}

@@ -3,29 +3,25 @@
 \docType{methods}
 \name{microaggregation}
 \alias{microaggregation}
-\alias{microaggregation,ANY-method}
-\alias{microaggregation,data.frame-method}
-\alias{microaggregation,matrix-method}
-\alias{microaggregation,sdcMicroObj-method}
-\alias{microaggregation-methods}
 \title{Microaggregation}
 \usage{
 microaggregation(obj, variables = NULL, aggr = 3, strata_variables = NULL,
   method = "mdav", weights = NULL, nc = 8, clustermethod = "clara",
-  opt = FALSE, measure = "mean", trim = 0, varsort = 1,
-  transf = "log")
+  measure = "mean", trim = 0, varsort = 1, transf = "log")
 }
 \arguments{
-\item{obj}{either an object of class sdcMicroObj or a data frame or matrix}
+\item{obj}{either an object of class \code{\link{sdcMicroObj-class}} or a \code{data.frame}}
 
-\item{variables}{variables to microaggregate. For NULL:If obj is of class
-sdcMicroObj the categorical key variables are chosen per default. For
-data.frames and matrices all columns are chosen per default.}
+\item{variables}{variables to microaggregate. For \code{NULL}: If obj is of class
+sdcMicroObj, all numerical key variables are chosen per default. For
+\code{data.frames}, all columns are chosen per default.}
 
 \item{aggr}{aggregation level (default=3)}
 
-\item{strata_variables}{by-variables for applying microaggregation only
-within strata defined by the variables}
+\item{strata_variables}{for \code{data.frames}, by-variables for applying microaggregation only
+within strata defined by the variables. For \code{\link{sdcMicroObj-class}}-objects, the
+stratification-variable defined in slot \code{@strataVar} is used. This slot can be changed any
+time using \code{strataVar<-}.}
 
 \item{method}{pca, rmd, onedims, single, simple, clustpca, pppca,
 clustpppca, mdav, clustmcdpca, influence, mcdpca}
@@ -39,29 +35,24 @@ median or weighted mean.}
 
 \item{clustermethod}{clustermethod, if necessary}
 
-\item{opt}{experimental}
-
 \item{measure}{aggregation statistic, mean, median, trim, onestep (default=mean)}
 
 \item{trim}{trimming percentage, if measure=trim}
 
-\item{varsort}{variable for sorting, if method= single}
+\item{varsort}{variable for sorting, if method=single}
 
 \item{transf}{transformation for data x}
 }
 \value{
 If \sQuote{obj} was of class \code{\link{sdcMicroObj-class}} the corresponding
-slots are filled, like manipNumVars, risk and utility.  If \sQuote{obj} was
-of class \dQuote{data.frame} or \dQuote{matrix} an object of class
-\dQuote{micro} with following entities is returned:
+slots are filled, like manipNumVars, risk and utility. If \sQuote{obj} was
+of class \dQuote{data.frame}, an object of class \dQuote{micro} with following entities is returned:
 \itemize{
-\item{mx}{the aggregated data}
-\item{x}{original data}
-\item{method}{method}
-\item{aggr}{aggregation level}
-\item{measure}{ proximity measure for aggregation}
-\item{fot}{ correction factor, necessary if totals calculated and n divided by aggr
-is not an integer.}}
+\item{\code{x}: }{original data}
+\item{\code{mx}: }{the microaggregated dataset}
+\item{\code{method}: }{method}
+\item{\code{aggr}: }{aggregation level}
+\item{\code{measure}: }{proximity measure for aggregation}}
 }
 \description{
 Function to perform various methods of microaggregation.
@@ -113,33 +104,32 @@ With method \sQuote{simple} one can apply microaggregation directly on the
 benchmark, i.e. replies the question how much better is a sorting of the
 data before aggregation.
 }
-\section{Methods}{
- \describe{
-\item{list("signature(obj = \"ANY\")")}{}
-\item{list("signature(obj = \"data.frame\")")}{}
-\item{list("signature(obj = \"matrix\")")}{}
-\item{list("signature(obj = \"sdcMicroObj\")")}{}}
+\note{
+if only one variable is specified, \code{\link{mafast}} is applied and argument \code{method} is ignored.
 }
 \examples{
-
 data(Tarragona)
-m1 <- microaggregation(Tarragona, method="onedims", aggr=3)
+m1 <- microaggregation(Tarragona, method='onedims', aggr=3)
 ## summary(m1)
 data(testdata)
-m2 <- microaggregation(testdata[1:100,c("expend","income","savings")],
-  method="mdav", aggr=4)
+m2 <- microaggregation(testdata[1:100,c('expend','income','savings')],
+  method='mdav', aggr=4)
 summary(m2)
 
 ## for objects of class sdcMicro:
+## no stratification because @strataVar is NULL
 data(testdata2)
 sdc <- createSdcObj(testdata2,
-  keyVars=c('urbrur','roof','walls','water','electcon','relat','sex'),
+  keyVars=c('urbrur','roof','walls','water','electcon','sex'),
   numVars=c('expend','income','savings'), w='sampling_weight')
-sdc <- microaggregation(sdc)
+sdc <- microaggregation(sdc, variables=c("expend","income"))
 
+## with stratification by 'relat'
+strataVar(sdc) <- "relat"
+sdc <- microaggregation(sdc, variables=c("savings"))
 }
 \author{
-Matthias Templ
+Matthias Templ, Bernhard Meindl
 
 For method \dQuote{mdav}: This work is being supported by the International
 Household Survey Network (IHSN) and funded by a DGF Grant provided by the
@@ -156,17 +146,17 @@ Templ, M. and Meindl, B., \emph{Robust Statistics Meets SDC: New Disclosure
 Risk Measures for Continuous Microdata Masking}, Lecture Notes in Computer
 Science, Privacy in Statistical Databases, vol. 5262, pp. 113-126, 2008.
 
-Templ, M.  \emph{Statistical Disclosure Control for Microdata Using the
+Templ, M. \emph{Statistical Disclosure Control for Microdata Using the
 R-Package sdcMicro}, Transactions on Data Privacy, vol. 1, number 2, pp.
 67-85, 2008.  \url{http://www.tdp.cat/issues/abs.a004a08.php}
 
-Templ, M.  \emph{New Developments in Statistical Disclosure Control and
+Templ, M. \emph{New Developments in Statistical Disclosure Control and
 Imputation: Robust Statistics Applied to Official Statistics},
 Suedwestdeutscher Verlag fuer Hochschulschriften, 2009, ISBN: 3838108280,
 264 pages.
 
-Templ, M. and Meindl, B. and Kowarik, A.: \emph{Statistical Disclosure Control for 
-Micro-Data Using the R Package sdcMicro}, Journal of Statistical Software, 
+Templ, M. and Meindl, B. and Kowarik, A.: \emph{Statistical Disclosure Control for
+Micro-Data Using the R Package sdcMicro}, Journal of Statistical Software,
 67 (4), 1--36, 2015.
 }
 \seealso{

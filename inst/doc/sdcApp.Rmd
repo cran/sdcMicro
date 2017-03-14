@@ -59,7 +59,7 @@ Here users can opt to upload a file exported from `SPSS`. The users can change t
 Here users can opt to upload a file exported from `SAS`. The users can change the options if character vectors should be automatically converted to factors and if variables that contain only missing-values ('NA') only should be dropped. By clicking on the `Browse` button the user needs to select a `sas7bdat`-file on disk which he wants to upload. For detailed explanation on the options, please see the chapter on [additional options](#additional_options).
 
 ### CSV (.csv, .txt)
-Here users can opt to upload a text file where variables are separated by some characters. Typically these data would be exported from software such as `Excel`. It is crucial that users indicate if the data file has variable names in the first row and how variables are separated. At this point, users have the option to have character vectors automatically converted to factor or have variables that contain only missing-values ('NA') dropped when the data are read into the GUI. By clicking on the `Browse` button the user needs to select a `txt` or `csv`-file on disk which he wants to upload. For detailed explanation on the options, please see the chapter on [additional options](#additional_options).
+Here users can opt to upload a text file where variables are separated by some characters. Typically these data would be exported from software such as `Excel`. It is crucial that users indicate if the data file has variable names in the first row and how variables are separated. At this point, users have the option to have character vectors automatically converted to factor or have variables that contain only missing-values ('NA') dropped when the data are read into the GUI. For columns read as character (text), the character `"` is ignored as quoting character and not imported. By clicking on the `Browse` button the user needs to select a `txt` or `csv`-file on disk which he wants to upload. For detailed explanation on the options, please see the chapter on [additional options](#additional_options).
 
 ### STATA-File (.dta)
 Here users can opt to upload a file exported from `Stata`. The users can change the options if character vectors should be automatically converted to factors and if variables that contain only missing-values ('NA') only should be dropped. By clicking on the `Browse` button the user needs to select a `dta`-file on disk which he wants to upload. For detailed explanation on the options, please see the chapter on [additional options](#additional_options).
@@ -79,13 +79,13 @@ This option is not available when an existing data frame from the current worksp
 
 This option is only available when a text/csv file is imported. This radio button input has two possible choices, `TRUE` (the default value) and `FALSE`. If `TRUE`, the first row of the imported data set will be interpreted as variable names, if `FALSE`, variable names are automatically generated.
 
-**Separator (Semicolon, Tab, Colon)**
+**Separator (Comma, Semicolon, Tab)**
 
-This option is only available when a text/csv file is imported. The radio button input has three possible choices, `Semicolon` (the default value), `Tab` and `Colon` defining the value that is used to separate variables in the input file.
+This option is only available when a text/csv file is imported. The radio button input has three possible choices, `Comma` (the default value) `Semicolon` and `Tab` defining the value that is used to separate variables in the input file.
 
+- `Comma`: the ``r dQuote(",")`` character is used as separator
 - `Semicolon`: the `;` character is used as separator
 - `Tab`: tabulators (`\t`) are used as separators
-- `Colon`: the ``r dQuote(",")`` character is used as separator
 
 **Select File Input:**
 
@@ -163,7 +163,7 @@ What is common for all choices of `Select algorithm` is that a button labelled `
 ### Convert variables to numeric
 In this page, variables of type `factor` and `character` from the input data can be converted to numeric variables. If no such variables are present in the microdata, the user is shown this information and no conversion is possible. Otherwise, the user can select one or more variables from the input field labelled `Choose variable(s)`. Once at least one variable is selected, a button called `Recode to numeric` occurs below the variable selection input. After clicking this button, the conversion is done and the view changes to the [explore variable](#explore_inputvars) page with the first of the recoded variables being selected.
 
-It should be noted however - as also shown on the GUI - that this feature should be used with care because internally,function `as.numeric()' is used to perform the conversation. Thus, the resulting numeric vector contains the underlying numeric (integer) representation of the input factor, which is often meaningless as it may not correspond to the factor levels.
+For variables of type `factor`, the factor levels are converted to numeric values. Factor levels that cannot be converted to numeric values are replaced with missing values (`NA`). It should be noted however - as also shown on the GUI - that, for variables of type `character`, this feature should be used with care because internally, the function `as.numeric()` is used to perform the conversion. Thus, the resulting numeric vector contains the underlying numeric (integer) representation of the input vector.
 
 ### Modify factor variable {#recode_factors_inputdata}
 When this option has been selected from the left hand sidebar, it is possible to modify existing factor variables. The most common use case is to combine one or more levels of the factor. The other use case is to rename single factor levels. In order to proceed, the user must first select an existing factor variable from the select input labelled `Choose factor variable`. Below this box, there is another input termed `Select Levels to recode/combine`. In this input, all the levels of the active factor variable can be choosen by clicking on the are selectable. Already selected levels may be removed again by clicking on them with the mouse and pressing either the *"backspace"*- or *"delete"* keys on the keyboard.

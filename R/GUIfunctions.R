@@ -70,6 +70,12 @@ extractLabels <- function(dat){
     varLab <- as.data.frame(cbind(colnames(dat), lapply(dat, function(x){attr(x, "label")})))
     colnames(varLab) <- c("var.name", "var.label")
     rownames(varLab) <- NULL
+    # Set to NULL values in var.label to NA
+    varLab[which(sapply(sapply(dat, function(x) { attr(x, "label") }), is.null)), 2] <- NA
+    # Check whether all strings are UTF-8 encoded    
+    if(!all(validUTF8(unlist(sapply(dat, function(x) { attr(x, "label") }))))){
+      return(sum(!validUTF8(unlist(sapply(dat, function(x) { attr(x, "label") })))))
+    }
   } else {
     varLab <- NULL
   }
@@ -113,7 +119,10 @@ selectHouseholdData <- function(dat, hhId, hhVars) {
 
   # Keep only one observation per household
   res <- res[which(!duplicated(res[,hhId])),]
-
+  
+  # Sort hhVars on the order of the variables in dat
+  hhVars <- colnames(dat)[which(colnames(dat) %in% hhVars)]
+  
   # Drop all variables that are not at the household level
   res <- res[,c(hhId, hhVars), drop=FALSE]
   invisible(res)
@@ -335,7 +344,11 @@ definition=function(obj, var) {
     stop("at least one variable specified in 'var' is not available in 'obj'!\n")
   }
   for (vv in var) {
-    obj[[vv]] <- as.numeric(obj[[vv]])
+    if("factor" %in% class(obj[[vv]])){
+      obj[[vv]] <- as.numeric(levels(obj[[vv]]))[obj[[vv]]] 
+    }else{
+      obj[[vv]] <- as.numeric(obj[[vv]])
+    }
   }
   obj
 })
@@ -373,7 +386,7 @@ tryCatchFn <- function(expr) {
 #' @note if \code{type} is either \code{'sas'}, \code{'spss'} or \code{'stata'}, values read in as \code{NaN}
 #' will be converted to \code{NA}.
 #' @return a data.frame or an object of class 'simple.error'. If a stata file was read in, the resulting \code{data.frame}
-#' has an addtitional attribute \code{lab} in which variable and value labels are stored.
+#' has an additional attribute \code{lab} in which variable and value labels are stored.
 #' @author Bernhard Meindl
 #' @export
 readMicrodata <- function(path, type, convertCharToFac=TRUE, drop_all_missings=TRUE, ...) {
@@ -386,6 +399,10 @@ readMicrodata <- function(path, type, convertCharToFac=TRUE, drop_all_missings=T
   if (type=="stata") {
     res <- tryCatchFn(read_dta(file=path))
     lab <- extractLabels(res)
+    if("integer" %in% class(lab)){
+      res <- simpleError(paste0(lab, " variable labels are not UTF-8 encoded. Correct the labels and reload the data."))
+      return(res)
+    }
   }
   if (type=="R") {
     res <- tryCatchFn(get(load(file=path)))
@@ -397,7 +414,8 @@ readMicrodata <- function(path, type, convertCharToFac=TRUE, drop_all_missings=T
     opts <- list(...)
     header <- ifelse(opts$header==TRUE, TRUE, FALSE)
     sep <- opts$sep
-    res <- tryCatchFn(read.table(path, sep=sep, header=header))
+    quote <- "\""
+    res <- tryCatchFn(read.table(path, sep=sep, header=header, quote=quote))
   }
   if ("simpleError" %in% class(res)) {
     return(res)
@@ -421,10 +439,10 @@ readMicrodata <- function(path, type, convertCharToFac=TRUE, drop_all_missings=T
   cl_lab <- which(sapply(res, class)=="labelled")
   if (length(cl_lab) > 0) {
     if (length(cl_lab)==1) {
-      res[[cl_lab]] <- as_factor(res[[cl_lab]], levels="values")
+      res[[cl_lab]] <- as_factor(res[[cl_lab]], levels="default")
     } else {
       res[,cl_lab] <- lapply(res[,cl_lab] , function(x) {
-        as_factor(x, levels="values")
+        as_factor(x, levels="default")
       })
     }
   }
@@ -443,7 +461,12 @@ readMicrodata <- function(path, type, convertCharToFac=TRUE, drop_all_missings=T
   if (drop_all_missings) {
     # drop all variables that are NA-only
     keep <- which(sapply(res, function(x) sum(is.na(x))!=length(x)))
+    dropped <- colnames(res)[-keep]
     res <- res[,keep,drop=FALSE]
+    # save names of dropped variables
+    if(length(dropped) > 0){
+      attr(res, "dropped") <- dropped
+    }
   }
 
   if (type=="stata") {

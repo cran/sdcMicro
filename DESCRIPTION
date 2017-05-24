@@ -2,8 +2,8 @@ Package: sdcMicro
 Type: Package
 Title: Statistical Disclosure Control Methods for Anonymization of
         Microdata and Risk Estimation
-Version: 5.0.1
-Date: 2017-03-14
+Version: 5.0.2
+Date: 2017-05-24
 Author: Matthias Templ, Alexander Kowarik, Bernhard Meindl
 Maintainer: Matthias Templ <matthias.templ@gmail.com>
 Description: Data from statistical agencies and other institutions are mostly
@@ -34,9 +34,9 @@ Collate: '0classes.r' 'addGhostVars.R' 'addNoise.r' 'aux_functions.r'
         'suda2.R' 'timeEstimation.R' 'topBotCoding.R' 'valTable.R'
         'zzz.R' 'printFunctions.R' 'mafast.R' 'maG.R' 'sdcApp.R'
         'show_sdcMicroObj.R'
-RoxygenNote: 5.0.1
+RoxygenNote: 6.0.1
 VignetteBuilder: knitr
 NeedsCompilation: yes
-Packaged: 2017-03-14 10:49:17 UTC; meindl
+Packaged: 2017-05-24 05:51:02 UTC; meindl
 Repository: CRAN
-Date/Publication: 2017-03-14 14:21:04
+Date/Publication: 2017-05-24 22:31:32 UTC

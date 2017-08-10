@@ -2,8 +2,8 @@ Package: sdcMicro
 Type: Package
 Title: Statistical Disclosure Control Methods for Anonymization of
         Microdata and Risk Estimation
-Version: 5.0.2
-Date: 2017-05-24
+Version: 5.0.3
+Date: 2017-08-10
 Author: Matthias Templ, Alexander Kowarik, Bernhard Meindl
 Maintainer: Matthias Templ <matthias.templ@gmail.com>
 Description: Data from statistical agencies and other institutions are mostly
@@ -20,7 +20,7 @@ Suggests: laeken,testthat
 Imports: utils, stats, graphics, car, rmarkdown, knitr, data.table,
         xtable, robustbase, cluster, MASS, e1071, tools, Rcpp, methods,
         sets, ggplot2, shiny, haven, rhandsontable, DT, shinyBS,
-        prettydoc
+        prettydoc, VIM(>= 4.7.0)
 License: GPL-2
 URL: https://github.com/sdcTools/sdcMicro
 Collate: '0classes.r' 'addGhostVars.R' 'addNoise.r' 'aux_functions.r'
@@ -37,6 +37,6 @@ Collate: '0classes.r' 'addGhostVars.R' 'addNoise.r' 'aux_functions.r'
 RoxygenNote: 6.0.1
 VignetteBuilder: knitr
 NeedsCompilation: yes
-Packaged: 2017-05-24 05:51:02 UTC; meindl
+Packaged: 2017-08-10 08:00:37 UTC; teml
 Repository: CRAN
-Date/Publication: 2017-05-24 22:31:32 UTC
+Date/Publication: 2017-08-10 15:12:31 UTC

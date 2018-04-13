@@ -2,9 +2,12 @@ Package: sdcMicro
 Type: Package
 Title: Statistical Disclosure Control Methods for Anonymization of
         Microdata and Risk Estimation
-Version: 5.1.0
-Date: 2018-01-26
-Author: Matthias Templ, Alexander Kowarik, Bernhard Meindl
+Version: 5.2.0
+Date: 2018-04-05
+Authors@R: c(
+  person("Matthias", "Templ", email="matthias.templ@gmail.com", role = c("aut", "cre")),
+  person("Bernhard", "Meindl", email = "Bernhard.Meindl@statistik.gv.at", role = c("aut")),
+  person("Alexander", "Kowarik", email="Alexander.Kowarik@statistik.gv.at", role = "aut"))
 Maintainer: Matthias Templ <matthias.templ@gmail.com>
 Description: Data from statistical agencies and other institutions are mostly
     confidential. This package can be used for the generation of anonymized
@@ -17,10 +20,10 @@ ByteCompile: TRUE
 LinkingTo: Rcpp
 Depends: R (>= 2.10)
 Suggests: laeken,testthat
-Imports: utils, stats, graphics, car, rmarkdown, knitr, data.table,
-        xtable, robustbase, cluster, MASS, e1071, tools, Rcpp, methods,
-        sets, ggplot2, shiny, haven, rhandsontable, DT, shinyBS,
-        prettydoc, VIM(>= 4.7.0)
+Imports: utils, stats, graphics, car, carData, rmarkdown, knitr,
+        data.table, xtable, robustbase, cluster, MASS, e1071, tools,
+        Rcpp, methods, sets, ggplot2, shiny, haven, rhandsontable, DT,
+        shinyBS, prettydoc, VIM(>= 4.7.0)
 License: GPL-2
 URL: https://github.com/sdcTools/sdcMicro
 Collate: '0classes.r' 'addGhostVars.R' 'addNoise.r' 'aux_functions.r'
@@ -38,6 +41,9 @@ Collate: '0classes.r' 'addGhostVars.R' 'addNoise.r' 'aux_functions.r'
 RoxygenNote: 6.0.1
 VignetteBuilder: knitr
 NeedsCompilation: yes
-Packaged: 2018-01-26 10:38:05 UTC; meindl
+Packaged: 2018-04-10 09:48:26 UTC; bernhard
+Author: Matthias Templ [aut, cre],
+  Bernhard Meindl [aut],
+  Alexander Kowarik [aut]
 Repository: CRAN
-Date/Publication: 2018-01-26 15:36:40 UTC
+Date/Publication: 2018-04-13 17:21:59 UTC

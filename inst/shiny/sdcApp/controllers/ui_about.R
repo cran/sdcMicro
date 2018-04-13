@@ -2,15 +2,15 @@ output$credits <- renderUI({
   out <- fluidRow(
     column(width = 8, offset = 2, h4("Implementation")),
     column(width = 8, offset = 2, p("This app was developed by", a(tags$strong("data-analysis OG"), href="http://www.data-analysis.at", target="_blank"))),
-    column(width = 8, offset = 2, tags$img(src="imgs/logo_da.jpg"), tags$br())
+    column(width = 8, offset = 2, tags$img(src="sdcwww/imgs/logo_da.jpg"), tags$br())
   )
   out <- list(out, fluidRow(
     column(width = 8, offset = 2, h4("Funding")),
     column(width = 8, offset = 2, p("The work was funded by the", a(tags$strong("World Bank Group"), href="http://www.worldbank.org/", target="_blank"))),
-    column(width = 8, offset = 2, tags$img(src="imgs/logo_worldbank.png"), tags$br()),
+    column(width = 8, offset = 2, tags$img(src="sdcwww/imgs/logo_worldbank.png"), tags$br()),
     column(width = 8, offset = 2, p("and the Department for International Development",
       a(tags$strong("DfID"), href="https://www.gov.uk/government/organisations/department-for-international-development", target="_blank"))),
-    column(width = 8, offset = 2, tags$img(src="imgs/logo_ukaid.png", width = 70))
+    column(width = 8, offset = 2, tags$img(src="sdcwww/imgs/logo_ukaid.png", width = 70))
   ))
   out <- list(out, fluidRow(
     column(width = 8, offset = 2, h4("Special Thanks")),
@@ -63,7 +63,9 @@ output$ui_about <- renderUI({
     column(width = 8, offset = 2, h2(("sdcApp"))),
     column(width = 8, offset = 2, p("This graphical user interface of",code("sdcMicro")," allows you to anonymize microdata even if you are not an
       expert in the",code("R"),"programming language. Detailed information on how to use this graphical user-interface (GUI) can be found in a tutorial (a so-called vignette) that is included in the",code("sdcMicro"),"package.
-    The vignette is available from the",tags$a("CRAN", href="https://cran.r-project.org/web/packages/sdcMicro/vignettes/sdcApp.html", target="_blank"), "website or by typing",code('vignette("sdcApp", package="sdcMicro")'),"into your",code("R"),"prompt.")),
+    The vignette is available on",tags$a("GitHub pages", href="https://sdctools.github.io/sdcMicro/articles/sdcMicro.html", target="_blank"), 
+    "and via the", tags$a("CRAN", href = "https://cran.r-project.org/web/packages/sdcMicro/vignettes/sdcApp.html"), "website. The vignette can
+    also be viewed offline by typing",code('vignette("sdcMicro", package="sdcMicro")'),"into your",code("R"),"prompt.")),
     column(width = 8, offset = 2, p("For information on the support and development of the graphical user interface, please click", btn_credits,".")),
     bsModal("cred_modal", title="Credits", trigger="btn_credits", uiOutput("credits"))    
   )

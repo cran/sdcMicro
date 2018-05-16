@@ -12,7 +12,7 @@
 
 <meta name="author" content="Bernhard Meindl" />
 
-<meta name="date" content="2018-05-16" />
+<meta name="date" content="2018-03-05" />
 
 <title>Using the interactive GUI - sdcApp</title>
 
@@ -32,7 +32,7 @@
 
 <h1 class="title toc-ignore">Using the interactive GUI - sdcApp</h1>
 <h4 class="author"><em>Bernhard Meindl</em></h4>
-<h4 class="date"><em>2018-05-16</em></h4>
+<h4 class="date"><em>2018-03-05</em></h4>
 
 
 <div id="TOC">
@@ -653,10 +653,6 @@
 <li><strong>Include variable names in first row?</strong>: allows to specify if variable names should be written to the output file (<code>yes</code>) which is the default setting or not (<code>no</code>)</li>
 <li><strong>Field separator</strong>: allows to specify the separation character, possible choices are <code>Comma</code> (the default), <code>Semicolon</code> and <code>Tab</code></li>
 <li><strong>Decimal separator</strong>: allows to specify the decimal character, possible choices are <code>Decimal point</code> (the default) and <code>Decimal comma</code></li>
-</ul>
-<p>If <code>STATA-File</code> is selected, an additional radio button input is shown:</p>
-<ul>
-<li><strong>To which version of STATA would you like to export?</strong>: allows to select the version of STATA to export the data to, as earlier versions of STATA cannot open STATA file formats of later versions. Versions 8 to 14 are available.</li>
 </ul>
 <p><strong>Randomize Order of Observations</strong></p>
 <p>This set of radio buttons allows to choose if the observations in the dataset should be randomized. The possible choices are <code>No randomization</code> (the default) and <code>Randomization at record level</code>. In the case of the former, the order of records remains unchanged. If <code>Randomization at record level</code> is chosen, the records of the dataset are randomly changed. In the case where a household/cluster variable was selected when specifying the current sdc problem as described <a href="setup_sdcproblem">here</a>, two additional options are possible. If <code>Randomize by hierarchical identifier</code> is selected, the values of this identification variable are randomized across the dataset. If the user opts to choose <code>Randomize by hierarchical identifier and within hierarchical units</code>, not only are the values of the household identification variable randomly changed, the order of records within the households/clusters is also permuted.</p>

@@ -2,8 +2,8 @@ Package: sdcMicro
 Type: Package
 Title: Statistical Disclosure Control Methods for Anonymization of
         Microdata and Risk Estimation
-Version: 5.2.0
-Date: 2018-04-05
+Version: 5.3.0
+Date: 2018-05-15
 Authors@R: c(
   person("Matthias", "Templ", email="matthias.templ@gmail.com", role = c("aut", "cre")),
   person("Bernhard", "Meindl", email = "Bernhard.Meindl@statistik.gv.at", role = c("aut")),
@@ -41,9 +41,9 @@ Collate: '0classes.r' 'addGhostVars.R' 'addNoise.r' 'aux_functions.r'
 RoxygenNote: 6.0.1
 VignetteBuilder: knitr
 NeedsCompilation: yes
-Packaged: 2018-04-10 09:48:26 UTC; bernhard
+Packaged: 2018-05-16 13:37:36 UTC; teml
 Author: Matthias Templ [aut, cre],
   Bernhard Meindl [aut],
   Alexander Kowarik [aut]
 Repository: CRAN
-Date/Publication: 2018-04-13 17:21:59 UTC
+Date/Publication: 2018-05-16 15:28:41 UTC

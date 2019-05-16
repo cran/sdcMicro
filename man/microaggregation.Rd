@@ -5,9 +5,10 @@
 \alias{microaggregation}
 \title{Microaggregation}
 \usage{
-microaggregation(obj, variables = NULL, aggr = 3, strata_variables = NULL,
-  method = "mdav", weights = NULL, nc = 8, clustermethod = "clara",
-  measure = "mean", trim = 0, varsort = 1, transf = "log")
+microaggregation(obj, variables = NULL, aggr = 3,
+  strata_variables = NULL, method = "mdav", weights = NULL, nc = 8,
+  clustermethod = "clara", measure = "mean", trim = 0, varsort = 1,
+  transf = "log")
 }
 \arguments{
 \item{obj}{either an object of class \code{\link{sdcMicroObj-class}} or a \code{data.frame}}
@@ -106,6 +107,7 @@ data before aggregation.
 }
 \note{
 if only one variable is specified, \code{\link{mafast}} is applied and argument \code{method} is ignored.
+Parameters \code{measure} are ignored for methods \code{mdav} and \code{rmd}.
 }
 \examples{
 data(Tarragona)
@@ -143,6 +145,10 @@ Templ, M. \emph{New Developments in Statistical Disclosure Control and
 Imputation: Robust Statistics Applied to Official Statistics},
 Suedwestdeutscher Verlag fuer Hochschulschriften, 2009, ISBN: 3838108280,
 264 pages.
+
+Templ, M. Statistical Disclosure Control for Microdata: Methods and Applications in R.
+\emph{Springer International Publishing}, 287 pages, 2017. ISBN 978-3-319-50272-4. \doi{10.1007/978-3-319-50272-4}
+\doi{10.1007/978-3-319-50272-4}
 
 Templ, M. and Meindl, B. and Kowarik, A.: \emph{Statistical Disclosure Control for
 Micro-Data Using the R Package sdcMicro}, Journal of Statistical Software,

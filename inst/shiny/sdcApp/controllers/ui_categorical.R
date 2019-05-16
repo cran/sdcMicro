@@ -104,7 +104,8 @@ output$ui_pram_expert <- renderUI({
     if (is.null(input$sel_pramvars_expert) || length(input$sel_pramvars_expert)!=1) {
       return(NULL)
     }
-    m <- rhandsontable(obj$transmat) #%>% hot_context_menu(allowRowEdit=FALSE, allowColEdit=FALSE)
+    rn <- attr(obj$transmat, "dimnames")[[2]]
+    m <- rhandsontable(obj$transmat, rowHeaders=rn) #%>% hot_context_menu(allowRowEdit=FALSE, allowColEdit=FALSE)
     m
   })
   output$pram_expert_strata <- renderUI({
@@ -268,6 +269,7 @@ output$ui_pram_simple <- renderUI({
 # current values of the importance-vector must be outside because of code_kAnon()
 kAnon_impvec <- reactive({
   cn <- names(input)[grep("sel_importance_", names(input))]
+  cn <- cn[-grep("-selectized", cn)]
   if (length(cn)==0) {
     return(c(""))
   }
@@ -375,12 +377,17 @@ output$ui_kAnon <- renderUI({
     poss <- possVals_importance()
     kV <- colnames(get_origData())[get_keyVars()]
     n <- length(kV)
-    sl <- lapply(1:n, function(i) {
-      selectInput(
-        inputId=paste0('sel_importance_', i),
-        label=paste0('Select the importance for key variable ', dQuote(kV[i])),
-        choices=c("",poss[[i]]$poss), selected=poss[[i]]$val, width="100%")
-    })
+    if (n == 0) {
+      sl <- NULL
+    } else {
+      sl <- lapply(1:n, function(i) {
+        selectInput(
+          inputId=paste0('sel_importance_', i),
+          label=paste0('Select the importance for key variable ', dQuote(kV[i])),
+          choices=c("",poss[[i]]$poss), selected=poss[[i]]$val, width="100%")
+      })
+    }
+
     # how many rows?
     n_rows <- ceiling(n/3)
     out <- list()
@@ -436,7 +443,7 @@ output$ui_kAnon <- renderUI({
     btn <- NULL
     impvec <- kAnon_impvec()
     pp <- kAnon_comb_params()
-    if (input$rb_kanon_useCombs=="Yes" & (!is.null(pp) && length(pp$use)==0)) {
+    if (input$rb_kanon_useCombs=="Yes" && (!is.null(pp) && length(pp$use)==0)) {
       return(NULL)
     }
     if (kAnon_useImportance() && any(impvec=="")) {

@@ -139,7 +139,7 @@ definition = function(x, type = "kAnon", docat=TRUE, ...) {
     }
     txt_f <- paste0(txt_f, "\n",hr,"\n\n")
     if (docat) {
-      cat(txt_f)
+      message(txt_f)
     }
     return(invisible(list(
       "2anon"=list(orig=f_2anon_o, orig_p=f_2anon_op, mod=f_2anon, mod_p=f_2anon_p),
@@ -203,7 +203,7 @@ definition = function(x, type = "kAnon", docat=TRUE, ...) {
       txt_r <- paste0(txt_r, hr, "\n\n")
     }
     if (docat) {
-      cat(txt_r)
+      message(txt_r)
     }
     out <- list(
       "riskyObs"=list(orig=s_orig, mod=s_mod),
@@ -222,22 +222,22 @@ definition = function(x, type = "kAnon", docat=TRUE, ...) {
     pp <- get.sdcMicroObj(obj, type="pram")
     if (is.null(pp)) {
       if (docat) {
-        cat(paste0("PRAM has not been applied!\n"))
+        message(paste0("PRAM has not been applied!\n"))
       }
       return(invisible(NULL))
     }
     ss <- pp$summary
     params <- pp$params
     if (docat) {
-      cat("Post-Randomization (PRAM):\n")
+      message("Post-Randomization (PRAM):\n")
       for (i in 1:nrow(ss)) {
-        cat("Variable:",ss$variable[i],"\n")
-        cat("--> final Transition-Matrix:\n")
+        message("Variable:",ss$variable[i],"\n")
+        message("--> final Transition-Matrix:\n")
         print(params[[i]]$Rs)
       }
-      cat("\nChanged observations:\n")
+      message("\nChanged observations:\n")
       print(ss)
-      cat(hr,"\n\n")
+      message(hr,"\n\n")
     }
     return(invisible(list(
       "pram_summary"=ss,
@@ -249,7 +249,7 @@ definition = function(x, type = "kAnon", docat=TRUE, ...) {
     ls <- get.sdcMicroObj(obj, "localSuppression")
     if (is.null(ls)) {
       if (docat) {
-        cat(paste0("Local suppression has not been applied!\n"))
+        message(paste0("Local suppression has not been applied!\n"))
       }
       return(invisible(NULL))
     }
@@ -271,9 +271,9 @@ definition = function(x, type = "kAnon", docat=TRUE, ...) {
     setnames(outT, c("KeyVar", "Suppressions (#)", "Suppressions (%)"))
 
     if (docat) {
-      cat(txt_ls)
+      message(txt_ls)
       print(out, row.names=F)
-      cat(hr,"\n\n")
+      message(hr,"\n\n")
     }
     return(invisible(list(
       "supps"=out[,c(1,3,5), with=FALSE],
@@ -289,10 +289,21 @@ definition = function(x, type = "kAnon", docat=TRUE, ...) {
     df.rec <- as.data.table(get.sdcMicroObj(obj, "manipKeyVars"))
 
     # number of categories (inkl. NA)
-    stats_o <- t(df.o[,lapply(.SD, function(x) {
-      c(length(unique(x)), mean(table(x)), sort(table(x))[1])})])
-    stats_rec <- t(df.rec[,lapply(.SD, function(x) {
-      c(length(unique(x)), mean(table(x)), sort(table(x))[1])})])
+    .stats <- function(x) {
+      tab_x <- table(x)
+      res <- c(
+        length(unique(x)),
+        mean(tab_x))
+
+      if (any(tab_x) > 0) {
+        return(c(res, min(tab_x[tab_x>0])))
+      } else {
+        return(c(res, 0))
+      }
+    }
+
+    stats_o <- t(df.o[,lapply(.SD, function(x) .stats(x))])
+    stats_rec <- t(df.rec[,lapply(.SD, function(x) .stats(x))])
 
     stats_o <- cbind(names(df.o), stats_o)
     stats_rec <- cbind(names(df.rec), stats_rec)
@@ -301,17 +312,17 @@ definition = function(x, type = "kAnon", docat=TRUE, ...) {
       prettyF(stats_rec[,3]), paste0("(",prettyF(stats_o[,3]),")"),
       stats_rec[,4], paste0("(",stats_o[,4],")"))
     stats_rec <- as.data.table(stats_rec)
-    setnames(stats_rec, c("Key Variable","Number of categories","","Mean size","","Size of smallest",""))
+    setnames(stats_rec, c("Key Variable","Number of categories","","Mean size","","Size of smallest (>0)",""))
 
     txt_rec <- paste0("Information on categorical key variables:\n")
-    txt_rec <- paste0(txt_rec,"\nReported is the number, mean size and size of the smallest category for recoded variables.\n")
+    txt_rec <- paste0(txt_rec,"\nReported is the number, mean size and size of the smallest category >0 for recoded variables.\n")
     txt_rec <- paste0(txt_rec, "In parenthesis, the same statistics are shown for the unmodified data.\n")
     txt_rec <- paste0(txt_rec, "Note: NA (missings) are counted as seperate categories!\n\n")
 
     if (docat) {
-      cat(txt_rec)
+      message(txt_rec)
       print(stats_rec, nrows=nrow(stats_rec), row.names=FALSE)
-      cat(hr,"\n\n")
+      message(hr,"\n\n")
     }
     return(invisible(list(
       "keyVars"=stats_rec[[1]],
@@ -356,7 +367,7 @@ definition = function(x, type = "kAnon", docat=TRUE, ...) {
     }
     txt_r <- paste0(txt_r, hr, "\n\n")
     if (docat) {
-      cat(txt_r)
+      message(txt_r)
     }
     return(invisible(list(
       "numVars"=cn[x@numVars],
@@ -413,7 +424,7 @@ definition = function(x, type = "kAnon", docat=TRUE, ...) {
     }
     txt <- paste0(txt, hr,"\n\n")
     if (docat) {
-      cat(txt)
+      message(txt)
     }
     return(invisible(list(
       "dims"=dims,
@@ -436,7 +447,7 @@ definition = function(x, type = "kAnon", docat=TRUE, ...) {
     nv_o <- orig[, numvars, drop=F]
     nv_m <- get.sdcMicroObj(x, "manipNumVars")
     if (docat) {
-      cat("Compare original and modified numeric key variables\n\n")
+      message("Compare original and modified numeric key variables\n\n")
     }
     out <- list(
       "numVars"=numvars,
@@ -451,7 +462,7 @@ definition = function(x, type = "kAnon", docat=TRUE, ...) {
         setnames(dt, c("Type",names(summary_o)))
         out$results[[length(out$results)+1]] <- dt
         if (docat) {
-          cat(paste0(tabsp,"Variable ", shQuote(numvars[i])," has not been modified.\n\n"))
+          message(paste0(tabsp,"Variable ", shQuote(numvars[i])," has not been modified.\n\n"))
         }
       } else {
         anyChanges <- TRUE
@@ -461,9 +472,9 @@ definition = function(x, type = "kAnon", docat=TRUE, ...) {
         dt <- as.data.table(rbind(c("orig",as.numeric(summary_o)), c("modified",as.numeric(summary_m))))
         setnames(dt, c("Type",names(summary_o)))
         if (docat) {
-          cat(paste0(tabsp,"Variable ", shQuote(numvars[i])," has been modified. The correlation is ",prettyF(val_cor),"\n\n"))
+          message(paste0(tabsp,"Variable ", shQuote(numvars[i])," has been modified. The correlation is ",prettyF(val_cor),"\n\n"))
           print(dt)
-          cat("\n")
+          message("\n")
         }
         out$results[[length(out$results)+1]] <- dt
       }
@@ -472,7 +483,7 @@ definition = function(x, type = "kAnon", docat=TRUE, ...) {
       out$results <- NULL
     }
     if (docat) {
-      cat(hr,"\n\n")
+      message(hr,"\n\n")
     }
     return(invisible(out))
   }

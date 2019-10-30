@@ -64,8 +64,13 @@ shinyServer(function(session, input, output) {
   # 1: modifications for microdata
   # code to read in microdata
   code_useRObj <- reactive({
-    cmd <- paste0("obj$inputdata <- readMicrodata(")
-    cmd <- paste0(cmd, "path=",dQuote(input$sel_choose_df))
+    obj <- input$sel_choose_df
+    cmd_chk <- paste0("if (!exists(", dQuote(obj),")) {\n")
+    cmd_chk <- paste0(cmd_chk, "  stop('object ", dQuote(obj), " is missing; make sure it exists.`', call. = FALSE)\n")
+    cmd_chk <- paste0(cmd_chk, "}\n")
+
+    cmd <- paste0(cmd_chk, "obj$inputdata <- readMicrodata(")
+    cmd <- paste0(cmd, "path=",dQuote(obj))
     cmd <- paste0(cmd, ", type=",dQuote("rdf"))
     cmd <- paste0(cmd, ", convertCharToFac=FALSE")
     cmd <- paste0(cmd, ", drop_all_missings=FALSE)")
@@ -587,13 +592,21 @@ shinyServer(function(session, input, output) {
     }
     cmd <- paste0(cmd, ", TopPercent=",input$sl_rankswap_top)
     cmd <- paste0(cmd, ", BottomPercent=",input$sl_rankswap_bot)
-    cmd <- paste0(cmd, ", K0=",input$sl_rankswap_k0)
-    cmd <- paste0(cmd, ", R0=",input$sl_rankswap_r0)
-    cmd <- paste0(cmd, ", P=",input$sl_rankswap_p)
+    rankswap_k0 <- rankswap_r0 <- rankswap_p <- "NULL"
+    if(input$rb_rankswap_p_k0_r0=="K0"){
+      rankswap_k0 <- input$sl_rankswap_p_k0_r0
+    }else if(input$rb_rankswap_p_k0_r0=="R0"){
+      rankswap_r0 <- input$sl_rankswap_p_k0_r0
+    }else if(input$rb_rankswap_p_k0_r0=="P"){
+      rankswap_p <- input$sl_rankswap_p_k0_r0*100
+    }
+    cmd <- paste0(cmd, ", K0=",rankswap_k0)
+    cmd <- paste0(cmd, ", R0=",rankswap_r0)
+    cmd <- paste0(cmd, ", P=",rankswap_p)
     cmd <- paste0(cmd, ", missing=NA, seed=NULL)")
 
     txt_action <- paste0(txt_action, " (parameters: TopPercent=",input$sl_rankswap_top,", BottomPercent=", input$sl_rankswap_bot)
-    txt_action <- paste0(txt_action, ", K0=",input$sl_rankswap_k0,", R0=", input$sl_rankswap_r0, ")\n")
+    txt_action <- paste0(txt_action, ", K0=",rankswap_k0,", R0=", rankswap_r0, ", P=",rankswap_p,")\n")
     return(list(cmd=cmd, txt_action=txt_action))
   })
 
@@ -713,7 +726,7 @@ shinyServer(function(session, input, output) {
       code_out <- gsub("res", "inputdata", code_out)
       obj$code_read_and_modify <- code_out
       obj$inputdataB <- obj$inputdata
-      obj$code_read_and_modify <- c(obj$code_read_and_modify,"inputdataB <- inputdata\n")
+      obj$code_read_and_modify <- c(obj$code_read_and_modify,"inputdataB <- obj$inputdata\n")
       obj$sdcObj <- NULL # start fresh
 
       # stata
@@ -800,7 +813,7 @@ shinyServer(function(session, input, output) {
     ptm <- proc.time()
     cmd <- code_useRObj()
     runEvalStrMicrodat(cmd=cmd, comment=NULL)
-    obj$code_read_and_modify <- c(obj$code_read_and_modify,"inputdataB <- inputdata\n")
+    obj$code_read_and_modify <- c(obj$code_read_and_modify,"inputdataB <- obj$inputdata\n")
     obj$inputdataB <- obj$inputdata
     obj$utf8 <- FALSE
     obj$sdcObj <- NULL # start fresh

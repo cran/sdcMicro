@@ -3,7 +3,6 @@ library(grid)
 library(sdcMicro)
 library(rhandsontable)
 library(haven)
-library(DT)
 library(shinyBS)
 library(data.table)
 
@@ -68,7 +67,7 @@ runEvalStr <- function(cmd, comment=NULL) {
     current_warnings <- get.sdcMicroObj(obj$sdcObj, type="additionalResults")$sdcMicro_warnings
     nr_new <- nrow(current_warnings)
     if (!is.null(current_warnings) && nrow(current_warnings) > nr_warnings_start) {
-      obj$last_warning <- tail(current_warnings,1)
+      obj$last_warning <- utils::tail(current_warnings,1)
     } else {
       obj$last_warning <- NULL
     }
@@ -222,9 +221,9 @@ msg_nodata <- function(tab_import=FALSE) {
 summaryfn <- function(x) {
   if (is.numeric(x)) {
     vv <- c(min(x, na.rm=TRUE),
-      quantile(x, c(0.05,0.25, 0.5), na.rm=TRUE),
+      stats::quantile(x, c(0.05,0.25, 0.5), na.rm=TRUE),
       mean(x, na.rm=TRUE),
-      quantile(x, c(0.75,0.95), na.rm=TRUE), max(x, na.rm=TRUE))
+      stats::quantile(x, c(0.75,0.95), na.rm=TRUE), max(x, na.rm=TRUE))
     names(vv) <- c("Min", "Q5","Q25","Median","Mean","Q75","Q95","Max")
   } else {
     vv <- as.data.frame.table(addmargins(table(x, useNA = "always")))
@@ -235,20 +234,20 @@ summaryfn <- function(x) {
 }
 
 # global, reactive data-structure
-data(testdata, envir = environment())
-data(testdata2, envir = environment())
+data(testdata, envir = .GlobalEnv)
+data(testdata2, envir = .GlobalEnv)
 testdata$urbrur <- factor(testdata$urbrur)
 testdata$urbrur[sample(1:nrow(testdata), 10)] <- NA
 testdata$roof <- factor(testdata$roof)
 testdata$walls <- factor(testdata$walls)
 testdata$sex <- factor(testdata$sex)
 # which data.frames ware available in the global environment?
-ex <- ls()
-if ( length(ex) > 0 ) {
+ex <- ls(envir = .GlobalEnv)
+if (length(ex) > 0) {
   available_dfs <- ex[sapply(ex, function(x) {
-    is.data.frame(get(paste(x)))
+    is.data.frame(get(paste(x), envir = .GlobalEnv))
   })]
-  if ( length(available_dfs) == 0 ) {
+  if (length(available_dfs) == 0) {
     available_dfs <- NULL
   }
 }
@@ -361,7 +360,10 @@ obj$sdcObj <- NULL
 obj$code_read_and_modify <- c()
 obj$code_setup <- c()
 obj$code_anonymize <- c()
-obj$code <- "require(sdcMicro)"
+obj$code <- c(
+  paste("# created using sdcMicro", packageVersion("sdcMicro")),
+  "library(sdcMicro)", "",
+  "obj <- NULL")
 obj$transmat <- NULL
 obj$last_warning <- NULL
 obj$last_error <- NULL

@@ -94,8 +94,6 @@
 #' @seealso \code{\link{summary.micro}}, \code{\link{plotMicro}},
 #' \code{\link{valTable}}
 #' @references
-#' \url{http://www.springerlink.com/content/v257655u88w2/?sortorder=asc&p\_o=20}
-#'
 #' Templ, M. and Meindl, B., \emph{Robust Statistics Meets SDC: New Disclosure
 #' Risk Measures for Continuous Microdata Masking}, Lecture Notes in Computer
 #' Science, Privacy in Statistical Databases, vol. 5262, pp. 113-126, 2008.
@@ -108,7 +106,7 @@
 #' Imputation: Robust Statistics Applied to Official Statistics},
 #' Suedwestdeutscher Verlag fuer Hochschulschriften, 2009, ISBN: 3838108280,
 #' 264 pages.
-#' 
+#'
 #' Templ, M. Statistical Disclosure Control for Microdata: Methods and Applications in R.
 #' \emph{Springer International Publishing}, 287 pages, 2017. ISBN 978-3-319-50272-4. \doi{10.1007/978-3-319-50272-4}
 #' \doi{10.1007/978-3-319-50272-4}
@@ -170,7 +168,7 @@ setMethod(f="microaggregationX", signature=c("sdcMicroObj"), definition=function
   if (length(strataVars) > 0) {
     sx <- get.sdcMicroObj(obj, type="origData")[, strataVars, drop=FALSE]
     x <- cbind(x, sx)
-    strataVars <- tail(colnames(x), 1)
+    strataVars <- utils::tail(colnames(x), 1)
   }
 
   weights <- get.sdcMicroObj(obj, type="weightVar")
@@ -310,7 +308,7 @@ microaggregationWORK <- function(x, variables=colnames(x), method="mdav", aggr=3
     }
     if (measure == "mean" & !is.null(weights)) {
       for (i in 1:length(index)) {
-        m[i, ] <- apply(x[index[[i]], ], 2, function(x) weighted.mean(x,
+        m[i, ] <- apply(x[index[[i]], ], 2, function(x) stats::weighted.mean(x,
           w=weights[index[[i]]]))
       }
     }
@@ -389,8 +387,8 @@ microaggregationWORK <- function(x, variables=colnames(x), method="mdav", aggr=3
       y <- scale(log(x))
     }
     if (transf == "boxcox") {
-      lambda <- powerTransform(x)$lambda
-      y <- scale(bcPower(x, lambda))
+      lambda <- car::powerTransform(x)$lambda
+      y <- scale(car::bcPower(x, lambda))
     }
     if (clustermethod == "clara") {
       a <- clara(x, nc)
@@ -405,20 +403,20 @@ microaggregationWORK <- function(x, variables=colnames(x), method="mdav", aggr=3
       size <- a$clusinfo[, 1]
     }
     if (clustermethod == "kmeans") {
-      a <- kmeans(x, nc)
+      a <- stats::kmeans(x, nc)
       centers <- a$centers
       clustresult <- a$cluster
       size <- a$size
     }
     if (clustermethod == "cmeans") {
-      a <- cmeans(x, nc)
+      a <- e1071::cmeans(x, nc)
       centers <- a$centers
       clustresult <- a$cluster
       size <- a$size
       res@mem <- a$mem
     }
     if (clustermethod == "bclust") {
-      a <- bclust(x, nc)
+      a <- e1071::bclust(x, nc)
       centers <- a$centers
       groesse <- rep(0, nc)
       for (i in seq(nc)) {
@@ -506,7 +504,7 @@ microaggregationWORK <- function(x, variables=colnames(x), method="mdav", aggr=3
       varsort=NULL, transf=NULL, blowup=TRUE, blowxm=y, fot=0))
   }
   micro_pca <- function(x, aggr, measure, trim) {
-    p <- princomp(scale(x))
+    p <- stats::princomp(scale(x))
     s1 <- sort(p$scores[, 1], index.return=TRUE)$ix
     xx <- x[s1, ]
     index <- indexMicro(xx, aggr)
@@ -521,7 +519,7 @@ microaggregationWORK <- function(x, variables=colnames(x), method="mdav", aggr=3
   micro_mcdpca <- function(x, aggr, measure, trim) {
     x.mcd <- cov.mcd(x, cor=TRUE)
     x.scale <- scale(x, x.mcd$center, sqrt(diag(x.mcd$cor)))
-    p <- princomp(x.scale, covmat=x.mcd)
+    p <- stats::princomp(x.scale, covmat=x.mcd)
     s1 <- sort(p$scores[, 1], index.return=TRUE)$ix
     xx <- x[s1, ]
     index <- indexMicro(xx, aggr)
@@ -588,7 +586,7 @@ microaggregationWORK <- function(x, variables=colnames(x), method="mdav", aggr=3
         y <- x[w, , drop=FALSE]
         xx[[i]] <- y[order(y[, varsort]), ]
       } else {
-        p <- princomp(scale(x[w, , drop=FALSE]))$scores[, 1]
+        p <- stats::princomp(scale(x[w, , drop=FALSE]))$scores[, 1]
         psortind <- sort(p, index.return=TRUE)$ix
         y <- x[w, , drop=FALSE]
         xx[[i]] <- y[psortind, ]
@@ -620,10 +618,10 @@ microaggregationWORK <- function(x, variables=colnames(x), method="mdav", aggr=3
         y <- x[w, , drop=FALSE]
         xx[[i]] <- y[order(y[, varsort]), ]
       } else {
-        cat("length(w):", length(w), "\n")
+        message("length(w):", length(w), "\n")
         x.mcd <- cov.mcd(x[w, ], cor=TRUE)
         x.scale <- scale(x[w, ], x.mcd$center, sqrt(diag(x.mcd$cor)))
-        p <- princomp(x.scale, covmat=x.mcd)$scores[, 1]
+        p <- stats::princomp(x.scale, covmat=x.mcd)$scores[, 1]
         psortind <- sort(p, index.return=TRUE)$ix
         y <- x[w, , drop=FALSE]
         xx[[i]] <- y[psortind, ]
@@ -692,10 +690,10 @@ microaggregationWORK <- function(x, variables=colnames(x), method="mdav", aggr=3
     len <- nrow(y)
     y <- apply(y, 2, function(x) (x - mean(x, na.rm=TRUE))/sd(x, na.rm=TRUE))
 
-    d <- as.matrix(dist(y))
+    d <- as.matrix(stats::dist(y))
     set.seed(123)
     rr <- covMcd(y)
-    md <- mahalanobis(y, center=rr$center, cov=rr$cov)
+    md <- stats::mahalanobis(y, center=rr$center, cov=rr$cov)
     diag(d) <- 0
 
     for (i in 1:(floor(dim(x)[1]/aggr) - 1)) {
@@ -847,18 +845,18 @@ microaggregationWORK <- function(x, variables=colnames(x), method="mdav", aggr=3
 #' m1
 #'
 print.micro <- function(x, ...) {
-  cat(paste("\n Object created with method", x$method, "and aggregation level",
+  message(paste("\n Object created with method", x$method, "and aggregation level",
     x$aggr))
-  cat("\n -------------------------\n")
-  cat("x ... original values \n")
+  message("\n -------------------------\n")
+  message("x ... original values \n")
   print(summary(x$x))
-  cat("\n -------------------------\n")
-  cat("mx ... microaggregated values\n")
+  message("\n -------------------------\n")
+  message("mx ... microaggregated values\n")
   print(summary(x$mx))
-  cat("\n -------------------------\n")
+  message("\n -------------------------\n")
 
-  cat("Try names(your object from class micro) for more details")
-  cat("\n")
+  message("Try names(your object from class micro) for more details")
+  message("\n")
 }
 
 #' Summary method for objects from class micro
@@ -901,7 +899,6 @@ print.micro <- function(x, ...) {
 #' data(Tarragona)
 #' m1 <- microaggregation(Tarragona, method='onedims', aggr=3)
 #' ## summary(m1)
-#'
 summary.micro <- function(object, ...) {
   prcompRob <- function(X, k=0, sca="mad", scores=TRUE) {
     ## Copyright: Croux and Filzmoser
@@ -939,15 +936,14 @@ summary.micro <- function(object, ...) {
   }
 
   x1 <- as.data.frame(object$x)
-  x2 <- if (length(as.data.frame(object$mx)) > 0)
-    as.data.frame(object$mx) else as.data.frame(object$mx)
+  x2 <- as.data.frame(object$mx)
   colnames(x2) <- colnames(x1)
   amx <- mapply(mean, x1)
   amxn <- mapply(mean, x2)
   amean <- sum(abs(amx - amxn)/(abs(amx)))
   meds1 <- mapply(median, x1)
   meds2 <- mapply(median, x2)
-  amedian <- sum(abs(meds1 - meds2)/abs(meds1), na.rm=TRUE)
+  amedian <- sum(abs(meds1 - meds2) / abs(meds1), na.rm = TRUE)
   onestep <- function(x) {
     y <- x
     constant <- 3/1.486
@@ -973,35 +969,24 @@ summary.micro <- function(object, ...) {
   aox <- mapply(mean, aox)
   aoxm <- onestep(x2)
   aoxm <- mapply(mean, aoxm)
-  aonestep <- sum(abs(aox - aoxm)/abs(aox), na.rm=TRUE)
+  aonestep <- sum(abs(aox - aoxm) / abs(aox), na.rm = TRUE)
   devvar <- sum(abs(var(x1) - var(x2))/abs(var(x1)))/length(x1)
   amx <- mapply(mad, x1)
   amxn <- mapply(mad, x2)
-  amad <- sum(abs(amx - amxn)/(abs(amx)), na.rm=TRUE)
+  amad <- sum(abs(amx - amxn) / (abs(amx)), na.rm = TRUE)
   acov <- sum(abs(cov(x1) - cov(x2))/abs(cov(x1)))/(2 * length(x1))
-  # if (robCov == TRUE) { arcov <- sum(abs(covMcd(x1)$cov -
-  # covMcd(x2)$cov)/abs(covMcd(x1)$cov))/(2 * length(x1)) } else {
   arcov <- NA
-  # }
   acor <- sum(abs(cor(x1) - cor(x2))/abs(cor(x1)))/(2 * length(x2))
-  # if (robCov == TRUE) { arcor <- sum(abs(covMcd(x1, cor=TRUE)$cor - covMcd(x2,
-  # cor=TRUE)$cor)/abs(covMcd(x1, cor=TRUE)$cor))/(2 * length(x1)) } else {
   arcor <- NA
-  # }
-  acors <- sum(abs(cor(x1, method="spearman") - cor(x2, method="spearman"))/abs(cor(x1,
-    method="spearman")))/(2 * length(x1))
+  acors <- sum(abs(cor(x1, method = "spearman") - cor(x2, method = "spearman")) /
+          abs(cor(x1, method = "spearman"))) / (2 * length(x1))
   l1 <- lm(as.matrix(x1[, 1]) ~ as.matrix(x1[, -1]))$coeff
   l2 <- lm(as.matrix(x2[, 1]) ~ as.matrix(x2[, -1]))$coeff
-  adlm <- sum(abs(l1[2:length(l1)] - l2[2:length(l2)]), na.rm=TRUE)
-  # if (robReg == TRUE) { l1 <- lqs(as.matrix(x1[, 1]) ~ as.matrix(x1[, -1]),
-  # method='lts')$coeff l2 <- lqs(as.matrix(x2[, 1]) ~ as.matrix(x2[, -1]),
-  # method='lts')$coeff adlts <- sum(abs(l1[2:length(l1)] - l2[2:length(l2)])) }
-  # else {
+  adlm <- sum(abs(l1[2:length(l1)] - l2[2:length(l2)]), na.rm = TRUE)
   adlts <- NA
-  # }
   if (dim(x1)[1] > dim(x1)[2] && dim(x2)[1] > dim(x2)[2]) {
-    p1 <- princomp(x1)
-    p2 <- princomp(x2)
+    p1 <- stats::princomp(x1)
+    p2 <- stats::princomp(x2)
     cp1 <- colMeans(p1$load)
     cp2 <- colMeans(p2$load)
     apcaload <- sum(abs(cp1 - cp2)/abs(cp1))
@@ -1022,17 +1007,39 @@ summary.micro <- function(object, ...) {
   atotals <- sum(abs((cmx1 - cmx2)/cmx1))
   pmtotals <- sum((cmx2 - cmx1)/cmx1)
   util1 <- dUtility(x1, x2)
-  deigenvalues <- dUtility(x1, x2, method="eigen")
+  deigenvalues <- dUtility(x1, x2, method = "eigen")
   risk0 <- dRisk(x1, x2)
-  r <- dRiskRMD(x1, x2, k=0.7)
+  r <- dRiskRMD(x1, x2, k = 0.7)
   risk1 <- r$risk1
   risk2 <- r$risk2
   wrisk1 <- r$wrisk1
   wrisk2 <- r$wrisk2
-  list(meansx=summary(x1), meansxm=summary(x2), amean=amean, amedian=amedian,
-    aonestep=aonestep, devvar=devvar, amad=amad, acov=acov, arcov=arcov,
-    acor=acor, arcor=arcor, acors=acors, adlm=adlm, adlts=adlts, apcaload=apcaload,
-    apppcaload=apppcaload, totalsOrig=cmx1, totalsMicro=cmx2, atotals=atotals,
-    pmtotals=pmtotals, util1=util1, deigenvalues=deigenvalues, risk0=risk0,
-    risk1=risk1, risk2=risk2, wrisk1=wrisk1, wrisk2=wrisk2)
+  list(
+    meansx = summary(x1),
+    meansxm = summary(x2),
+    amean = amean,
+    amedian = amedian,
+    aonestep = aonestep,
+    devvar = devvar,
+    amad = amad,
+    acov = acov,
+    arcov = arcov,
+    acor = acor,
+    arcor = arcor,
+    acors = acors,
+    adlm = adlm,
+    adlts = adlts,
+    apcaload = apcaload,
+    apppcaload = apppcaload,
+    totalsOrig = cmx1,
+    totalsMicro = cmx2,
+    atotals = atotals,
+    pmtotals = pmtotals,
+    util1 = util1,
+    deigenvalues = deigenvalues,
+    risk0 = risk0,
+    risk1 = risk1,
+    risk2 = risk2,
+    wrisk1 = wrisk1,
+    wrisk2 = wrisk2)
 }

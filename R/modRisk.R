@@ -214,17 +214,17 @@ definition=function(obj, method="default", weights, formulaM, bound=Inf) {
   if ( method == "IPF" ) {
     form <- as.formula(paste(c("counts", as.character(formulaM)), collapse=""))
     form2 <- as.formula(paste(c("inclProb", as.character(formulaM)), collapse=""))
-    tab <- xtabs(form, x)
-    tabP <- xtabs(form2, x)
+    tab <- stats::xtabs(form, x)
+    tabP <- stats::xtabs(form2, x)
   }
 
   # running the model with the chosen formula
   if ( method == "IPF" ) {
     mod <- loglm(form, data=tab, fitted=TRUE)
   } else {
-    mod <- glm(form, data=x, family=poisson())
+    mod <- glm(form, data=x, family=stats::poisson())
   }
-  lambda <- fitted(mod)
+  lambda <- stats::fitted(mod)
 
   # calculate risk and estimate
   # 1. the number of sample uniques that are population unique
@@ -240,8 +240,23 @@ definition=function(obj, method="default", weights, formulaM, bound=Inf) {
     lambda <- as.data.frame.table(lambda, stringsAsFactors=FALSE)
     colnames(lambda)[ncol(lambda)] <- "Fk"
     lambda <- data.table(lambda, key=vars)
-    lambda <- lambda[,lapply(.SD, as.numeric)]
+    #lambda <- lambda[,lapply(.SD, as.numeric)]
+    for(v in vars){
+      if(class(x[[v]])!=class(lambda[[v]])){
+        if(is.character(x[[v]])){
+          lambda[[v]] <- as.character(lambda[[v]])
+        }else if(is.integer(x[[v]])){
+          lambda[[v]] <- as.integer(lambda[[v]])
+        }else if(is.numeric(x[[v]])){
+          lambda[[v]] <- as.numeric(lambda[[v]])
+        }else if(is.factor(x[[v]])){
+          lambda[[v]] <- as.factor(lambda[[v]])
+        }
+      }
+    }
   }
+
+
   x <- merge(x, lambda, all.x=TRUE)
   x[is.na(Fk), Fk:=0]
   x <- x[0 < x$counts & x$counts <= bound]
@@ -252,7 +267,7 @@ definition=function(obj, method="default", weights, formulaM, bound=Inf) {
   gr2 <- file_risk(x$counts, r2)
 
   res <- list(gr1=gr1, gr2=gr2, gr1perc=gr1*100, gr2perc=gr2*100,
-              method=method, model=formulaM, fitted=fitted(mod), inclProb=x$inclProb)
+              method=method, model=formulaM, fitted=stats::fitted(mod), inclProb=x$inclProb)
   class(res) <- "modrisk"
   res
 })
@@ -270,9 +285,9 @@ definition=function(obj, method="default", weights, formulaM, bound=Inf) {
 #' @method print modrisk
 #' @export
 print.modrisk <- function(x, ...) {
-  cat(paste0("The estimated model (using method '",x$method,"') was:\n"))
-  cat(paste0("\t",paste(as.character(x$model), collapse=" "),"\n"))
-  cat("global risk-measures:\n")
-  cat(paste0("\tRisk-Measure 1: ", prettyF(x$gr1, digits=3)," (",prettyF(x$gr1perc, digits=3)," %)\n"))
-  cat(paste0("\tRisk-Measure 2: ", prettyF(x$gr2, digits=3)," (",prettyF(x$gr2perc, digits=3)," %)\n"))
+  message(paste0("The estimated model (using method '",x$method,"') was:\n"))
+  message(paste0("\t",paste(as.character(x$model), collapse=" "),"\n"))
+  message("global risk-measures:\n")
+  message(paste0("\tRisk-Measure 1: ", prettyF(x$gr1, digits=3)," (",prettyF(x$gr1perc, digits=3)," %)\n"))
+  message(paste0("\tRisk-Measure 2: ", prettyF(x$gr2, digits=3)," (",prettyF(x$gr2perc, digits=3)," %)\n"))
 }

@@ -14,6 +14,8 @@
 #' @import shinyBS
 #' @import shiny
 #' @import rhandsontable
+#' @importFrom DT datatable
+#' @importFrom prettydoc html_pretty
 #' @importFrom rmarkdown pandoc_available
 #' @importFrom rmarkdown render
 #' @importFrom graphics axis

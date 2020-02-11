@@ -2,7 +2,7 @@ Package: sdcMicro
 Type: Package
 Title: Statistical Disclosure Control Methods for Anonymization of Data
         and Risk Estimation
-Version: 5.5.0
+Version: 5.5.1
 Authors@R: c(
   person("Matthias", "Templ", email="matthias.templ@gmail.com", role = c("aut", "cre"), comment=c(ORCID="0000-0002-8638-5276")),
   person("Bernhard", "Meindl", email = "Bernhard.Meindl@statistik.gv.at", role = c("aut")),
@@ -37,14 +37,14 @@ Collate: '0classes.r' 'addGhostVars.R' 'addNoise.r' 'aux_functions.r'
         'shuffle.R' 'suda2.R' 'timeEstimation.R' 'topBotCoding.R'
         'valTable.R' 'zzz.R' 'printFunctions.R' 'mafast.R' 'maG.R'
         'sdcApp.R' 'show_sdcMicroObj.R'
-RoxygenNote: 7.0.0
+RoxygenNote: 7.0.2
 VignetteBuilder: knitr
 Encoding: UTF-8
 NeedsCompilation: yes
-Packaged: 2019-11-20 12:15:09 UTC; matthias
+Packaged: 2020-02-11 09:39:55 UTC; matthias
 Author: Matthias Templ [aut, cre] (<https://orcid.org/0000-0002-8638-5276>),
   Bernhard Meindl [aut],
   Alexander Kowarik [aut] (<https://orcid.org/0000-0001-8598-4130>)
 Maintainer: Matthias Templ <matthias.templ@gmail.com>
 Repository: CRAN
-Date/Publication: 2019-11-21 10:40:03 UTC
+Date/Publication: 2020-02-11 13:40:02 UTC

@@ -1,4 +1,4 @@
-## ----echo=FALSE, results='hide'------------------------------------------
+## ----echo=FALSE, results='hide'-----------------------------------------------
 f1 <- function(x){
   library(sdcMicro)
   truth <- weighted.mean(x$earningsMonth, x$GrossingUpFactor.x)
@@ -36,7 +36,7 @@ text(x=0.1,y=0.5, "good", cex=1.5)
 text(x=0.11,y=1.8, "worst data", cex=1.5)
 legend("right", legend=c("method1","method2"), lty=c(1,2))
 
-## ----freq, echo=FALSE, results='hide'------------------------------------
+## ----freq, echo=FALSE, results='hide'-----------------------------------------
 library(sdcMicro)
 library(xtable, quietly=TRUE)
 data(francdat, package="sdcMicro")   ## toy data set
@@ -50,17 +50,17 @@ df <- xtable::xtable(df, digits=c(0,0,0,0,0,1,3,0,1), align = "|l|llll|l|l|ll|",
 caption="Example of sample and estimated population frequency counts.",
 label="listingFreq")
 
-## ----freqprint, echo=FALSE, results='asis'-------------------------------
+## ----freqprint, echo=FALSE, results='asis'------------------------------------
 print(df,include.rownames = getOption("xtable.include.rownames", TRUE), caption.placement="top")
 
-## ----echo=FALSE----------------------------------------------------------
+## ----echo=FALSE---------------------------------------------------------------
 data(testdata)
 sdc <- createSdcObj(testdata,
 keyVars=c('urbrur','roof','walls','water','electcon','relat','sex'),
 numVars=c('expend','income','savings'), w='sampling_weight', hhId ='ori_hid')
 print(sdc, "risk")
 
-## ----microaggregation, echo=FALSE----------------------------------------
+## ----microaggregation, echo=FALSE---------------------------------------------
 df <- francdat[,c(1,3,7)]
 df <- cbind(df, microaggregation(df, aggr=2)$mx)
 colnames(df)[4:6] <- paste("Mic",1:3, sep="")
@@ -68,10 +68,10 @@ df <- xtable(df, digits=c(0,2,3,0,2,2,1), align = "|l|lll|lll|",
 caption="Example of micro-aggregation. Columns 1-3 contain the original variables, columns 4-6 the micro-aggregated values.",
 label="listingMicroaggregation")
 
-## ----allprint, echo=FALSE, results='asis'--------------------------------
+## ----allprint, echo=FALSE, results='asis'-------------------------------------
 print(df,include.rownames = getOption("xtable.include.rownames", TRUE), caption.placement="top")
 
-## ----results='hide', echo=FALSE, eval=TRUE-------------------------------
+## ----results='hide', echo=FALSE, eval=TRUE------------------------------------
 require(laeken, quiet=TRUE)
 data(ses)
 

@@ -42,12 +42,12 @@
 #' Notes in Computer Science, vol. 3050, pp. 149-161, 2004.  ISSN 0302-9743.
 #' Vol. Privacy in Statistical Databases, eds. J. Domingo-Ferrer and V. Torra,
 #' Berlin: Springer-Verlag.
-#' \url{http://crises-deim.urv.cat/webCrises/publications/isijcr/lncs3050OntheSec.pdf},
+#' \doi{10.1007/978-3-540-25955-8_12},
 #'
 #' Ting, D. Fienberg, S.E. and Trottini, M. \dQuote{ROMM Methodology for
 #' Microdata Release} Joint UNECE/Eurostat work session on statistical data
 #' confidentiality, Geneva, Switzerland, 2005,
-#' \url{http://www.unece.org/fileadmin/DAM/stats/documents/ece/ces/ge.46/2005/wp.11.e.pdf}
+#' \url{https://www.unece.org/fileadmin/DAM/stats/documents/ece/ces/ge.46/2005/wp.11.e.pdf}
 #'
 #' Ting, D., Fienberg, S.E., Trottini, M.  \dQuote{Random orthogonal matrix
 #' masking methodology for microdata release}, International Journal of
@@ -107,7 +107,7 @@ definition=function(obj, variables, noise=150, method="additive", ...) {
   obj <- nextSdcObj(obj)
   if (length(variables) == 1) {
     x1tmp <- cbind(0, x[, variables])
-    x[, variables] <- addNoiseWORK(x1tmp, noise=noise, method=method, ...)$xm[, 2, drop=FALSE]
+    x[, variables] <- addNoiseWORK(x1tmp, noise=noise, method=method, ...)$xm[, 2, drop=TRUE]
   } else {
     x[, variables] <- addNoiseWORK(x=x[, variables], noise=noise, method=method, ...)$xm
   }

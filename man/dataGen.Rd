@@ -47,8 +47,7 @@ sdc <- createSdcObj(testdata2,
 sdc <- dataGen(sdc)
 }
 \references{
-Have a look at
-\url{http://crises2-deim.urv.cat/docs/publications/lncs/443.pdf}
+Have a look at \doi{10.1007/978-3-540-25955-8_24}
 }
 \seealso{
 \code{\link{sdcMicroObj-class}}, \code{\link{shuffle}}

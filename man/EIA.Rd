@@ -4,7 +4,8 @@
 \name{EIA}
 \alias{EIA}
 \title{EIA data set}
-\format{A data frame with 4092 observations on the following 15 variables.
+\format{
+A data frame with 4092 observations on the following 15 variables.
 \describe{
 \item{UTILITYID}{UNIQUE UTILITY IDENTIFICATION NUMBER}
 \item{UTILNAME}{UTILITY NAME. A factor with levels \code{4-County
@@ -141,7 +142,8 @@ Assn} \code{Yellowstone Vlly Elec Coop Inc}}
 \item{OTHREVENUE}{REVENUE FROM SALES TO OTHER CONSUMERS}
 \item{OTHRSALES}{SALES TO OTHER CONSUMERS}
 \item{TOTREVENUE}{REVENUE FROM SALES TO ALL CONSUMERS}
-\item{TOTSALES}{SALES TO ALL CONSUMERS}}}
+\item{TOTSALES}{SALES TO ALL CONSUMERS}}
+}
 \source{
 Public use file from the CASC project.
 }
@@ -158,6 +160,6 @@ head(EIA)
 Brand, R. and Domingo-Ferrer, J. and Mateo-Sanz, J.M., Reference
 data sets to test and compare SDC methods for protection of numerical
 microdata. Unpublished.
-\url{http://neon.vb.cbs.nl/casc/CASCrefmicrodata.pdf}
+\url{https://research.cbs.nl/casc/CASCrefmicrodata.pdf}
 }
 \keyword{datasets}

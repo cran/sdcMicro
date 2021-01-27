@@ -4,7 +4,8 @@
 \name{Tarragona}
 \alias{Tarragona}
 \title{Tarragona data set}
-\format{A data frame with 834 observations on the following 13 variables.
+\format{
+A data frame with 834 observations on the following 13 variables.
 \describe{
 \item{FIXED.ASSETS}{a numeric vector}
 \item{CURRENT.ASSETS}{a numeric vector}
@@ -18,7 +19,8 @@
 \item{OPERATING.PROFIT}{a numeric vector}
 \item{FINANCIAL.OUTCOME}{a numeric vector}
 \item{GROSS.PROFIT}{a numeric vector}
-\item{NET.PROFIT}{a numeric vector}}}
+\item{NET.PROFIT}{a numeric vector}}
+}
 \source{
 Public use data from the CASC project.
 }
@@ -36,6 +38,6 @@ dim(Tarragona)
 Brand, R. and Domingo-Ferrer, J. and Mateo-Sanz, J.M., Reference
 data sets to test and compare SDC methods for protection of numerical
 microdata. Unpublished.
-\url{http://neon.vb.cbs.nl/casc/CASCrefmicrodata.pdf}
+\url{https://research.cbs.nl/casc/CASCrefmicrodata.pdf}
 }
 \keyword{datasets}

@@ -4,7 +4,8 @@
 \name{CASCrefmicrodata}
 \alias{CASCrefmicrodata}
 \title{Census data set}
-\format{A data frame sampled from year 1995 with 1080 observations on the
+\format{
+A data frame sampled from year 1995 with 1080 observations on the
 following 13 variables.  \describe{
 \item{AFNLWGT}{Final weight (2 implied decimal places)}
 \item{AGI}{Adjusted gross income}
@@ -18,7 +19,8 @@ following 13 variables.  \describe{
 \item{PEARNVAL}{Total person earnings}
 \item{FICA}{Soc. sec. retirement payroll deduction}
 \item{WSALVAL}{Amount: Total Wage and salary}
-\item{ERNVAL}{Business or Farm net earnings}}}
+\item{ERNVAL}{Business or Farm net earnings}}
+}
 \source{
 Public use file from the CASC project.  More information on this
 test data can be found in the paper listed below.
@@ -37,6 +39,6 @@ str(CASCrefmicrodata)
 Brand, R. and Domingo-Ferrer, J. and Mateo-Sanz, J.M., Reference
 data sets to test and compare SDC methods for protection of numerical
 microdata.  Unpublished.
-\url{http://neon.vb.cbs.nl/casc/CASCrefmicrodata.pdf}
+\url{https://research.cbs.nl/casc/CASCrefmicrodata.pdf}
 }
 \keyword{datasets}

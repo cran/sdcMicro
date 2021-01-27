@@ -24,7 +24,7 @@
 #' @references Brand, R. and Domingo-Ferrer, J. and Mateo-Sanz, J.M., Reference
 #' data sets to test and compare SDC methods for protection of numerical
 #' microdata.  Unpublished.
-#' \url{http://neon.vb.cbs.nl/casc/CASCrefmicrodata.pdf}
+#' \url{https://research.cbs.nl/casc/CASCrefmicrodata.pdf}
 #' @source Public use file from the CASC project.  More information on this
 #' test data can be found in the paper listed below.
 #' @keywords datasets
@@ -183,7 +183,7 @@ NULL
 #' @references Brand, R. and Domingo-Ferrer, J. and Mateo-Sanz, J.M., Reference
 #' data sets to test and compare SDC methods for protection of numerical
 #' microdata. Unpublished.
-#' \url{http://neon.vb.cbs.nl/casc/CASCrefmicrodata.pdf}
+#' \url{https://research.cbs.nl/casc/CASCrefmicrodata.pdf}
 #' @source Public use file from the CASC project.
 #' @keywords datasets
 #' @examples
@@ -220,7 +220,7 @@ NULL
 #' @references Brand, R. and Domingo-Ferrer, J. and Mateo-Sanz, J.M., Reference
 #' data sets to test and compare SDC methods for protection of numerical
 #' microdata. Unpublished.
-#' \url{http://neon.vb.cbs.nl/casc/CASCrefmicrodata.pdf}
+#' \url{https://research.cbs.nl/casc/CASCrefmicrodata.pdf}
 #' @source Public use data from the CASC project.
 #' @keywords datasets
 #' @examples
@@ -269,7 +269,7 @@ NULL
 #' \item{Key4}{Key variable 4. A numeric vector}
 #' \item{Num3}{a numeric vector}
 #' \item{w}{The weight vector. A numeric vector}}
-#' @source \url{http://neon.vb.cbs.nl/casc/Deliv/12d1.pdf}
+#' @source \url{https://research.cbs.nl/casc/deliv/12d1.pdf}
 #' @keywords datasets
 #' @examples
 #'

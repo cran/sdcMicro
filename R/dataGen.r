@@ -20,8 +20,7 @@
 #' general, not follows a multivariate normal distribution.
 #' @author Matthias Templ
 #' @seealso \code{\link{sdcMicroObj-class}}, \code{\link{shuffle}}
-#' @references Have a look at
-#' \url{http://crises2-deim.urv.cat/docs/publications/lncs/443.pdf}
+#' @references Have a look at \doi{10.1007/978-3-540-25955-8_24}
 #' @keywords manip
 #' @export
 #' @examples

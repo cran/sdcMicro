@@ -4,7 +4,8 @@
 \name{francdat}
 \alias{francdat}
 \title{data from the casc project}
-\format{A data frame with 8 observations on the following 8 variables.
+\format{
+A data frame with 8 observations on the following 8 variables.
 \describe{
 \item{Num1}{a numeric vector}
 \item{Key1}{Key variable 1. A numeric vector}
@@ -13,9 +14,10 @@
 \item{Key3}{Key variable 3. A numeric vector}
 \item{Key4}{Key variable 4. A numeric vector}
 \item{Num3}{a numeric vector}
-\item{w}{The weight vector. A numeric vector}}}
+\item{w}{The weight vector. A numeric vector}}
+}
 \source{
-\url{http://neon.vb.cbs.nl/casc/Deliv/12d1.pdf}
+\url{https://research.cbs.nl/casc/deliv/12d1.pdf}
 }
 \description{
 Small synthetic data from Capobianchi, Polettini, Lucarelli

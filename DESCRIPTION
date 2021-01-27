@@ -2,7 +2,7 @@ Package: sdcMicro
 Type: Package
 Title: Statistical Disclosure Control Methods for Anonymization of Data
         and Risk Estimation
-Version: 5.5.1
+Version: 5.6.0
 Authors@R: c(
   person("Matthias", "Templ", email="matthias.templ@gmail.com", role = c("aut", "cre"), comment=c(ORCID="0000-0002-8638-5276")),
   person("Bernhard", "Meindl", email = "Bernhard.Meindl@statistik.gv.at", role = c("aut")),
@@ -28,23 +28,23 @@ URL: https://github.com/sdcTools/sdcMicro
 Collate: '0classes.r' 'addGhostVars.R' 'addNoise.r' 'aux_functions.r'
         'createNewID.R' 'dataGen.r' 'dataSets.R' 'dRisk.R' 'dRiskRMD.R'
         'dUtility.R' 'freqCalc.r' 'globalRecode.R' 'groupAndRename.R'
-        'GUIfunctions.R' 'indivRisk.R' 'LLmodGlobalRisk.R'
-        'LocalRecProg.R' 'localSupp.R' 'localSuppression.R' 'mdav.R'
-        'measure_risk.R' 'methods.r' 'microaggregation.R' 'modRisk.R'
+        'GUIfunctions.R' 'indivRisk.R' 'LocalRecProg.R' 'localSupp.R'
+        'localSuppression.R' 'mdav.R' 'measure_risk.R' 'methods.r'
+        'microaggregation.R' 'modRisk.R'
         'muargus_compatibility_functions.R' 'mvTopCoding.R'
         'plotFunctions.R' 'plotMicro.R' 'pram.R' 'rankSwap.R'
         'RcppExports.R' 'report.R' 'riskyCells.R' 'sdcMicro-package.R'
         'shuffle.R' 'suda2.R' 'timeEstimation.R' 'topBotCoding.R'
         'valTable.R' 'zzz.R' 'printFunctions.R' 'mafast.R' 'maG.R'
         'sdcApp.R' 'show_sdcMicroObj.R'
-RoxygenNote: 7.0.2
+RoxygenNote: 7.1.1
 VignetteBuilder: knitr
 Encoding: UTF-8
 NeedsCompilation: yes
-Packaged: 2020-02-11 09:39:55 UTC; matthias
+Packaged: 2021-01-23 15:35:36 UTC; matthias
 Author: Matthias Templ [aut, cre] (<https://orcid.org/0000-0002-8638-5276>),
   Bernhard Meindl [aut],
   Alexander Kowarik [aut] (<https://orcid.org/0000-0001-8598-4130>)
 Maintainer: Matthias Templ <matthias.templ@gmail.com>
 Repository: CRAN
-Date/Publication: 2020-02-11 13:40:02 UTC
+Date/Publication: 2021-01-27 10:40:02 UTC

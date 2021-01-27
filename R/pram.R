@@ -35,7 +35,7 @@
 #' @return a modified [sdcMicroObj-class] object or a new object containing
 #' original and post-randomized variables (with suffix "_pram").
 #' @author Alexander Kowarik, Matthias Templ, Bernhard Meindl
-#' @references \url{http://www.gnu.org/software/glpk}
+#' @references \url{https://www.gnu.org/software/glpk/}
 #'
 #' Kowarik, A. and Templ, M. and Meindl, B. and Fonteneau, F. and Prantner, B.:
 #' *Testing of IHSN Cpp Code and Inclusion of New Methods into sdcMicro*,
@@ -452,20 +452,20 @@ pramWORK <- function(data, variables=NULL, strata_variables=NULL, params) {
   do.pram <- function(x, Rs) {
     # special case: na-only input
     if (all(is.na(x))) {
-      return(list(x=x, xpramed=x))
+      return(list(x = x, xpramed = x))
     }
     xpramed <- x
     levs <- levels(xpramed)
 
     # perform sampling
-    for ( i in 1:length(levs) ) {
-      ii <- which(xpramed==levs[i])
+    for (i in 1:length(levs)) {
+      ii <- which(x == levs[i])
       if (length(ii) > 0) {
-        xpramed[ii] <- sample(levs, length(ii), prob=Rs[i, ], replace=TRUE)
+        xpramed[ii] <- sample(levs, length(ii), prob = Rs[i,], replace = TRUE)
       }
     }
-    xpramed <- factor(xpramed, levels=levs)
-    return(list(x=x, xpramed=xpramed))
+    xpramed <- factor(xpramed, levels = levs)
+    return(list(x = x, xpramed = xpramed))
   }
 
   idvarpram <- tmpfactor_for_pram <- NULL

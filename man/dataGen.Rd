@@ -47,7 +47,8 @@ sdc <- createSdcObj(testdata2,
 sdc <- dataGen(sdc)
 }
 \references{
-Have a look at \doi{10.1007/978-3-540-25955-8_24}
+Mateo-Sanz, Martinez-Balleste, Domingo-Ferrer. Fast Generation of Accurate Synthetic Microdata. 
+International Workshop on Privacy in Statistical Databases PSD 2004: Privacy in Statistical Databases, pp 298-306.
 }
 \seealso{
 \code{\link{sdcMicroObj-class}}, \code{\link{shuffle}}
@@ -55,4 +56,3 @@ Have a look at \doi{10.1007/978-3-540-25955-8_24}
 \author{
 Matthias Templ
 }
-\keyword{manip}

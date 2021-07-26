@@ -20,8 +20,8 @@
 #' general, not follows a multivariate normal distribution.
 #' @author Matthias Templ
 #' @seealso \code{\link{sdcMicroObj-class}}, \code{\link{shuffle}}
-#' @references Have a look at \doi{10.1007/978-3-540-25955-8_24}
-#' @keywords manip
+#' @references Mateo-Sanz, Martinez-Balleste, Domingo-Ferrer. Fast Generation of Accurate Synthetic Microdata. 
+#' International Workshop on Privacy in Statistical Databases PSD 2004: Privacy in Statistical Databases, pp 298-306.
 #' @export
 #' @examples
 #' data(mtcars)

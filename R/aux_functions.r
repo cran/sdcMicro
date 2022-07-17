@@ -116,13 +116,32 @@ createSdcObj <- function(dat, keyVars, numVars=NULL, pramVars=NULL, ghostVars=NU
   hhId=NULL, strataVar=NULL, sensibleVar=NULL, excludeVars=NULL, options=NULL, seed=NULL,
   randomizeRecords=FALSE, alpha=1) {
   obj <- new("sdcMicroObj")
-  options <- list()
+
+  if(!is.null(options)){
+    # check if options is a named list
+    if(!(is.list(options) && !is.null(names(options)))){
+      stop("`options` must be either `NULL` or a named list")
+    }
+  }
   if (!is.null(seed) && is.numeric(seed)) {
     ss <- round(seed)
     set.seed(ss)
     options$seed <- ss
   } else {
     options$seed <- NA
+  }
+
+  # max_size for undo-functionality (refers to rows of data.frame input
+  # can be set via env-var `sdcMicro_maxsize_undo`
+  res <- tryCatch(
+    expr = as.numeric(Sys.getenv("sdcMicro_maxsize_undo")),
+    error = function(e) e,
+    warning = function(w) w
+  )
+  if (inherits(res, "error") || is.na(res) || res < 1) {
+    options$max_size <- 1e5
+  } else {
+    options$max_size <- res
   }
 
   if (!is.data.frame(dat)) {
@@ -284,21 +303,39 @@ setGeneric("nextSdcObjX", function(obj) {
 })
 
 setMethod(f="nextSdcObjX", signature=c("sdcMicroObj"), definition=function(obj) {
-  options <- get.sdcMicroObj(obj, type="options")
+  options <- get.sdcMicroObj(obj, type = "options")
   if (("noUndo" %in% options)) {
     return(obj)
   }
-  if (nrow(obj@origData) > 1e+05) {
-    warnMsg <- "No previous states are saved because your data set has more than 100 000 observations.\n"
-    obj <- addWarning(obj, warnMsg=warnMsg, method="nextSdcObj", variable=NA)
+  if (nrow(obj@origData) > options$max_size) {
+    warnMsg <- paste("No previous states are saved because your data set has more than", options$max_size, "observations.\n")
+    obj <- addWarning(
+      obj = obj,
+      warnMsg = warnMsg,
+      method = "nextSdcObj",
+      variable = NA
+    )
     warning(warnMsg)
     return(obj)
   }
-  if (length(grep("maxUndo", options)) > 0)
-    maxUndo <- as.numeric(substr(options[grep("maxUndo", options)], 9, stop=nchar(options[grep("maxUndo",
-      options)], type="width"))) else maxUndo <- 1
-  obj <- deletePrevSave(obj, maxUndo)
-  obj <- set.sdcMicroObj(obj, type="prev", input=list(obj))
+  if (length(grep("maxUndo", options)) > 0) {
+    maxUndo <- as.numeric(substr(
+      x = options[grep("maxUndo", options)],
+      start = 9,
+      stop = nchar(options[grep("maxUndo", options)], type = "width")
+    ))
+  } else {
+    maxUndo <- 1
+  }
+  obj <- deletePrevSave(
+    obj = obj,
+    m = maxUndo
+  )
+  obj <- set.sdcMicroObj(
+    object = obj,
+    type = "prev",
+    input = list(obj)
+  )
   return(obj)
 })
 
@@ -405,42 +442,48 @@ setMethod(f="extractManipDataX", signature=c("sdcMicroObj"), definition=function
   ignoreGhostVars=FALSE, ignoreStrataVar=FALSE, randomizeRecords="no") {
   hhid <- clusterid <- newid <- N <- id <- NULL
   if (!randomizeRecords %in% c("no","simple","byHH", "withinHH")) {
-    stop("invalid value in argument 'randomizeRecords'\n")
+    stop("invalid value in argument 'randomizeRecords'", call. = FALSE)
   }
-  o <- get.sdcMicroObj(obj, type="origData")
-  k <- get.sdcMicroObj(obj, type="manipKeyVars")
-  p <- get.sdcMicroObj(obj, type="manipPramVars")
-  n <- get.sdcMicroObj(obj, type="manipNumVars")
-  g <- get.sdcMicroObj(obj, type="manipGhostVars")
-  s <- get.sdcMicroObj(obj, type="manipStrataVar")
-  origKeys <- o[,colnames(k)]
-  if (!is.null(k) && !ignoreKeyVars)
+  o <- get.sdcMicroObj(obj, type = "origData")
+  k <- get.sdcMicroObj(obj, type = "manipKeyVars")
+  p <- get.sdcMicroObj(obj, type = "manipPramVars")
+  n <- get.sdcMicroObj(obj, type = "manipNumVars")
+  g <- get.sdcMicroObj(obj, type = "manipGhostVars")
+  s <- get.sdcMicroObj(obj, type = "manipStrataVar")
+  origKeys <- o[, colnames(k), drop = FALSE]
+  if (!is.null(k) && !ignoreKeyVars) {
     o[, colnames(k)] <- k
-  if (!is.null(p) && !ignorePramVars)
+  }
+  if (!is.null(p) && !ignorePramVars) {
     o[, colnames(p)] <- p
-  if (!is.null(n) && !ignoreNumVars)
+  }
+  if (!is.null(n) && !ignoreNumVars) {
     o[, colnames(n)] <- n
-  if (!is.null(g) && !ignoreGhostVars)
+  }
+  if (!is.null(g) && !ignoreGhostVars) {
     o[, colnames(g)] <- g
-  if (!is.null(s) && !ignoreStrataVar)
+  }
+  if (!is.null(s) && !ignoreStrataVar) {
     o$sdcGUI_strataVar <- s
+  }
   ## quick and dirty: ensure that keyVars are factors:
   if (!is.null(k) && !ignoreKeyVars) {
-    for (i in 1:length(colnames(k))) {
-      cc <- class(origKeys[, colnames(k)[i]])
-      v_p <- o[,colnames(k)[i]]
-      if (cc!=class(v_p)) {
-        if (cc=="integer") {
-          o[,colnames(k)[i]] <- as.integer(v_p)
+    for (i in seq_len(ncol(k))) {
+      cc <- class(origKeys[[colnames(k)[i]]])
+      vname <- colnames(k)[i]
+      v_p <- o[[vname]]
+      if (cc != class(v_p)) {
+        if (cc == "integer") {
+          o[[vname]] <- as.integer(v_p)
         }
-        if (cc=="character") {
-          o[,colnames(k)[i]] <- as.character(v_p)
+        if (cc == "character") {
+          o[[vname]] <- as.character(v_p)
         }
-        if (cc=="numeric") {
-          o[,colnames(k)[i]] <- as.numeric(v_p)
+        if (cc == "numeric") {
+          o[[vname]] <- as.numeric(v_p)
         }
-        if (cc=="logical") {
-          o[,colnames(k)[i]] <- as.logical(v_p)
+        if (cc == "logical") {
+          o[[vname]] <- as.logical(v_p)
         }
       }
     }
@@ -486,7 +529,7 @@ setMethod(f="extractManipDataX", signature=c("sdcMicroObj"), definition=function
 })
 
 addWarning <- function(obj, warnMsg, method, variable=NA) {
-  if (!class(obj)=="sdcMicroObj") {
+  if (!inherits(obj, "sdcMicroObj")) {
     stop("'obj' must be a of class 'sdcMicroObj'!\n")
   }
   if (!is.character(method)) {

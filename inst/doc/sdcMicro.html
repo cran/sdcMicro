@@ -12,7 +12,7 @@
 
 <meta name="author" content="Bernhard Meindl" />
 
-<meta name="date" content="2022-07-08" />
+<meta name="date" content="2022-07-22" />
 
 <title>Using the interactive GUI - sdcApp</title>
 
@@ -239,112 +239,135 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 <h1 class="title toc-ignore">Using the interactive GUI - sdcApp</h1>
 <h4 class="author">Bernhard Meindl</h4>
-<h4 class="date">2022-07-08</h4>
+<h4 class="date">2022-07-22</h4>
 
 
 <div id="TOC">
 <ul>
-<li><a href="#introduction-and-main-features">Introduction and Main
+<li><a href="#introduction-and-main-features" id="toc-introduction-and-main-features">Introduction and Main
 Features</a></li>
-<li><a href="#about">About/Help</a></li>
-<li><a href="#microdata">Microdata</a>
+<li><a href="#about" id="toc-about">About/Help</a></li>
+<li><a href="#microdata" id="toc-microdata">Microdata</a>
 <ul>
-<li><a href="#upload_microdata">Upload microdata</a>
+<li><a href="#upload_microdata" id="toc-upload_microdata">Upload
+microdata</a>
 <ul>
-<li><a href="#testdatainternal-data">Testdata/internal data</a></li>
-<li><a href="#r-dataset-.rdata">R-dataset (.rdata)</a></li>
-<li><a href="#spss-file-.sav">SPSS-file (.sav)</a></li>
-<li><a href="#sas-file-.sasb7dat">SAS-file (.sasb7dat)</a></li>
-<li><a href="#csv-file-.csv-.txt">CSV-file (.csv, .txt)</a></li>
-<li><a href="#stata-file-.dta">STATA-file (.dta)</a></li>
-<li><a href="#additional_options">Additional options</a></li>
+<li><a href="#testdatainternal-data" id="toc-testdatainternal-data">Testdata/internal data</a></li>
+<li><a href="#r-dataset-.rdata" id="toc-r-dataset-.rdata">R-dataset
+(.rdata)</a></li>
+<li><a href="#spss-file-.sav" id="toc-spss-file-.sav">SPSS-file
+(.sav)</a></li>
+<li><a href="#sas-file-.sasb7dat" id="toc-sas-file-.sasb7dat">SAS-file
+(.sasb7dat)</a></li>
+<li><a href="#csv-file-.csv-.txt" id="toc-csv-file-.csv-.txt">CSV-file
+(.csv, .txt)</a></li>
+<li><a href="#stata-file-.dta" id="toc-stata-file-.dta">STATA-file
+(.dta)</a></li>
+<li><a href="#additional_options" id="toc-additional_options">Additional
+options</a></li>
 </ul></li>
-<li><a href="#modify_microdata">Modify microdata</a>
+<li><a href="#modify_microdata" id="toc-modify_microdata">Modify
+microdata</a>
 <ul>
-<li><a href="#display_microdata">Display microdata</a></li>
-<li><a href="#explore_inputvars">Explore variables</a></li>
-<li><a href="#reset_inputvars">Reset variables</a></li>
-<li><a href="#use-subset-of-microdata">Use subset of microdata</a></li>
-<li><a href="#convert-numeric-to-factor">Convert numeric to
-factor</a></li>
-<li><a href="#convert-variables-to-numeric">Convert variables to
+<li><a href="#display_microdata" id="toc-display_microdata">Display
+microdata</a></li>
+<li><a href="#explore_inputvars" id="toc-explore_inputvars">Explore
+variables</a></li>
+<li><a href="#reset_inputvars" id="toc-reset_inputvars">Reset
+variables</a></li>
+<li><a href="#use-subset-of-microdata" id="toc-use-subset-of-microdata">Use subset of microdata</a></li>
+<li><a href="#convert-numeric-to-factor" id="toc-convert-numeric-to-factor">Convert numeric to factor</a></li>
+<li><a href="#convert-variables-to-numeric" id="toc-convert-variables-to-numeric">Convert variables to
 numeric</a></li>
-<li><a href="#recode_factors_inputdata">Modify factor variable</a></li>
-<li><a href="#create_strata_var">Create a stratification
-variable</a></li>
-<li><a href="#set-specific-values-to-na">Set specific values to
+<li><a href="#recode_factors_inputdata" id="toc-recode_factors_inputdata">Modify factor variable</a></li>
+<li><a href="#create_strata_var" id="toc-create_strata_var">Create a
+stratification variable</a></li>
+<li><a href="#set-specific-values-to-na" id="toc-set-specific-values-to-na">Set specific values to
 <code>NA</code></a></li>
-<li><a href="#hierarchical-data">Hierarchical data</a></li>
+<li><a href="#hierarchical-data" id="toc-hierarchical-data">Hierarchical
+data</a></li>
 </ul></li>
 </ul></li>
-<li><a href="#anonymize">Anonymize</a>
+<li><a href="#anonymize" id="toc-anonymize">Anonymize</a>
 <ul>
-<li><a href="#setup_sdcproblem">Set up a problem</a></li>
-<li><a href="#anonymization_methods">Anonymization Methods</a>
+<li><a href="#setup_sdcproblem" id="toc-setup_sdcproblem">Set up a
+problem</a></li>
+<li><a href="#anonymization_methods" id="toc-anonymization_methods">Anonymization Methods</a>
 <ul>
-<li><a href="#view_analyze_existing_problem">View/Analyze existing
+<li><a href="#view_analyze_existing_problem" id="toc-view_analyze_existing_problem">View/Analyze existing
 sdcProblem</a>
 <ul>
-<li><a href="#show_sdc_summary">Show summary</a></li>
-<li><a href="#explore_sdc_vars">Explore variables</a></li>
-<li><a href="#add_ghostvars">Add linked variables</a></li>
-<li><a href="#create_new_ids">Create new IDs</a></li>
+<li><a href="#show_sdc_summary" id="toc-show_sdc_summary">Show
+summary</a></li>
+<li><a href="#explore_sdc_vars" id="toc-explore_sdc_vars">Explore
+variables</a></li>
+<li><a href="#add_ghostvars" id="toc-add_ghostvars">Add linked
+variables</a></li>
+<li><a href="#create_new_ids" id="toc-create_new_ids">Create new
+IDs</a></li>
 </ul></li>
-<li><a href="#anonymize_categorical">Anonymize categorical variables</a>
+<li><a href="#anonymize_categorical" id="toc-anonymize_categorical">Anonymize categorical variables</a>
 <ul>
-<li><a href="#recoding_sdcproblem">Recoding</a></li>
-<li><a href="#kanon">k-Anonymity</a></li>
-<li><a href="#pram_simple">PRAM (simple)</a></li>
-<li><a href="#pram_expert">PRAM (expert)</a></li>
-<li><a href="#supp_highrisk">Supress values with high risks</a></li>
+<li><a href="#recoding_sdcproblem" id="toc-recoding_sdcproblem">Recoding</a></li>
+<li><a href="#kanon" id="toc-kanon">k-Anonymity</a></li>
+<li><a href="#pram_simple" id="toc-pram_simple">PRAM (simple)</a></li>
+<li><a href="#pram_expert" id="toc-pram_expert">PRAM (expert)</a></li>
+<li><a href="#supp_highrisk" id="toc-supp_highrisk">Supress values with
+high risks</a></li>
 </ul></li>
-<li><a href="#anonymize_numerical">Anonymize numerical variables</a>
+<li><a href="#anonymize_numerical" id="toc-anonymize_numerical">Anonymize numerical variables</a>
 <ul>
-<li><a href="#top_bot_coding">Top-/Bottom Coding</a></li>
-<li><a href="#microaggregation">Microaggregation</a></li>
-<li><a href="#add_noise">Adding Noise</a></li>
-<li><a href="#rank_swapping">Rank Swapping</a></li>
+<li><a href="#top_bot_coding" id="toc-top_bot_coding">Top-/Bottom
+Coding</a></li>
+<li><a href="#microaggregation" id="toc-microaggregation">Microaggregation</a></li>
+<li><a href="#add_noise" id="toc-add_noise">Adding Noise</a></li>
+<li><a href="#rank_swapping" id="toc-rank_swapping">Rank
+Swapping</a></li>
 </ul></li>
 </ul></li>
 </ul></li>
-<li><a href="#risk_utility">Risk/Utility</a>
+<li><a href="#risk_utility" id="toc-risk_utility">Risk/Utility</a>
 <ul>
-<li><a href="#res_cat">Risk measures</a>
+<li><a href="#res_cat" id="toc-res_cat">Risk measures</a>
 <ul>
-<li><a href="#cat_risk_info">Information of risk</a></li>
-<li><a href="#suda2">Suda2 risk measure</a></li>
-<li><a href="#ldiv">l-Diversity risk measure</a></li>
+<li><a href="#cat_risk_info" id="toc-cat_risk_info">Information of
+risk</a></li>
+<li><a href="#suda2" id="toc-suda2">Suda2 risk measure</a></li>
+<li><a href="#ldiv" id="toc-ldiv">l-Diversity risk measure</a></li>
 </ul></li>
-<li><a href="#res_vis">Visualizations</a>
+<li><a href="#res_vis" id="toc-res_vis">Visualizations</a>
 <ul>
-<li><a href="#res_vis_plot">Barplot/Mosaicplot</a></li>
-<li><a href="#res_vis_tabulations">Tabulations</a></li>
-<li><a href="#res_vis_infoloss_recoding">Information loss</a></li>
-<li><a href="#res_vis_violating_kanon">Obs violating k-Anon</a></li>
+<li><a href="#res_vis_plot" id="toc-res_vis_plot">Barplot/Mosaicplot</a></li>
+<li><a href="#res_vis_tabulations" id="toc-res_vis_tabulations">Tabulations</a></li>
+<li><a href="#res_vis_infoloss_recoding" id="toc-res_vis_infoloss_recoding">Information loss</a></li>
+<li><a href="#res_vis_violating_kanon" id="toc-res_vis_violating_kanon">Obs violating k-Anon</a></li>
 </ul></li>
-<li><a href="#res_numrisk">Numerical risk measures</a>
+<li><a href="#res_numrisk" id="toc-res_numrisk">Numerical risk
+measures</a>
 <ul>
-<li><a href="#numres_summary_stats">Compare summary statistics</a></li>
-<li><a href="#numres_disclosure_risk">Disclosure Risk</a></li>
-<li><a href="#numres_infoloss">Information loss</a></li>
+<li><a href="#numres_summary_stats" id="toc-numres_summary_stats">Compare summary statistics</a></li>
+<li><a href="#numres_disclosure_risk" id="toc-numres_disclosure_risk">Disclosure Risk</a></li>
+<li><a href="#numres_infoloss" id="toc-numres_infoloss">Information
+loss</a></li>
 </ul></li>
 </ul></li>
-<li><a href="#export_data">Export Data</a>
+<li><a href="#export_data" id="toc-export_data">Export Data</a>
 <ul>
-<li><a href="#export_anonymized_data">Anonymized Data</a></li>
-<li><a href="#anonymization-report">Anonymization Report</a></li>
-<li><a href="#change-stata-labels">Change Stata Labels</a></li>
+<li><a href="#export_anonymized_data" id="toc-export_anonymized_data">Anonymized Data</a></li>
+<li><a href="#anonymization-report" id="toc-anonymization-report">Anonymization Report</a></li>
+<li><a href="#change-stata-labels" id="toc-change-stata-labels">Change
+Stata Labels</a></li>
 </ul></li>
-<li><a href="#reproducibility">Reproducibility</a>
+<li><a href="#reproducibility" id="toc-reproducibility">Reproducibility</a>
 <ul>
-<li><a href="#viewsave-the-current-script">View/Save the current
+<li><a href="#viewsave-the-current-script" id="toc-viewsave-the-current-script">View/Save the current
 script</a></li>
-<li><a href="#import-a-previously-saved-sdcproblem">Import a previously
-saved sdcProblem</a></li>
-<li><a href="#export_sdc_probleminstance">Export/Save the current
+<li><a href="#import-a-previously-saved-sdcproblem" id="toc-import-a-previously-saved-sdcproblem">Import a previously saved
+sdcProblem</a></li>
+<li><a href="#export_sdc_probleminstance" id="toc-export_sdc_probleminstance">Export/Save the current
 sdcProblem</a></li>
 </ul></li>
-<li><a href="#undo">Undo</a></li>
+<li><a href="#undo" id="toc-undo">Undo</a></li>
 </ul>
 </div>
 

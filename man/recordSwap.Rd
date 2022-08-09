@@ -77,7 +77,9 @@ rule is applied.}
 besides to hierarchy variables. These variables do not interfere with the
 procedure of finding a record to swap with or calculating risk. This
 parameter is only used at the end of the procedure when swapping the
-hierarchies.}
+hierarchies. We note that the variables to be used as `carry_along` should
+be at household level. In case it is detected that they are at individual
+level (different values within `hid`), a warning is given.}
 
 \item{return_swapped_id, }{boolean if `TRUE` the output includes an
 additional column showing the `hid` with which a record was swapped with.
@@ -99,7 +101,7 @@ reproducibility. if `NULL` a random seed will be set using `sample(1e5,1)`.}
 [createDat()] returns dummy data to illustrate
 targeted record swapping. The generated data contain
 household ids (`hid`), geographic variables
-(`nuts1`, `nuts2`, `nuts3`, `lau2`)as well as some
+(`nuts1`, `nuts2`, `nuts3`, `lau2`) as well as some
 other household or personal variables.
 
 Applies targeted record swapping on micro data considering the identification

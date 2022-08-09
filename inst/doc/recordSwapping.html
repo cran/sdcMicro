@@ -12,7 +12,7 @@
 
 <meta name="author" content="Johannes Gussenbauer" />
 
-<meta name="date" content="2022-07-08" />
+<meta name="date" content="2022-07-22" />
 
 <title>Targeted Record Swapping</title>
 
@@ -334,7 +334,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 <h1 class="title toc-ignore">Targeted Record Swapping</h1>
 <h4 class="author">Johannes Gussenbauer</h4>
-<h4 class="date">2022-07-08</h4>
+<h4 class="date">2022-07-22</h4>
 
 
 
@@ -400,7 +400,13 @@ will be considered for estimating the risk. This is only used if
 <li><strong>carry_along</strong> column indices of variables in which
 are additionally swapped. These variables do not interfere with the
 procedure of finding a record to swap with. This parameter is only used
-at the end of the procedure when swapping the hierarchies.</li>
+at the end of the procedure when swapping the hierarchies. We note that
+the variables to be used as <code>carry_along</code> should be at
+household level. In case it is detected that they are at individual
+level (different values within <code>hid</code>), a warning is given
+because unexpected results may occur since the first observed value
+within the Household for any variable is used for all members in the
+swapped household.</li>
 <li><strong>count_swapped_records</strong>,
 <strong>count_swapped_hid</strong> count number of households and
 records swapped</li>
@@ -547,33 +553,48 @@ high risk households in municipality <span class="math inline">\(m\)</span>.</p>
 <p>The package was tested on randomly generated data, which contained 5
 geographic levels and some other sociodemographic variables.</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sdcMicro)</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">createDat</span>(<span class="at">N=</span><span class="dv">100000</span>)</span></code></pre></div>
-<pre><code>## Warning in as.data.table.list(x, keep.rownames = keep.rownames, check.names =
-## check.names, : Item 7 has 100000 rows but longest item has 350236; recycled with
-## remainder.</code></pre>
-<pre><code>## Warning in as.data.table.list(x, keep.rownames = keep.rownames, check.names =
-## check.names, : Item 8 has 100000 rows but longest item has 350236; recycled with
-## remainder.</code></pre>
-<pre><code>## Warning in as.data.table.list(x, keep.rownames = keep.rownames, check.names =
-## check.names, : Item 9 has 100000 rows but longest item has 350236; recycled with
-## remainder.</code></pre>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>dat</span></code></pre></div>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">createDat</span>(<span class="at">N=</span><span class="dv">100000</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>dat</span></code></pre></div>
+<pre><code>##         nuts1 nuts2 nuts3  lau2    hid hsize ageGroup gender national htype
+##      1:     1    12  1210 12104      1     6        4      2        2     6
+##      2:     1    12  1210 12104      1     6        6      1        3     6
+##      3:     1    12  1210 12104      1     6        6      2        3     6
+##      4:     1    12  1210 12104      1     6        5      2        1     6
+##      5:     1    12  1210 12104      1     6        4      1        1     6
+##     ---                                                                    
+## 349731:     3    31  3115 31155  99998     4        6      1        4    10
+## 349732:     2    23  2311 23112  99999     1        7      2        1    10
+## 349733:     3    32  3206 32065 100000     3        3      2        4     3
+## 349734:     3    32  3206 32065 100000     3        7      2        2     3
+## 349735:     3    32  3206 32065 100000     3        2      2        2     3
+##         hincome
+##      1:       8
+##      2:       8
+##      3:       8
+##      4:       8
+##      5:       8
+##     ---        
+## 349731:       5
+## 349732:       4
+## 349733:       4
+## 349734:       4
+## 349735:       4</code></pre>
 <p>Applying the record swapping to dat could look like this</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>hierarchy <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;nuts1&quot;</span>,<span class="st">&quot;nuts2&quot;</span>)</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>risk_variables <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;hincome&quot;</span>,<span class="st">&quot;ageGroup&quot;</span>,<span class="st">&quot;gender&quot;</span>)</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>k_anonymity <span class="ot">&lt;-</span> <span class="dv">3</span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>swaprate <span class="ot">&lt;-</span> .<span class="dv">05</span></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>hid <span class="ot">&lt;-</span> <span class="st">&quot;hid&quot;</span></span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>similar <span class="ot">&lt;-</span> <span class="st">&quot;hsize&quot;</span></span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>dat_swapped <span class="ot">&lt;-</span> <span class="fu">recordSwap</span>(<span class="at">data =</span> dat, <span class="at">hid =</span> hid,</span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>                          <span class="at">hierarchy =</span> hierarchy,</span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>                          <span class="at">similar =</span> similar,</span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>                          <span class="at">risk_variables =</span> risk_variables,</span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>                          <span class="at">k_anonymity =</span> k_anonymity,</span>
-<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>                          <span class="at">swaprate =</span> swaprate)</span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>hierarchy <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;nuts1&quot;</span>,<span class="st">&quot;nuts2&quot;</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>risk_variables <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;hincome&quot;</span>,<span class="st">&quot;ageGroup&quot;</span>,<span class="st">&quot;gender&quot;</span>)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>k_anonymity <span class="ot">&lt;-</span> <span class="dv">3</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>swaprate <span class="ot">&lt;-</span> .<span class="dv">05</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>hid <span class="ot">&lt;-</span> <span class="st">&quot;hid&quot;</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>similar <span class="ot">&lt;-</span> <span class="st">&quot;hsize&quot;</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>dat_swapped <span class="ot">&lt;-</span> <span class="fu">recordSwap</span>(<span class="at">data =</span> dat, <span class="at">hid =</span> hid,</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>                          <span class="at">hierarchy =</span> hierarchy,</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>                          <span class="at">similar =</span> similar,</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>                          <span class="at">risk_variables =</span> risk_variables,</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>                          <span class="at">k_anonymity =</span> k_anonymity,</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>                          <span class="at">swaprate =</span> swaprate)</span></code></pre></div>
 <pre><code>## Recordswapping was successful!</code></pre>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>dat_swapped</span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>dat_swapped</span></code></pre></div>
 <p>Here the procedure was applied to <code>dat</code></p>
 <ul>
 <li>using every hierarchy level, <code>nuts1</code> and
@@ -590,42 +611,42 @@ Then at most <code>th*100</code>% of the households are swapped. If the
 sample is very small, the actual number of swaps can be smaller,
 however, this can only happen if some regions have a very small number
 of households, e.g. 1,2,3,…</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>k_anonymity <span class="ot">&lt;-</span> <span class="dv">0</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>swaprate <span class="ot">&lt;-</span> .<span class="dv">05</span></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>dat_swapped <span class="ot">&lt;-</span> <span class="fu">recordSwap</span>(<span class="at">data =</span> dat, <span class="at">hid =</span> hid,</span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>                          <span class="at">hierarchy =</span> hierarchy,</span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>                          <span class="at">similar =</span> similar,</span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>                          <span class="at">risk_variables =</span> risk_variables,</span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>                          <span class="at">k_anonymity =</span> k_anonymity,</span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>                          <span class="at">swaprate =</span> swaprate)</span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>k_anonymity <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>swaprate <span class="ot">&lt;-</span> .<span class="dv">05</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>dat_swapped <span class="ot">&lt;-</span> <span class="fu">recordSwap</span>(<span class="at">data =</span> dat, <span class="at">hid =</span> hid,</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>                          <span class="at">hierarchy =</span> hierarchy,</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>                          <span class="at">similar =</span> similar,</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>                          <span class="at">risk_variables =</span> risk_variables,</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>                          <span class="at">k_anonymity =</span> k_anonymity,</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>                          <span class="at">swaprate =</span> swaprate)</span></code></pre></div>
 <pre><code>## Recordswapping was successful!</code></pre>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>dat_swapped</span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>dat_swapped</span></code></pre></div>
 <p>Comparing number of swapped households</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>dat_compare <span class="ot">&lt;-</span> <span class="fu">merge</span>(dat[,.(<span class="fu">paste</span>(nuts1[<span class="dv">1</span>],nuts2[<span class="dv">1</span>])),<span class="at">by=</span>hid],</span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>                     dat_swapped[,.(<span class="fu">paste</span>(nuts1[<span class="dv">1</span>],nuts2[<span class="dv">1</span>])),<span class="at">by=</span>hid],<span class="at">by=</span><span class="st">&quot;hid&quot;</span>)</span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="co"># number of swapped households</span></span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(dat_compare[V1.x<span class="sc">!=</span>V1.y])</span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>dat_compare <span class="ot">&lt;-</span> <span class="fu">merge</span>(dat[,.(<span class="fu">paste</span>(nuts1[<span class="dv">1</span>],nuts2[<span class="dv">1</span>])),<span class="at">by=</span>hid],</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>                     dat_swapped[,.(<span class="fu">paste</span>(nuts1[<span class="dv">1</span>],nuts2[<span class="dv">1</span>])),<span class="at">by=</span>hid],<span class="at">by=</span><span class="st">&quot;hid&quot;</span>)</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="co"># number of swapped households</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(dat_compare[V1.x<span class="sc">!=</span>V1.y])</span></code></pre></div>
 <pre><code>## [1] 5000</code></pre>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># swaprate times number of households in data</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>dat[,<span class="fu">uniqueN</span>(hid)]<span class="sc">*</span>swaprate</span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># swaprate times number of households in data</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>dat[,<span class="fu">uniqueN</span>(hid)]<span class="sc">*</span>swaprate</span></code></pre></div>
 <pre><code>## [1] 5000</code></pre>
 <div id="supplying-index-vectors" class="section level3">
 <h3>Supplying index vectors</h3>
 <p>Instead of column names, index vectors can be supplied for parameters
 <code>hid</code>, <code>hierarchy</code>, <code>similar</code> and
 <code>risk_variables</code>.</p>
-<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>hierarchy <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>) <span class="co"># ~ c(&quot;nuts1&quot;,&quot;nuts2&quot;)</span></span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>risk_variables <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">11</span>,<span class="dv">7</span>,<span class="dv">8</span>) <span class="co"># ~ c(&quot;hincome&quot;,&quot;ageGroup&quot;,&quot;gender&quot;)</span></span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>hid <span class="ot">&lt;-</span> <span class="dv">5</span> <span class="co"># ~ &quot;hid&quot;</span></span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>similar <span class="ot">&lt;-</span> <span class="dv">6</span> <span class="co"># ~ &quot;hsize&quot;</span></span>
-<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>dat_swapped <span class="ot">&lt;-</span> <span class="fu">recordSwap</span>(<span class="at">data =</span> dat, <span class="at">hid =</span> hid,</span>
-<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>                          <span class="at">hierarchy =</span> hierarchy,</span>
-<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>                          <span class="at">similar =</span> similar,</span>
-<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>                          <span class="at">risk_variables =</span> risk_variables,</span>
-<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>                          <span class="at">k_anonymity =</span> k_anonymity,</span>
-<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>                          <span class="at">swaprate =</span> swaprate)</span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>hierarchy <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>) <span class="co"># ~ c(&quot;nuts1&quot;,&quot;nuts2&quot;)</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>risk_variables <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">11</span>,<span class="dv">7</span>,<span class="dv">8</span>) <span class="co"># ~ c(&quot;hincome&quot;,&quot;ageGroup&quot;,&quot;gender&quot;)</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>hid <span class="ot">&lt;-</span> <span class="dv">5</span> <span class="co"># ~ &quot;hid&quot;</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>similar <span class="ot">&lt;-</span> <span class="dv">6</span> <span class="co"># ~ &quot;hsize&quot;</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>dat_swapped <span class="ot">&lt;-</span> <span class="fu">recordSwap</span>(<span class="at">data =</span> dat, <span class="at">hid =</span> hid,</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>                          <span class="at">hierarchy =</span> hierarchy,</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>                          <span class="at">similar =</span> similar,</span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>                          <span class="at">risk_variables =</span> risk_variables,</span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>                          <span class="at">k_anonymity =</span> k_anonymity,</span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>                          <span class="at">swaprate =</span> swaprate)</span></code></pre></div>
 <pre><code>## Recordswapping was successful!</code></pre>
 <p>Please note that the underlying <code>c++</code>-routines expect
 indices starting from 0 but in <code>R</code> indices start with 1. The
@@ -640,41 +661,32 @@ in the usually <code>R</code>-fashion where indices start with 1.</p>
 given by the parameter <code>similarity</code> might be too strict. And
 thus, it is not possible to swap the necessary number of households due
 to the lack of a suitable donor household.</p>
-<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># demonstrate on small data set</span></span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">createDat</span>(<span class="at">N=</span><span class="dv">10000</span>)</span></code></pre></div>
-<pre><code>## Warning in as.data.table.list(x, keep.rownames = keep.rownames, check.names =
-## check.names, : Item 7 has 10000 rows but longest item has 35234; recycled with
-## remainder.</code></pre>
-<pre><code>## Warning in as.data.table.list(x, keep.rownames = keep.rownames, check.names =
-## check.names, : Item 8 has 10000 rows but longest item has 35234; recycled with
-## remainder.</code></pre>
-<pre><code>## Warning in as.data.table.list(x, keep.rownames = keep.rownames, check.names =
-## check.names, : Item 9 has 10000 rows but longest item has 35234; recycled with
-## remainder.</code></pre>
-<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>hierarchy <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;nuts1&quot;</span>,<span class="st">&quot;nuts2&quot;</span>)</span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>risk_variables <span class="ot">&lt;-</span> <span class="st">&quot;gender&quot;</span></span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="co"># similarity profile contains:</span></span>
-<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="co"># nuts1 + hsize + htype + hincome</span></span>
-<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>similar <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;nuts1&quot;</span>,<span class="st">&quot;hsize&quot;</span>,<span class="st">&quot;htype&quot;</span>,<span class="st">&quot;hincome&quot;</span>)</span>
-<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a><span class="co"># procedure will not always find a suitable donor</span></span>
-<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>dat_swapped <span class="ot">&lt;-</span> <span class="fu">recordSwap</span>(<span class="at">data =</span> dat, <span class="at">hid =</span> hid,</span>
-<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>                          <span class="at">hierarchy =</span> hierarchy,</span>
-<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>                          <span class="at">similar =</span> similar,</span>
-<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>                          <span class="at">risk_variables =</span> risk_variables,</span>
-<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>                          <span class="at">k_anonymity =</span> <span class="dv">3</span>,</span>
-<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a>                          <span class="at">swaprate =</span> <span class="fl">0.05</span>,</span>
-<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a>                          <span class="at">seed =</span> 123456L)</span></code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># demonstrate on small data set</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">createDat</span>(<span class="at">N=</span><span class="dv">10000</span>)</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>hierarchy <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;nuts1&quot;</span>,<span class="st">&quot;nuts2&quot;</span>)</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>risk_variables <span class="ot">&lt;-</span> <span class="st">&quot;gender&quot;</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="co"># similarity profile contains:</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a><span class="co"># nuts1 + hsize + htype + hincome</span></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>similar <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;nuts1&quot;</span>,<span class="st">&quot;hsize&quot;</span>,<span class="st">&quot;htype&quot;</span>,<span class="st">&quot;hincome&quot;</span>)</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a><span class="co"># procedure will not always find a suitable donor</span></span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>dat_swapped <span class="ot">&lt;-</span> <span class="fu">recordSwap</span>(<span class="at">data =</span> dat, <span class="at">hid =</span> hid,</span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>                          <span class="at">hierarchy =</span> hierarchy,</span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>                          <span class="at">similar =</span> similar,</span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>                          <span class="at">risk_variables =</span> risk_variables,</span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>                          <span class="at">k_anonymity =</span> <span class="dv">3</span>,</span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>                          <span class="at">swaprate =</span> <span class="fl">0.05</span>,</span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>                          <span class="at">seed =</span> 123456L)</span></code></pre></div>
 <pre><code>## Donor household was not found in 5 case(s).
 ## See TRS_logfile.txt for a detailed list</code></pre>
 <p>The expected number of swapped households for a population of 10000
 households and a swapping rate of 0.05 is 500. The actual number of
 swaps was however:</p>
-<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>dat_compare <span class="ot">&lt;-</span> <span class="fu">merge</span>(dat[,.(<span class="fu">paste</span>(nuts1[<span class="dv">1</span>],nuts2[<span class="dv">1</span>])),<span class="at">by=</span>hid],</span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>                     dat_swapped[,.(<span class="fu">paste</span>(nuts1[<span class="dv">1</span>],nuts2[<span class="dv">1</span>])),<span class="at">by=</span>hid],<span class="at">by=</span><span class="st">&quot;hid&quot;</span>)</span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a><span class="co"># number of swapped households</span></span>
-<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(dat_compare[V1.x<span class="sc">!=</span>V1.y])</span></code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>dat_compare <span class="ot">&lt;-</span> <span class="fu">merge</span>(dat[,.(<span class="fu">paste</span>(nuts1[<span class="dv">1</span>],nuts2[<span class="dv">1</span>])),<span class="at">by=</span>hid],</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>                     dat_swapped[,.(<span class="fu">paste</span>(nuts1[<span class="dv">1</span>],nuts2[<span class="dv">1</span>])),<span class="at">by=</span>hid],<span class="at">by=</span><span class="st">&quot;hid&quot;</span>)</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="co"># number of swapped households</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(dat_compare[V1.x<span class="sc">!=</span>V1.y])</span></code></pre></div>
 <pre><code>## [1] 490</code></pre>
 <p>With the parameter <code>similar</code> multiple similarity profiles
 can be defined, if the parameter input is a <code>list</code>. If a
@@ -683,29 +695,29 @@ donor could not be found for the first similarity profile
 similarity profile (<code>similar[[2]]</code>) and so on.</p>
 <p>Using multiple similarity profiles makes it easy to supply fall-back
 profiles if the initial profile is too specific.</p>
-<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># additional profile contains only hsize</span></span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>similar <span class="ot">&lt;-</span> <span class="fu">list</span>(similar)</span>
-<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>similar[[<span class="dv">2</span>]] <span class="ot">&lt;-</span> <span class="st">&quot;hsize&quot;</span></span>
-<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>similar</span></code></pre></div>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># additional profile contains only hsize</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>similar <span class="ot">&lt;-</span> <span class="fu">list</span>(similar)</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>similar[[<span class="dv">2</span>]] <span class="ot">&lt;-</span> <span class="st">&quot;hsize&quot;</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>similar</span></code></pre></div>
 <pre><code>## [[1]]
 ## [1] &quot;nuts1&quot;   &quot;hsize&quot;   &quot;htype&quot;   &quot;hincome&quot;
 ## 
 ## [[2]]
 ## [1] &quot;hsize&quot;</code></pre>
-<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co"># procedure found donors for every record</span></span>
-<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>dat_swapped <span class="ot">&lt;-</span> <span class="fu">recordSwap</span>(<span class="at">data =</span> dat, <span class="at">hid =</span> hid,</span>
-<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>                          <span class="at">hierarchy =</span> hierarchy,</span>
-<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>                          <span class="at">similar =</span> similar,</span>
-<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>                          <span class="at">risk_variables =</span> risk_variables,</span>
-<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>                          <span class="at">k_anonymity =</span> <span class="dv">3</span>,</span>
-<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>                          <span class="at">swaprate =</span> <span class="fl">0.05</span>,</span>
-<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>                          <span class="at">seed =</span> 123456L)</span></code></pre></div>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># procedure found donors for every record</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>dat_swapped <span class="ot">&lt;-</span> <span class="fu">recordSwap</span>(<span class="at">data =</span> dat, <span class="at">hid =</span> hid,</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>                          <span class="at">hierarchy =</span> hierarchy,</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>                          <span class="at">similar =</span> similar,</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>                          <span class="at">risk_variables =</span> risk_variables,</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>                          <span class="at">k_anonymity =</span> <span class="dv">3</span>,</span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>                          <span class="at">swaprate =</span> <span class="fl">0.05</span>,</span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>                          <span class="at">seed =</span> 123456L)</span></code></pre></div>
 <pre><code>## Recordswapping was successful!</code></pre>
-<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>dat_compare <span class="ot">&lt;-</span> <span class="fu">merge</span>(dat[,.(<span class="fu">paste</span>(nuts1[<span class="dv">1</span>],nuts2[<span class="dv">1</span>])),<span class="at">by=</span>hid],</span>
-<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>                     dat_swapped[,.(<span class="fu">paste</span>(nuts1[<span class="dv">1</span>],nuts2[<span class="dv">1</span>])),<span class="at">by=</span>hid],<span class="at">by=</span><span class="st">&quot;hid&quot;</span>)</span>
-<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a><span class="co"># number of swapped households</span></span>
-<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(dat_compare[V1.x<span class="sc">!=</span>V1.y])</span></code></pre></div>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>dat_compare <span class="ot">&lt;-</span> <span class="fu">merge</span>(dat[,.(<span class="fu">paste</span>(nuts1[<span class="dv">1</span>],nuts2[<span class="dv">1</span>])),<span class="at">by=</span>hid],</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>                     dat_swapped[,.(<span class="fu">paste</span>(nuts1[<span class="dv">1</span>],nuts2[<span class="dv">1</span>])),<span class="at">by=</span>hid],<span class="at">by=</span><span class="st">&quot;hid&quot;</span>)</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a><span class="co"># number of swapped households</span></span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(dat_compare[V1.x<span class="sc">!=</span>V1.y])</span></code></pre></div>
 <pre><code>## [1] 500</code></pre>
 </div>
 <div id="carry-along-variables" class="section level3">
@@ -721,92 +733,92 @@ for the resulting data set, the variables <code>nuts1</code> and
 <code>nuts2</code> are no longer coherent with <code>nuts3</code> and
 <code>lau2</code>.</p>
 <p>Let’s have a more detailed look at the problem</p>
-<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>hid <span class="ot">&lt;-</span> <span class="st">&quot;hid&quot;</span></span>
-<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>hierarchy <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;nuts1&quot;</span>,<span class="st">&quot;nuts2&quot;</span>)</span>
-<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>similar <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;hsize&quot;</span>)</span>
-<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>risk_variables <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;hincome&quot;</span>,<span class="st">&quot;htype&quot;</span>)</span>
-<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a>dat_swapped <span class="ot">&lt;-</span> <span class="fu">recordSwap</span>(<span class="at">data =</span> <span class="fu">copy</span>(dat),</span>
-<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a>                        <span class="at">hid =</span> hid,</span>
-<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a>                        <span class="at">hierarchy =</span> hierarchy,</span>
-<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a>                        <span class="at">similar =</span> similar,</span>
-<span id="cb33-10"><a href="#cb33-10" aria-hidden="true" tabindex="-1"></a>                        <span class="at">risk_variables =</span> risk_variables,</span>
-<span id="cb33-11"><a href="#cb33-11" aria-hidden="true" tabindex="-1"></a>                        <span class="at">swaprate =</span> <span class="fl">0.05</span>,</span>
-<span id="cb33-12"><a href="#cb33-12" aria-hidden="true" tabindex="-1"></a>                        <span class="at">seed=</span>1234L)</span></code></pre></div>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>hid <span class="ot">&lt;-</span> <span class="st">&quot;hid&quot;</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>hierarchy <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;nuts1&quot;</span>,<span class="st">&quot;nuts2&quot;</span>)</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>similar <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;hsize&quot;</span>)</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>risk_variables <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;hincome&quot;</span>,<span class="st">&quot;htype&quot;</span>)</span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>dat_swapped <span class="ot">&lt;-</span> <span class="fu">recordSwap</span>(<span class="at">data =</span> <span class="fu">copy</span>(dat),</span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>                        <span class="at">hid =</span> hid,</span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>                        <span class="at">hierarchy =</span> hierarchy,</span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>                        <span class="at">similar =</span> similar,</span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a>                        <span class="at">risk_variables =</span> risk_variables,</span>
+<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a>                        <span class="at">swaprate =</span> <span class="fl">0.05</span>,</span>
+<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a>                        <span class="at">seed=</span>1234L)</span></code></pre></div>
 <pre><code>## Recordswapping was successful!</code></pre>
-<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="co"># compare results</span></span>
-<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>dat_compare <span class="ot">&lt;-</span> <span class="fu">merge</span>(dat[,.(<span class="fu">paste</span>(nuts1[<span class="dv">1</span>],nuts2[<span class="dv">1</span>])),<span class="at">by=</span>hid],</span>
-<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>                     dat_swapped[,.(<span class="fu">paste</span>(nuts1[<span class="dv">1</span>],nuts2[<span class="dv">1</span>])),<span class="at">by=</span>hid],<span class="at">by=</span><span class="st">&quot;hid&quot;</span>)</span>
-<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(dat_compare[V1.x<span class="sc">!=</span>V1.y])</span></code></pre></div>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># compare results</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>dat_compare <span class="ot">&lt;-</span> <span class="fu">merge</span>(dat[,.(<span class="fu">paste</span>(nuts1[<span class="dv">1</span>],nuts2[<span class="dv">1</span>])),<span class="at">by=</span>hid],</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>                     dat_swapped[,.(<span class="fu">paste</span>(nuts1[<span class="dv">1</span>],nuts2[<span class="dv">1</span>])),<span class="at">by=</span>hid],<span class="at">by=</span><span class="st">&quot;hid&quot;</span>)</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(dat_compare[V1.x<span class="sc">!=</span>V1.y])</span></code></pre></div>
 <pre><code>##    hid V1.x V1.y
-## 1:  13 1 12 3 33
-## 2:  31 3 32 2 24
-## 3:  32 2 25 1 13
-## 4:  37 3 35 2 21
-## 5:  41 1 12 2 24
-## 6:  71 2 23 2 22</code></pre>
+## 1:   9 3 34 2 24
+## 2:  37 2 23 2 24
+## 3:  77 3 33 3 31
+## 4:  83 3 35 1 13
+## 5:  84 2 24 2 22
+## 6:  85 2 25 2 24</code></pre>
 <p>For <code>nuts1==1</code> and <code>nuts2==14</code> the
 <code>nuts3</code> variables takes on values</p>
-<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>dat[nuts1<span class="sc">==</span><span class="dv">1</span><span class="sc">&amp;</span>nuts2<span class="sc">==</span><span class="dv">14</span>,<span class="fu">sort</span>(<span class="fu">unique</span>(nuts3))]</span></code></pre></div>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>dat[nuts1<span class="sc">==</span><span class="dv">1</span><span class="sc">&amp;</span>nuts2<span class="sc">==</span><span class="dv">14</span>,<span class="fu">sort</span>(<span class="fu">unique</span>(nuts3))]</span></code></pre></div>
 <pre><code>##  [1] 1401 1402 1403 1404 1405 1406 1407 1408 1409 1410 1411 1412 1413 1414 1415</code></pre>
 <p>In the swapped data set there are however many more values for
 <code>nuts3</code> now which are not coherent with <code>nuts1==1</code>
 and <code>nuts2==14</code></p>
-<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>dat_swapped[nuts1<span class="sc">==</span><span class="dv">1</span><span class="sc">&amp;</span>nuts2<span class="sc">==</span><span class="dv">14</span>,<span class="fu">sort</span>(<span class="fu">unique</span>(nuts3))]</span></code></pre></div>
-<pre><code>##  [1] 1102 1104 1105 1108 1113 1206 1311 1401 1402 1403 1404 1405 1406 1407 1408
-## [16] 1409 1410 1411 1412 1413 1414 1415 1504 1507 1511 1512 1514 2109 2113 2115
-## [31] 2202 2205 2208 2211 2304 2308 2311 2408 2415 2501 2509 3301 3403 3406 3407
-## [46] 3408 3411 3513 3514</code></pre>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>dat_swapped[nuts1<span class="sc">==</span><span class="dv">1</span><span class="sc">&amp;</span>nuts2<span class="sc">==</span><span class="dv">14</span>,<span class="fu">sort</span>(<span class="fu">unique</span>(nuts3))]</span></code></pre></div>
+<pre><code>##  [1] 1106 1107 1108 1111 1302 1306 1308 1315 1401 1402 1403 1404 1405 1406 1407
+## [16] 1408 1409 1410 1411 1412 1413 1414 1415 1501 1504 1506 1508 1511 1513 1514
+## [31] 2109 2111 2206 2211 2214 2302 2310 2408 2413 2503 2504 2510 2513 2515 3112
+## [46] 3202 3205 3210 3215 3307 3313 3402 3514</code></pre>
 <p>Using the parameter <code>carry_along</code> one can define certain
 variables which are additionally swapped but do not interfere with the
 risk calculation, sampling and procedure of finding a donor.</p>
-<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>dat_swapped2 <span class="ot">&lt;-</span> <span class="fu">recordSwap</span>(<span class="at">data =</span> <span class="fu">copy</span>(dat),</span>
-<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>                        <span class="at">hid =</span> hid,</span>
-<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>                        <span class="at">hierarchy =</span> hierarchy,</span>
-<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>                        <span class="at">similar =</span> similar,</span>
-<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>                        <span class="at">risk_variables =</span> risk_variables,</span>
-<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a>                        <span class="at">swaprate =</span> <span class="fl">0.05</span>,</span>
-<span id="cb41-7"><a href="#cb41-7" aria-hidden="true" tabindex="-1"></a>                        <span class="at">carry_along =</span> <span class="fu">c</span>(<span class="st">&quot;nuts3&quot;</span>,<span class="st">&quot;lau2&quot;</span>), <span class="co"># &lt;- swap nuts3 and lau2 variable as well</span></span>
-<span id="cb41-8"><a href="#cb41-8" aria-hidden="true" tabindex="-1"></a>                        <span class="at">seed=</span>1234L)</span></code></pre></div>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>dat_swapped2 <span class="ot">&lt;-</span> <span class="fu">recordSwap</span>(<span class="at">data =</span> <span class="fu">copy</span>(dat),</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>                        <span class="at">hid =</span> hid,</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>                        <span class="at">hierarchy =</span> hierarchy,</span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>                        <span class="at">similar =</span> similar,</span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>                        <span class="at">risk_variables =</span> risk_variables,</span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>                        <span class="at">swaprate =</span> <span class="fl">0.05</span>,</span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a>                        <span class="at">carry_along =</span> <span class="fu">c</span>(<span class="st">&quot;nuts3&quot;</span>,<span class="st">&quot;lau2&quot;</span>), <span class="co"># &lt;- swap nuts3 and lau2 variable as well</span></span>
+<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a>                        <span class="at">seed=</span>1234L)</span></code></pre></div>
 <pre><code>## Recordswapping was successful!</code></pre>
-<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>geoVars <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;nuts1&quot;</span>, <span class="st">&quot;nuts2&quot;</span>, <span class="st">&quot;nuts3&quot;</span>)</span>
-<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>dat_geo <span class="ot">&lt;-</span> dat[<span class="sc">!</span><span class="fu">duplicated</span>(hid),..geoVars]</span>
-<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a><span class="fu">setorderv</span>(dat_geo,geoVars)</span>
-<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>dat_geo_swapped <span class="ot">&lt;-</span> dat_swapped2[<span class="sc">!</span><span class="fu">duplicated</span>(hid),..geoVars]</span>
-<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a><span class="fu">setorderv</span>(dat_geo_swapped,geoVars)</span>
-<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb43-7"><a href="#cb43-7" aria-hidden="true" tabindex="-1"></a><span class="co"># check if value combinations of swapped and original data are the same</span></span>
-<span id="cb43-8"><a href="#cb43-8" aria-hidden="true" tabindex="-1"></a><span class="fu">all.equal</span>(dat_geo,dat_geo_swapped)</span></code></pre></div>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>geoVars <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;nuts1&quot;</span>, <span class="st">&quot;nuts2&quot;</span>, <span class="st">&quot;nuts3&quot;</span>)</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>dat_geo <span class="ot">&lt;-</span> dat[<span class="sc">!</span><span class="fu">duplicated</span>(hid),..geoVars]</span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a><span class="fu">setorderv</span>(dat_geo,geoVars)</span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>dat_geo_swapped <span class="ot">&lt;-</span> dat_swapped2[<span class="sc">!</span><span class="fu">duplicated</span>(hid),..geoVars]</span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a><span class="fu">setorderv</span>(dat_geo_swapped,geoVars)</span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a><span class="co"># check if value combinations of swapped and original data are the same</span></span>
+<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a><span class="fu">all.equal</span>(dat_geo,dat_geo_swapped)</span></code></pre></div>
 <pre><code>## [1] TRUE</code></pre>
 <p>Both the original and swapped data set have the same value
 combinations for <code>nuts1</code>, <code>nuts2</code> and
 <code>nuts3</code>. Setting this parameter did, however, not interfere
 with the swapping procedure</p>
-<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>dat_compare2 <span class="ot">&lt;-</span> <span class="fu">merge</span>(dat[,.(<span class="fu">paste</span>(nuts1[<span class="dv">1</span>],nuts2[<span class="dv">1</span>])),<span class="at">by=</span>hid],</span>
-<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>                     dat_swapped[,.(<span class="fu">paste</span>(nuts1[<span class="dv">1</span>],nuts2[<span class="dv">1</span>])),<span class="at">by=</span>hid],<span class="at">by=</span><span class="st">&quot;hid&quot;</span>)</span>
-<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a><span class="co"># check if same hid were swapped in both cases</span></span>
-<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a><span class="fu">all.equal</span>(dat_compare2[<span class="fu">order</span>(hid),.(hid)],</span>
-<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a>          dat_compare[<span class="fu">order</span>(hid),.(hid)])</span></code></pre></div>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>dat_compare2 <span class="ot">&lt;-</span> <span class="fu">merge</span>(dat[,.(<span class="fu">paste</span>(nuts1[<span class="dv">1</span>],nuts2[<span class="dv">1</span>])),<span class="at">by=</span>hid],</span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>                     dat_swapped[,.(<span class="fu">paste</span>(nuts1[<span class="dv">1</span>],nuts2[<span class="dv">1</span>])),<span class="at">by=</span>hid],<span class="at">by=</span><span class="st">&quot;hid&quot;</span>)</span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a><span class="co"># check if same hid were swapped in both cases</span></span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a><span class="fu">all.equal</span>(dat_compare2[<span class="fu">order</span>(hid),.(hid)],</span>
+<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a>          dat_compare[<span class="fu">order</span>(hid),.(hid)])</span></code></pre></div>
 <pre><code>## [1] TRUE</code></pre>
 <p>Using the same idea one can set <code>return_swapped_id = TRUE</code>
 to return the <code>hid</code> with which the records were swapped
 with.</p>
-<div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>dat_swapped3 <span class="ot">&lt;-</span> <span class="fu">recordSwap</span>(<span class="at">data =</span> <span class="fu">copy</span>(dat),</span>
-<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>                        <span class="at">hid =</span> hid,</span>
-<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>                        <span class="at">hierarchy =</span> hierarchy,</span>
-<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a>                        <span class="at">similar =</span> similar,</span>
-<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a>                        <span class="at">risk_variables =</span> risk_variables,</span>
-<span id="cb47-6"><a href="#cb47-6" aria-hidden="true" tabindex="-1"></a>                        <span class="at">swaprate =</span> <span class="fl">0.05</span>,</span>
-<span id="cb47-7"><a href="#cb47-7" aria-hidden="true" tabindex="-1"></a>                        <span class="at">carry_along =</span> <span class="st">&quot;nuts3&quot;</span>,</span>
-<span id="cb47-8"><a href="#cb47-8" aria-hidden="true" tabindex="-1"></a>                        <span class="at">return_swapped_id =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb47-9"><a href="#cb47-9" aria-hidden="true" tabindex="-1"></a>                        <span class="at">seed=</span>1234L)</span></code></pre></div>
+<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>dat_swapped3 <span class="ot">&lt;-</span> <span class="fu">recordSwap</span>(<span class="at">data =</span> <span class="fu">copy</span>(dat),</span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>                        <span class="at">hid =</span> hid,</span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>                        <span class="at">hierarchy =</span> hierarchy,</span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>                        <span class="at">similar =</span> similar,</span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>                        <span class="at">risk_variables =</span> risk_variables,</span>
+<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a>                        <span class="at">swaprate =</span> <span class="fl">0.05</span>,</span>
+<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a>                        <span class="at">carry_along =</span> <span class="st">&quot;nuts3&quot;</span>,</span>
+<span id="cb40-8"><a href="#cb40-8" aria-hidden="true" tabindex="-1"></a>                        <span class="at">return_swapped_id =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb40-9"><a href="#cb40-9" aria-hidden="true" tabindex="-1"></a>                        <span class="at">seed=</span>1234L)</span></code></pre></div>
 <pre><code>## Recordswapping was successful!</code></pre>
 <p>The output now has an additional column named
 <code>hid_swapped</code>, which contains the household ID with which a
 household was swapped with.</p>
 <p>Number of swapped <code>hid</code>s</p>
-<div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>dat_swapped3[<span class="sc">!</span><span class="fu">duplicated</span>(hid),.N,by<span class="ot">=</span>.(<span class="at">id_swapped =</span> hid<span class="sc">!=</span>hid_swapped)]</span></code></pre></div>
+<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>dat_swapped3[<span class="sc">!</span><span class="fu">duplicated</span>(hid),.N,by<span class="ot">=</span>.(<span class="at">id_swapped =</span> hid<span class="sc">!=</span>hid_swapped)]</span></code></pre></div>
 <pre><code>##    id_swapped    N
 ## 1:      FALSE 9500
 ## 2:       TRUE  500</code></pre>
@@ -820,26 +832,26 @@ which accepts column names of the original and swapped micro data. The
 frequency table is internally constructed using both the original and
 swapped micro data. Afterwards, various information loss measures are
 estimated over each of the table cells.</p>
-<div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="co"># calculate information loss for frequecy table nuts2 x national</span></span>
-<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>table_vars <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;nuts2&quot;</span>,<span class="st">&quot;national&quot;</span>)</span>
-<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a>iloss <span class="ot">&lt;-</span> <span class="fu">infoLoss</span>(<span class="at">data=</span>dat, <span class="at">data_swapped =</span> dat_swapped3,</span>
-<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a>                  <span class="at">table_vars =</span> table_vars)</span>
-<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a>iloss<span class="sc">$</span>measures</span></code></pre></div>
+<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="co"># calculate information loss for frequecy table nuts2 x national</span></span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>table_vars <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;nuts2&quot;</span>,<span class="st">&quot;national&quot;</span>)</span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>iloss <span class="ot">&lt;-</span> <span class="fu">infoLoss</span>(<span class="at">data=</span>dat, <span class="at">data_swapped =</span> dat_swapped3,</span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>                  <span class="at">table_vars =</span> table_vars)</span>
+<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>iloss<span class="sc">$</span>measures</span></code></pre></div>
 <pre><code>##       what      absD   abssqrtD     relabsD
 ##  1:    Min  0.000000 0.00000000 0.000000000
 ##  2:    10%  0.000000 0.00000000 0.000000000
 ##  3:    20%  0.000000 0.00000000 0.000000000
-##  4:    30%  1.000000 0.02260455 0.002042683
-##  5:    40%  2.000000 0.04445700 0.003960767
-##  6:   Mean  3.726316 0.08613669 0.007971618
-##  7: Median  3.000000 0.06828780 0.006198347
-##  8:    60%  4.000000 0.09230231 0.008526495
-##  9:    70%  5.000000 0.11903693 0.011111111
-## 10:    80%  7.000000 0.16118706 0.014780927
-## 11:    90%  9.000000 0.20930613 0.019430247
-## 12:    95% 11.000000 0.25454517 0.024378726
-## 13:    99% 12.060000 0.28182318 0.026423937
-## 14:    Max 13.000000 0.29500438 0.026442308</code></pre>
+##  4:    30%  1.000000 0.02344338 0.002195981
+##  5:    40%  2.000000 0.04573896 0.004175365
+##  6:   Mean  3.578947 0.08273530 0.007657521
+##  7: Median  3.000000 0.07122707 0.006741573
+##  8:    60%  4.000000 0.09170863 0.008375218
+##  9:    70%  5.000000 0.11747533 0.011077883
+## 10:    80%  7.000000 0.15840579 0.014241102
+## 11:    90%  8.600000 0.19352072 0.017585059
+## 12:    95% 10.000000 0.22631982 0.020661157
+## 13:    99% 11.000000 0.25959760 0.024722442
+## 14:    Max 11.000000 0.26235645 0.024774775</code></pre>
 <p>Per default the absolute deviation (<span class="math inline">\(abs(x,y)\)</span>), relative absolute deviation
 (<span class="math inline">\(r\_abs(x,y)\)</span>), and absolute
 deviaion of square roots (<span class="math inline">\(abs\_sqr(x,y)\)</span>) is calculated between the
@@ -855,30 +867,30 @@ abs\_sqr(x,y) = |\sqrt{x}-\sqrt{y}|
 \]</span></p>
 <p>It is also possible to supply a custom information loss metric by
 using parameter <code>custom_meric</code></p>
-<div class="sourceCode" id="cb53"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="co"># define squared distance as custom metric</span></span>
-<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>squareD <span class="ot">&lt;-</span> <span class="cf">function</span>(x,y){</span>
-<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>   (x<span class="sc">-</span>y)<span class="sc">^</span><span class="dv">2</span></span>
-<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb53-5"><a href="#cb53-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb53-6"><a href="#cb53-6" aria-hidden="true" tabindex="-1"></a>iloss <span class="ot">&lt;-</span> <span class="fu">infoLoss</span>(<span class="at">data=</span>dat, <span class="at">data_swapped =</span> dat_swapped3,</span>
-<span id="cb53-7"><a href="#cb53-7" aria-hidden="true" tabindex="-1"></a>                  <span class="at">table_vars =</span> <span class="fu">c</span>(<span class="st">&quot;nuts2&quot;</span>,<span class="st">&quot;national&quot;</span>),</span>
-<span id="cb53-8"><a href="#cb53-8" aria-hidden="true" tabindex="-1"></a>                  <span class="at">custom_metric =</span> <span class="fu">list</span>(<span class="at">squareD=</span>squareD))</span>
-<span id="cb53-9"><a href="#cb53-9" aria-hidden="true" tabindex="-1"></a>iloss<span class="sc">$</span>measures <span class="co"># includes custom loss as well</span></span></code></pre></div>
+<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="co"># define squared distance as custom metric</span></span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>squareD <span class="ot">&lt;-</span> <span class="cf">function</span>(x,y){</span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>   (x<span class="sc">-</span>y)<span class="sc">^</span><span class="dv">2</span></span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-6"><a href="#cb46-6" aria-hidden="true" tabindex="-1"></a>iloss <span class="ot">&lt;-</span> <span class="fu">infoLoss</span>(<span class="at">data=</span>dat, <span class="at">data_swapped =</span> dat_swapped3,</span>
+<span id="cb46-7"><a href="#cb46-7" aria-hidden="true" tabindex="-1"></a>                  <span class="at">table_vars =</span> <span class="fu">c</span>(<span class="st">&quot;nuts2&quot;</span>,<span class="st">&quot;national&quot;</span>),</span>
+<span id="cb46-8"><a href="#cb46-8" aria-hidden="true" tabindex="-1"></a>                  <span class="at">custom_metric =</span> <span class="fu">list</span>(<span class="at">squareD=</span>squareD))</span>
+<span id="cb46-9"><a href="#cb46-9" aria-hidden="true" tabindex="-1"></a>iloss<span class="sc">$</span>measures <span class="co"># includes custom loss as well</span></span></code></pre></div>
 <pre><code>##       what      absD   abssqrtD     relabsD   squareD
 ##  1:    Min  0.000000 0.00000000 0.000000000   0.00000
 ##  2:    10%  0.000000 0.00000000 0.000000000   0.00000
 ##  3:    20%  0.000000 0.00000000 0.000000000   0.00000
-##  4:    30%  1.000000 0.02260455 0.002042683   1.00000
-##  5:    40%  2.000000 0.04445700 0.003960767   4.00000
-##  6:   Mean  3.726316 0.08613669 0.007971618  26.82105
-##  7: Median  3.000000 0.06828780 0.006198347   9.00000
-##  8:    60%  4.000000 0.09230231 0.008526495  16.00000
-##  9:    70%  5.000000 0.11903693 0.011111111  25.00000
-## 10:    80%  7.000000 0.16118706 0.014780927  49.00000
-## 11:    90%  9.000000 0.20930613 0.019430247  81.00000
-## 12:    95% 11.000000 0.25454517 0.024378726 121.00000
-## 13:    99% 12.060000 0.28182318 0.026423937 145.50000
-## 14:    Max 13.000000 0.29500438 0.026442308 169.00000</code></pre>
+##  4:    30%  1.000000 0.02344338 0.002195981   1.00000
+##  5:    40%  2.000000 0.04573896 0.004175365   4.00000
+##  6:   Mean  3.578947 0.08273530 0.007657521  23.74737
+##  7: Median  3.000000 0.07122707 0.006741573   9.00000
+##  8:    60%  4.000000 0.09170863 0.008375218  16.00000
+##  9:    70%  5.000000 0.11747533 0.011077883  25.00000
+## 10:    80%  7.000000 0.15840579 0.014241102  49.00000
+## 11:    90%  8.600000 0.19352072 0.017585059  74.20000
+## 12:    95% 10.000000 0.22631982 0.020661157 100.00000
+## 13:    99% 11.000000 0.25959760 0.024722442 121.00000
+## 14:    Max 11.000000 0.26235645 0.024774775 121.00000</code></pre>
 </div>
 <div id="sdcmicro-objects" class="section level3">
 <h3>sdcMicro Objects</h3>
@@ -886,28 +898,28 @@ using parameter <code>custom_meric</code></p>
 data directly, as seen above, or with an sdcMicro-Object. Parameters for
 the swapping routine can be passed to the options-slot when creating the
 sdcMicro-Object.</p>
-<div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="co"># define paramters</span></span>
-<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>hierarchy <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;nuts1&quot;</span>,<span class="st">&quot;nuts2&quot;</span>)</span>
-<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a>risk_variables <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;hincome&quot;</span>,<span class="st">&quot;ageGroup&quot;</span>,<span class="st">&quot;gender&quot;</span>)</span>
-<span id="cb55-4"><a href="#cb55-4" aria-hidden="true" tabindex="-1"></a>k_anonymity <span class="ot">&lt;-</span> <span class="dv">3</span></span>
-<span id="cb55-5"><a href="#cb55-5" aria-hidden="true" tabindex="-1"></a>swaprate <span class="ot">&lt;-</span> .<span class="dv">05</span></span>
-<span id="cb55-6"><a href="#cb55-6" aria-hidden="true" tabindex="-1"></a>hid <span class="ot">&lt;-</span> <span class="st">&quot;hid&quot;</span></span>
-<span id="cb55-7"><a href="#cb55-7" aria-hidden="true" tabindex="-1"></a>similar <span class="ot">&lt;-</span> <span class="st">&quot;hsize&quot;</span></span>
-<span id="cb55-8"><a href="#cb55-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb55-9"><a href="#cb55-9" aria-hidden="true" tabindex="-1"></a><span class="co"># create sdcMicro object with parameters for recordSwap()</span></span>
-<span id="cb55-10"><a href="#cb55-10" aria-hidden="true" tabindex="-1"></a>data_sdc <span class="ot">&lt;-</span> <span class="fu">createSdcObj</span>(dat,<span class="at">hhId =</span> hid,</span>
-<span id="cb55-11"><a href="#cb55-11" aria-hidden="true" tabindex="-1"></a>                         <span class="at">keyVars=</span>risk_variables,</span>
-<span id="cb55-12"><a href="#cb55-12" aria-hidden="true" tabindex="-1"></a>                         <span class="at">options =</span> <span class="fu">list</span>(<span class="at">k_anonymity =</span> k_anonymity,</span>
-<span id="cb55-13"><a href="#cb55-13" aria-hidden="true" tabindex="-1"></a>                                                    <span class="at">swaprate =</span> swaprate,</span>
-<span id="cb55-14"><a href="#cb55-14" aria-hidden="true" tabindex="-1"></a>                                                    <span class="at">similar =</span> similar,</span>
-<span id="cb55-15"><a href="#cb55-15" aria-hidden="true" tabindex="-1"></a>                                                    <span class="at">hierarchy =</span> hierarchy))</span></code></pre></div>
-<div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>dat_swapped_sdc <span class="ot">&lt;-</span> <span class="fu">recordSwap</span>(<span class="at">data =</span> data_sdc,</span>
-<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a>                              <span class="at">return_swapped_id =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="co"># define paramters</span></span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>hierarchy <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;nuts1&quot;</span>,<span class="st">&quot;nuts2&quot;</span>)</span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>risk_variables <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;hincome&quot;</span>,<span class="st">&quot;ageGroup&quot;</span>,<span class="st">&quot;gender&quot;</span>)</span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>k_anonymity <span class="ot">&lt;-</span> <span class="dv">3</span></span>
+<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a>swaprate <span class="ot">&lt;-</span> .<span class="dv">05</span></span>
+<span id="cb48-6"><a href="#cb48-6" aria-hidden="true" tabindex="-1"></a>hid <span class="ot">&lt;-</span> <span class="st">&quot;hid&quot;</span></span>
+<span id="cb48-7"><a href="#cb48-7" aria-hidden="true" tabindex="-1"></a>similar <span class="ot">&lt;-</span> <span class="st">&quot;hsize&quot;</span></span>
+<span id="cb48-8"><a href="#cb48-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-9"><a href="#cb48-9" aria-hidden="true" tabindex="-1"></a><span class="co"># create sdcMicro object with parameters for recordSwap()</span></span>
+<span id="cb48-10"><a href="#cb48-10" aria-hidden="true" tabindex="-1"></a>data_sdc <span class="ot">&lt;-</span> <span class="fu">createSdcObj</span>(dat,<span class="at">hhId =</span> hid,</span>
+<span id="cb48-11"><a href="#cb48-11" aria-hidden="true" tabindex="-1"></a>                         <span class="at">keyVars=</span>risk_variables,</span>
+<span id="cb48-12"><a href="#cb48-12" aria-hidden="true" tabindex="-1"></a>                         <span class="at">options =</span> <span class="fu">list</span>(<span class="at">k_anonymity =</span> k_anonymity,</span>
+<span id="cb48-13"><a href="#cb48-13" aria-hidden="true" tabindex="-1"></a>                                                    <span class="at">swaprate =</span> swaprate,</span>
+<span id="cb48-14"><a href="#cb48-14" aria-hidden="true" tabindex="-1"></a>                                                    <span class="at">similar =</span> similar,</span>
+<span id="cb48-15"><a href="#cb48-15" aria-hidden="true" tabindex="-1"></a>                                                    <span class="at">hierarchy =</span> hierarchy))</span></code></pre></div>
+<div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>dat_swapped_sdc <span class="ot">&lt;-</span> <span class="fu">recordSwap</span>(<span class="at">data =</span> data_sdc,</span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>                              <span class="at">return_swapped_id =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
 <pre><code>## Recordswapping was successful!</code></pre>
-<div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a>dat_swapped_sdc[<span class="sc">!</span><span class="fu">duplicated</span>(hid),.N,by<span class="ot">=</span>.(<span class="at">id_swapped =</span> hid<span class="sc">!=</span>hid_swapped)]</span></code></pre></div>
+<div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>dat_swapped_sdc[<span class="sc">!</span><span class="fu">duplicated</span>(hid),.N,by<span class="ot">=</span>.(<span class="at">id_swapped =</span> hid<span class="sc">!=</span>hid_swapped)]</span></code></pre></div>
 <pre><code>##    id_swapped    N
-## 1:      FALSE 9500
-## 2:       TRUE  500</code></pre>
+## 1:       TRUE  500
+## 2:      FALSE 9500</code></pre>
 </div>
 </div>
 

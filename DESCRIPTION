@@ -2,13 +2,16 @@ Package: sdcMicro
 Type: Package
 Title: Statistical Disclosure Control Methods for Anonymization of Data
         and Risk Estimation
-Version: 5.7.2
-Date: 2022-07-22
+Version: 5.7.3
+Date: 2022-09-30
 Authors@R: c(
   person("Matthias", "Templ", email="matthias.templ@gmail.com", role = c("aut", "cre"), comment=c(ORCID="0000-0002-8638-5276")),
   person("Bernhard", "Meindl", email = "Bernhard.Meindl@statistik.gv.at", role = c("aut")),
   person("Alexander", "Kowarik", email="Alexander.Kowarik@statistik.gv.at", role = "aut", comment=c(ORCID="0000-0001-8598-4130")),  
-  person("Johannes", "Gussenbauer", email = "johannes.gussenbauer@statistik.gv.at", role = c("aut")))
+  person("Johannes", "Gussenbauer", email = "johannes.gussenbauer@statistik.gv.at", role = c("aut")),
+  person("Organisation For Economic Co-Operation And Development", role=c("cph"), comment="Initial published c(++) code (under LGPL) code for rank swapping, mdav-microaggregation, suda2 and other (hierarchical) risk measures"),
+  person("Statistics Netherlands", role=c("cph"), comment="microAggregation cpp code (under EUPL v1.1)"),
+  person("Pascal Heus", role=c("cph"), comment="original measure threshold cpp code (under LGPL)"))
 Description: Data from statistical agencies and other institutions are mostly
     confidential. This package (see also Templ, Kowarik and Meindl (2017) <doi:10.18637/jss.v067.i04>) can be used for the generation of anonymized
     (micro)data, i.e. for the creation of public- and scientific-use files.
@@ -40,16 +43,23 @@ Collate: '0classes.r' 'addGhostVars.R' 'addNoise.r' 'aux_functions.r'
         'sdcMicro-package.R' 'shuffle.R' 'suda2.R' 'timeEstimation.R'
         'topBotCoding.R' 'valTable.R' 'zzz.R' 'printFunctions.R'
         'mafast.R' 'maG.R' 'sdcApp.R' 'show_sdcMicroObj.R'
-RoxygenNote: 7.2.0
+RoxygenNote: 7.2.1
 VignetteBuilder: knitr
 Encoding: UTF-8
 SystemRequirements: C++11
 NeedsCompilation: yes
-Packaged: 2022-07-22 09:28:44 UTC; bernhard
+Packaged: 2022-10-05 18:57:34 UTC; matthias
 Author: Matthias Templ [aut, cre] (<https://orcid.org/0000-0002-8638-5276>),
   Bernhard Meindl [aut],
   Alexander Kowarik [aut] (<https://orcid.org/0000-0001-8598-4130>),
-  Johannes Gussenbauer [aut]
+  Johannes Gussenbauer [aut],
+  Organisation For Economic Co-Operation And Development [cph] (Initial
+    published c(++) code (under LGPL) code for rank swapping,
+    mdav-microaggregation, suda2 and other (hierarchical) risk
+    measures),
+  Statistics Netherlands [cph] (microAggregation cpp code (under EUPL
+    v1.1)),
+  Pascal Heus [cph] (original measure threshold cpp code (under LGPL))
 Maintainer: Matthias Templ <matthias.templ@gmail.com>
 Repository: CRAN
-Date/Publication: 2022-08-09 15:40:02 UTC
+Date/Publication: 2022-10-05 23:10:02 UTC

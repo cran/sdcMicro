@@ -12,23 +12,11 @@
 
 <meta name="author" content="Johannes Gussenbauer" />
 
-<meta name="date" content="2022-07-22" />
+<meta name="date" content="2022-10-05" />
 
 <title>Targeted Record Swapping</title>
 
-<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
-// be compatible with the behavior of Pandoc < 2.8).
-document.addEventListener('DOMContentLoaded', function(e) {
-  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
-  var i, h, a;
-  for (i = 0; i < hs.length; i++) {
-    h = hs[i];
-    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
-    a = h.attributes;
-    while (a.length > 0) h.removeAttribute(a[0].name);
-  }
-});
-</script>
+<script src="data:application/javascript;base64,Ly8gUGFuZG9jIDIuOSBhZGRzIGF0dHJpYnV0ZXMgb24gYm90aCBoZWFkZXIgYW5kIGRpdi4gV2UgcmVtb3ZlIHRoZSBmb3JtZXIgKHRvCi8vIGJlIGNvbXBhdGlibGUgd2l0aCB0aGUgYmVoYXZpb3Igb2YgUGFuZG9jIDwgMi44KS4KZG9jdW1lbnQuYWRkRXZlbnRMaXN0ZW5lcignRE9NQ29udGVudExvYWRlZCcsIGZ1bmN0aW9uKGUpIHsKICB2YXIgaHMgPSBkb2N1bWVudC5xdWVyeVNlbGVjdG9yQWxsKCJkaXYuc2VjdGlvbltjbGFzcyo9J2xldmVsJ10gPiA6Zmlyc3QtY2hpbGQiKTsKICB2YXIgaSwgaCwgYTsKICBmb3IgKGkgPSAwOyBpIDwgaHMubGVuZ3RoOyBpKyspIHsKICAgIGggPSBoc1tpXTsKICAgIGlmICghL15oWzEtNl0kL2kudGVzdChoLnRhZ05hbWUpKSBjb250aW51ZTsgIC8vIGl0IHNob3VsZCBiZSBhIGhlYWRlciBoMS1oNgogICAgYSA9IGguYXR0cmlidXRlczsKICAgIHdoaWxlIChhLmxlbmd0aCA+IDApIGgucmVtb3ZlQXR0cmlidXRlKGFbMF0ubmFtZSk7CiAgfQp9KTsK"></script>
 
 <style type="text/css">
   code{white-space: pre-wrap;}
@@ -140,187 +128,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 
 
-<style type="text/css">body {
-background-color: #fff;
-margin: 1em auto;
-max-width: 700px;
-overflow: visible;
-padding-left: 2em;
-padding-right: 2em;
-font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
-font-size: 14px;
-line-height: 1.35;
-}
-#TOC {
-clear: both;
-margin: 0 0 10px 10px;
-padding: 4px;
-width: 400px;
-border: 1px solid #CCCCCC;
-border-radius: 5px;
-background-color: #f6f6f6;
-font-size: 13px;
-line-height: 1.3;
-}
-#TOC .toctitle {
-font-weight: bold;
-font-size: 15px;
-margin-left: 5px;
-}
-#TOC ul {
-padding-left: 40px;
-margin-left: -1.5em;
-margin-top: 5px;
-margin-bottom: 5px;
-}
-#TOC ul ul {
-margin-left: -2em;
-}
-#TOC li {
-line-height: 16px;
-}
-table {
-margin: 1em auto;
-border-width: 1px;
-border-color: #DDDDDD;
-border-style: outset;
-border-collapse: collapse;
-}
-table th {
-border-width: 2px;
-padding: 5px;
-border-style: inset;
-}
-table td {
-border-width: 1px;
-border-style: inset;
-line-height: 18px;
-padding: 5px 5px;
-}
-table, table th, table td {
-border-left-style: none;
-border-right-style: none;
-}
-table thead, table tr.even {
-background-color: #f7f7f7;
-}
-p {
-margin: 0.5em 0;
-}
-blockquote {
-background-color: #f6f6f6;
-padding: 0.25em 0.75em;
-}
-hr {
-border-style: solid;
-border: none;
-border-top: 1px solid #777;
-margin: 28px 0;
-}
-dl {
-margin-left: 0;
-}
-dl dd {
-margin-bottom: 13px;
-margin-left: 13px;
-}
-dl dt {
-font-weight: bold;
-}
-ul {
-margin-top: 0;
-}
-ul li {
-list-style: circle outside;
-}
-ul ul {
-margin-bottom: 0;
-}
-pre, code {
-background-color: #f7f7f7;
-border-radius: 3px;
-color: #333;
-white-space: pre-wrap; 
-}
-pre {
-border-radius: 3px;
-margin: 5px 0px 10px 0px;
-padding: 10px;
-}
-pre:not([class]) {
-background-color: #f7f7f7;
-}
-code {
-font-family: Consolas, Monaco, 'Courier New', monospace;
-font-size: 85%;
-}
-p > code, li > code {
-padding: 2px 0px;
-}
-div.figure {
-text-align: center;
-}
-img {
-background-color: #FFFFFF;
-padding: 2px;
-border: 1px solid #DDDDDD;
-border-radius: 3px;
-border: 1px solid #CCCCCC;
-margin: 0 5px;
-}
-h1 {
-margin-top: 0;
-font-size: 35px;
-line-height: 40px;
-}
-h2 {
-border-bottom: 4px solid #f7f7f7;
-padding-top: 10px;
-padding-bottom: 2px;
-font-size: 145%;
-}
-h3 {
-border-bottom: 2px solid #f7f7f7;
-padding-top: 10px;
-font-size: 120%;
-}
-h4 {
-border-bottom: 1px solid #f7f7f7;
-margin-left: 8px;
-font-size: 105%;
-}
-h5, h6 {
-border-bottom: 1px solid #ccc;
-font-size: 105%;
-}
-a {
-color: #0033dd;
-text-decoration: none;
-}
-a:hover {
-color: #6666ff; }
-a:visited {
-color: #800080; }
-a:visited:hover {
-color: #BB00BB; }
-a[href^="http:"] {
-text-decoration: underline; }
-a[href^="https:"] {
-text-decoration: underline; }
-
-code > span.kw { color: #555; font-weight: bold; } 
-code > span.dt { color: #902000; } 
-code > span.dv { color: #40a070; } 
-code > span.bn { color: #d14; } 
-code > span.fl { color: #d14; } 
-code > span.ch { color: #d14; } 
-code > span.st { color: #d14; } 
-code > span.co { color: #888888; font-style: italic; } 
-code > span.ot { color: #007020; } 
-code > span.al { color: #ff0000; font-weight: bold; } 
-code > span.fu { color: #900; font-weight: bold; } 
-code > span.er { color: #a61717; background-color: #e3d2d2; } 
-</style>
+<link rel="stylesheet" href="data:text/css,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20700px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0A%7D%0Apre%20%7B%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" type="text/css" />
 
 
 
@@ -334,28 +142,17 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 <h1 class="title toc-ignore">Targeted Record Swapping</h1>
 <h4 class="author">Johannes Gussenbauer</h4>
-<h4 class="date">2022-07-22</h4>
+<h4 class="date">2022-10-05</h4>
 
 
 
 <div id="overview" class="section level2">
 <h2>Overview</h2>
-<p>This is the vignette for the R-Package <em>recordSwapping</em>, which
-can be used to apply the record swapping algorithm to a micro data set.
-The implementation of the procedure was done purely in C++ and is based
-on the SAS code on targeted record swapping from ONS (<a href="https://ec.europa.eu/eurostat/cros/content/2-record-swapping_en" class="uri">https://ec.europa.eu/eurostat/cros/content/2-record-swapping_en</a>).
-There are, however, substantial differences between the SAS and C++
-Code. Some of these differences are the result of improving the run-time
-for the C++ implementation. In the next section, the differences between
-the 2 implementations are presented further. The R-Package is just as a
-front end to easily call the procedures and for testing purposes.</p>
+<p>This is the vignette for the R-Package <em>recordSwapping</em>, which can be used to apply the record swapping algorithm to a micro data set. The implementation of the procedure was done purely in C++ and is based on the SAS code on targeted record swapping from ONS (<a href="https://ec.europa.eu/eurostat/cros/content/2-record-swapping_en" class="uri">https://ec.europa.eu/eurostat/cros/content/2-record-swapping_en</a>). There are, however, substantial differences between the SAS and C++ Code. Some of these differences are the result of improving the run-time for the C++ implementation. In the next section, the differences between the 2 implementations are presented further. The R-Package is just as a front end to easily call the procedures and for testing purposes.</p>
 </div>
 <div id="functionality" class="section level2">
 <h2>Functionality</h2>
-<p>The targeted record swapping can be applied with the function
-<code>recordSwap()</code>. All other functions in the package are called
-from inside <code>recordSwap()</code> and are only exported for testing
-purposes. The function has the following arguments:</p>
+<p>The targeted record swapping can be applied with the function <code>recordSwap()</code>. All other functions in the package are called from inside <code>recordSwap()</code> and are only exported for testing purposes. The function has the following arguments:</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>recordSwap<span class="op">(</span><span class="bu">std::</span>vector<span class="op">&lt;</span> <span class="bu">std::</span>vector<span class="op">&lt;</span><span class="dt">int</span><span class="op">&gt;</span> <span class="op">&gt;</span> data<span class="op">,</span> <span class="dt">int</span> hid<span class="op">,</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>                                           <span class="bu">std::</span>vector<span class="op">&lt;</span><span class="dt">int</span><span class="op">&gt;</span> hierarchy<span class="op">,</span> </span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>                                           <span class="bu">std::</span>vector<span class="op">&lt;</span><span class="bu">std::</span>vector<span class="op">&lt;</span><span class="dt">int</span><span class="op">&gt;&gt;</span> similar<span class="op">,</span></span>
@@ -368,107 +165,48 @@ purposes. The function has the following arguments:</p>
 <span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>                                           <span class="bu">std::</span>string<span class="op"> </span>log_file_name<span class="op">,</span></span>
 <span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>                                           <span class="dt">int</span> seed <span class="op">=</span> <span class="dv">123456</span><span class="op">)</span></span></code></pre></div>
 <ul>
-<li><strong>data</strong> micro data containing ONLY integer values,
-rectangular table format.</li>
-<li><strong>hid</strong> column index in which refers to the household
-identifier.</li>
-<li><strong>hierarchy</strong> column indices of variables in which
-refer to the geographic hierarchy in the micro data set. For instance
-county &gt; municipality &gt; district.</li>
-<li><strong>similar</strong> vector of vector containing the similarity
-profiles that are sets of variables in which should be considered when
-swapping households. corresponds to the first set similarity variables,
-to the second set and so on.</li>
-<li><strong>swaprate</strong> double between 0 and 1 defining the
-proportion of households which should be swapped, see details for more
-explanations</li>
-<li><strong>risk</strong> vector of vector containing the risk of each
-individual for each hierarchy level. <code>risk[0]</code> corresponds to
-the risks of the first record for all hierarchy levels,
-<code>risk[1]</code> for the second record and so on. Should be ignored,
-for now, it is not fully tested yet.</li>
-<li><strong>risk_threshold</strong> risk threshold, which determines if
-a record has to be swapped and over which hierarchy level. This
-overwrites k_anonymity. Should be ignored, for now, it is not fully
-tested yet.</li>
-<li><strong>k_anonymity</strong> integer defining the threshold of high
-risk households (k-anonymity). A record is not at risk if
-<code>k_anonymity &gt; counts</code>.</li>
-<li><strong>risk_variables</strong> column indices of variables in which
-will be considered for estimating the risk. This is only used if
-<code>risk</code> was not supplied.</li>
-<li><strong>carry_along</strong> column indices of variables in which
-are additionally swapped. These variables do not interfere with the
-procedure of finding a record to swap with. This parameter is only used
-at the end of the procedure when swapping the hierarchies. We note that
-the variables to be used as <code>carry_along</code> should be at
-household level. In case it is detected that they are at individual
-level (different values within <code>hid</code>), a warning is given
-because unexpected results may occur since the first observed value
-within the Household for any variable is used for all members in the
-swapped household.</li>
-<li><strong>count_swapped_records</strong>,
-<strong>count_swapped_hid</strong> count number of households and
-records swapped</li>
-<li><strong>log_file_name</strong> path for writing a log file. The log
-file contains a list of household IDs (<code>hid</code>) that could not
-have been swapped and is only created if any such households exist.</li>
-<li><strong>seed</strong> integer defining the seed for the random
-number generator, for reproducibility.</li>
+<li><strong>data</strong> micro data containing ONLY integer values, rectangular table format.</li>
+<li><strong>hid</strong> column index in  which refers to the household identifier.</li>
+<li><strong>hierarchy</strong> column indices of variables in  which refer to the geographic hierarchy in the micro data set. For instance county &gt; municipality &gt; district.</li>
+<li><strong>similar</strong> vector of vector containing the similarity profiles that are sets of variables in  which should be considered when swapping households.  corresponds to the first set similarity variables,  to the second set and so on.</li>
+<li><strong>swaprate</strong> double between 0 and 1 defining the proportion of households which should be swapped, see details for more explanations</li>
+<li><strong>risk</strong> vector of vector containing the risk of each individual for each hierarchy level. <code>risk[0]</code> corresponds to the risks of the first record for all hierarchy levels, <code>risk[1]</code> for the second record and so on. Should be ignored, for now, it is not fully tested yet.</li>
+<li><strong>risk_threshold</strong> risk threshold, which determines if a record has to be swapped and over which hierarchy level. This overwrites k_anonymity. Should be ignored, for now, it is not fully tested yet.</li>
+<li><strong>k_anonymity</strong> integer defining the threshold of high risk households (k-anonymity). A record is not at risk if <code>k_anonymity &gt; counts</code>.</li>
+<li><strong>risk_variables</strong> column indices of variables in  which will be considered for estimating the risk. This is only used if <code>risk</code> was not supplied.</li>
+<li><strong>carry_along</strong> column indices of variables in  which are additionally swapped. These variables do not interfere with the procedure of finding a record to swap with. This parameter is only used at the end of the procedure when swapping the hierarchies. We note that the variables to be used as <code>carry_along</code> should be at household level. In case it is detected that they are at individual level (different values within <code>hid</code>), a warning is given because unexpected results may occur since the first observed value within the Household for any variable is used for all members in the swapped household.</li>
+<li><strong>count_swapped_records</strong>, <strong>count_swapped_hid</strong> count number of households and records swapped</li>
+<li><strong>log_file_name</strong> path for writing a log file. The log file contains a list of household IDs (<code>hid</code>) that could not have been swapped and is only created if any such households exist.</li>
+<li><strong>seed</strong> integer defining the seed for the random number generator, for reproducibility.</li>
 </ul>
-<p><strong>IMPORTANT</strong>: The argument <code>data</code> contains
-the micro data and can be understood as a vector of vectors. Inside the
-function, <code>data</code> is expected to contain each column of the
-input data as <code>std::vector&lt;int&gt;</code> which are then again
-stored in an <code>std::vector&lt; std::vector&lt;int&gt; &gt;</code>.
-So <code>data[0]</code> addresses variables of the first record and
-<code>data[0][0]</code> the first column of the first record. The same
-logic hold for the argument <code>risk</code>.</p>
+<p><strong>IMPORTANT</strong>: The argument <code>data</code> contains the micro data and can be understood as a vector of vectors. Inside the function, <code>data</code> is expected to contain each column of the input data as <code>std::vector&lt;int&gt;</code> which are then again stored in an <code>std::vector&lt; std::vector&lt;int&gt; &gt;</code>. So <code>data[0]</code> addresses variables of the first record and <code>data[0][0]</code> the first column of the first record. The same logic hold for the argument <code>risk</code>.</p>
 <div id="some-differences-to-sas-code" class="section level3">
 <h3>Some differences to SAS-Code</h3>
 <div id="risk-definition" class="section level4">
 <h4>Risk definition</h4>
 <ul>
-<li><strong>C++-Code</strong>: Risk is calculated using counts over the
-geographic hierarchies (<code>hierarchy</code>) and the combination of
-all risk variables.</li>
-<li><strong>SAS-Code</strong>: Risk is calculated using counts for each
-geographic hierarchy (<code>hierarchy</code>) and risk variable
-separately. These risks are then combined to produce a single risk value
-for each record.</li>
+<li><strong>C++-Code</strong>: Risk is calculated using counts over the geographic hierarchies (<code>hierarchy</code>) and the combination of all risk variables.</li>
+<li><strong>SAS-Code</strong>: Risk is calculated using counts for each geographic hierarchy (<code>hierarchy</code>) and risk variable separately. These risks are then combined to produce a single risk value for each record.</li>
 </ul>
 </div>
 <div id="sampling-probability" class="section level4">
 <h4>Sampling probability</h4>
 <ul>
-<li><strong>C++-Code</strong>: Sampling probability <span class="math inline">\(p_{y,h}\)</span> for household <span class="math inline">\(y\)</span> at the geographic hierarchy <span class="math inline">\(h\)</span> is derived from the risks <span class="math inline">\(r_{i,h}\)</span> of all individuals living in the
-same household. The risk <span class="math inline">\(r_{i,h}\)</span>
-for each individual <span class="math inline">\(i\)</span> in geographic
-hierarchy (<span class="math inline">\(h\)</span>) is currently
-estimated through the k-anonymity rule. <span class="math inline">\(r_{i,h}\)</span> is then defined as</li>
+<li><strong>C++-Code</strong>: Sampling probability <span class="math inline">\(p_{y,h}\)</span> for household <span class="math inline">\(y\)</span> at the geographic hierarchy <span class="math inline">\(h\)</span> is derived from the risks <span class="math inline">\(r_{i,h}\)</span> of all individuals living in the same household. The risk <span class="math inline">\(r_{i,h}\)</span> for each individual <span class="math inline">\(i\)</span> in geographic hierarchy (<span class="math inline">\(h\)</span>) is currently estimated through the k-anonymity rule. <span class="math inline">\(r_{i,h}\)</span> is then defined as</li>
 </ul>
 <p><span class="math display">\[
-r_{i,h} = (\sum\limits_{j=1}^{N_{g_1}}1[v_{1(i)}=v_{1(j)} \land ...
-\land v_{p(i)}=v_{p(j)}])^{-1} \quad ,
+r_{i,h} = (\sum\limits_{j=1}^{N_{g_1}}1[v_{1(i)}=v_{1(j)} \land ... \land v_{p(i)}=v_{p(j)}])^{-1} \quad ,
 \]</span></p>
-<p>with <span class="math inline">\(v_1,\ldots,v_p\)</span> as a set of
-risk variables, <span class="math inline">\(N_{g_1}\)</span> as the
-number of persons living in region <span class="math inline">\(g_1\)</span> and <span class="math inline">\(1[...]\)</span> as the indicator function. <span class="math inline">\(1[v_{1(i)}=v_{1(j)} \land ... \land
-v_{p(i)}=v_{p(j)}]\)</span> is 1 if individual <span class="math inline">\(j\)</span> as the same values for risk variables
-<span class="math inline">\(v_1,\ldots,v_p\)</span> as individual <span class="math inline">\(i\)</span> and is 0 otherwise. Casually
-speaking</p>
+<p>with <span class="math inline">\(v_1,\ldots,v_p\)</span> as a set of risk variables, <span class="math inline">\(N_{g_1}\)</span> as the number of persons living in region <span class="math inline">\(g_1\)</span> and <span class="math inline">\(1[...]\)</span> as the indicator function. <span class="math inline">\(1[v_{1(i)}=v_{1(j)} \land ... \land v_{p(i)}=v_{p(j)}]\)</span> is 1 if individual <span class="math inline">\(j\)</span> as the same values for risk variables <span class="math inline">\(v_1,\ldots,v_p\)</span> as individual <span class="math inline">\(i\)</span> and is 0 otherwise. Casually speaking</p>
 <p><span class="math display">\[
 r_{i,h} \sim \frac{1}{counts} \quad .
 \]</span></p>
-<p>The sampling probability for household <span class="math inline">\(y\)</span>, <span class="math inline">\(p_{y,h}\)</span> in hierarchy <span class="math inline">\(h\)</span>, is then defined by the maximum of risk
-across all household member</p>
+<p>The sampling probability for household <span class="math inline">\(y\)</span>, <span class="math inline">\(p_{y,h}\)</span> in hierarchy <span class="math inline">\(h\)</span>, is then defined by the maximum of risk across all household member</p>
 <p><span class="math display">\[
 p_{y,h} = \max_{i\text{ in household }y}(r_{i,h}) \quad .
-\]</span> This sampling probability is used for selecting households for
-swapping as well as donor households.</p>
+\]</span> This sampling probability is used for selecting households for swapping as well as donor households.</p>
 <ul>
-<li><strong>SAS-Code</strong>: Sampling probability is derived from
-multiple factors.</li>
+<li><strong>SAS-Code</strong>: Sampling probability is derived from multiple factors.</li>
 </ul>
 <p><span class="math display">\[
 p_i = \begin{cases}
@@ -480,105 +218,68 @@ p_i = \begin{cases}
 \]</span> where <span class="math display">\[
 b = SA - N_{high}\\
 c = N_{netto} - N_{high}
-\]</span> with <span class="math inline">\(SA\)</span> as the sample
-size, <span class="math inline">\(N_{high}\)</span> as the number of
-high risk households in the geographic area and <span class="math inline">\(N_{netto}\)</span> the number of non-imputed
-records in the geographic area.</p>
+\]</span> with <span class="math inline">\(SA\)</span> as the sample size, <span class="math inline">\(N_{high}\)</span> as the number of high risk households in the geographic area and <span class="math inline">\(N_{netto}\)</span> the number of non-imputed records in the geographic area.</p>
 </div>
 <div id="swapping-records" class="section level4">
 <h4>Swapping Records</h4>
 <ul>
-<li><strong>C++-Code</strong>: Swaps are made in every hierarchy level
-and records which do not fulfil the k-anonymity are swapped. The donor
-set of records to be swapped with is always made out of every record
-which does not belong to the same geographic area as the swapped
-households. At the lowest hierarchy level, an additional number of
-households is swapped such that the proportion of households swapped is
-equal to the number in <code>swaprate</code>. If the proportion of
-already swapped households succeeds these values then records that do
-not fulfil the k-anonymity are also swapped.</li>
+<li><strong>C++-Code</strong>: Swaps are made in every hierarchy level and records which do not fulfil the k-anonymity are swapped. The donor set of records to be swapped with is always made out of every record which does not belong to the same geographic area as the swapped households. At the lowest hierarchy level, an additional number of households is swapped such that the proportion of households swapped is equal to the number in <code>swaprate</code>. If the proportion of already swapped households succeeds these values then records that do not fulfil the k-anonymity are also swapped.</li>
 </ul>
 <div class="figure">
 <img src="data:image/png;base64,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AAAATEcTAwAAwHQ0MQAAAExHEwMAAMB0NDEAAABMRxMDAADAdDQxAAAATEcTAwAAwHQ0MQAAAExHEwMAAMB0NDEAAABMRxMDAADAdDQxAAAATEcTAwAAwHQ0MQAAAExHEwMAAMB0NDEAAABMRxMDAADAdDQxAAAATEcTAwAAwHQ0MQAAAExHEwMAAMB0NDEAAABMRxMDAADAdDQxAAAATEcTAwAAwHQ0MQAAAExHEwMAAMB0NDEAAABMRxMDAADAdDQxAAAATEcTAwAAwHQ0MQAAAExHEwMAAMB0NDEAAABMRxMDAADAdDQxAAAATEcTAwAAwHQ0MQAAAExHEwMAAMB0NDEAAABMRxMDAADAdDQxAAAATEcTAwAAwHQ0MQAAAExHEwMAAMB0NDEAAABMRxMDAADAdDQxAAAATEcTAwAAwHQ0MQAAAExHEwMAAMB0NDEAAABMRxMDAADAdDQxAAAATEcTAwAAwHQ0MQAAAExHEwMAAMB0NDEAAABMRxMDAADAdDQxAAAATEcTAwAAwHQ0MQAAAExHEwMAAMB0NDEAAABMRxMDAADAdDQxAAAATEcTAwAAwHQ0MQAAAExHEwMAAMB0NDEAAABMRxMDAADAdDQxAAAATEcTAwAAwHQ0MQAAAExHEwMAAMB0NDEAAABMRxMDAADAhySvUQAAA6JJREFUdDQxAAAATEcTAwAAwHQ0MQAAAExHEwMAAMB0NDEAAABMRxMDAADAdDQxAAAATEcTAwAAwHQ0MQAAAExHEwMAAMB0NDEAAABMRxMDAADAdDQxAAAATEcTAwAAwHQ0MQAAAExHEwMAAMB0NDEAAABMRxMDAADAdDQxAAAATEcTAwAAwHQ0MQAAAExHEwMAAMB0NDEAAABMRxMDAADAdDQxAAAATEcTAwAAwHQ0MQAAAExHEwMAAMB0NDEAAABMRxMDAADAdDQxAAAATEcTAwAAwHQ0MQAAAExHEwMAAMB0NDEAAABMRxMDAADAdDQxAAAATEcTAwAAwHQ0MQAAAExHEwMAAMB0NDEAAABMRxMDAADAdDQxAAAATEcTAwAAwHQ0MQAAAExHEwMAAMB0NDEAAABMRxMDAADAdDQxAAAATEcTAwAAwHQ0MQAAAExHEwMAAMB0NDEAAABMRxMDAADAdDQxAAAATEcTAwAAwHQ0MQAAAExHEwMAAMB0NDEAAABMRxMDAADAdDQxAAAATEcTAwAAwHQ0MQAAAExHEwMAAMB0NDEAAABMRxMDAADAdDQxAAAATEcTAwAAwHQ0MQAAAExHEwMAAMB0NDEAAABMRxMDAADAdDQxAAAATEcTAwAAwHQ0MQAAAExHEwMAAMB0NDEAAABMRxMDAADAdDQxAAAATEcTAwAAwHQ0MQAAAExHEwMAAMB0NDEAAABMRxMDAADAdDQxAAAATEcTAwAAwHQ0MQAAAExHEwMAAMB0NDEAAABMRxMDAADAdDQxAAAATEcTAwAAwHQ0MQAAAExHEwMAAMB0NDEAAABMRxMDAADAdDQxAAAATEcTAwAAwHQ0MQAAAExHEwMAAMB0NDEAAABMRxMDAADAdDQxAAAATEcTAwAAwHQ0MQAAAExHEwMAAMB0NDEAAABMRxMDAADAdDQxAAAATEcTAwAAwHQ0MQAAAExHEwMAAMB0NDEAAABMRxMDAADAdDQxAAAATEcTAwAAwHQ0MQAAAExHEwMAAMB0NDEAAABMRxMDAADAdDQxAAAATEcTAwAAwHQ0MQAAAExHEwMAAMB0NDEAAABMRxMDAADAdDQxAAAATEcTAwAAwHQ0MQAAAExHEwMAAMB0NDEAAABMRxMDAADAdDQxAAAATEcTAwAAwHQ0MQAAAExHEwMAAMB0NDEAAABMRxMDAADAdDQxAAAATEcTAwAAwHQ0MQAAAExHEwMAAMB0/w+YONWlAWOSxwAAAABJRU5ErkJggg==" style="width:100.0%" alt />
-<p class="caption">Example for swapping households. The number
-represents the number of high risk households at each hierarchy
-level.</p>
+<p class="caption">Example for swapping households. The number represents the number of high risk households at each hierarchy level.</p>
 </div>
-<p>Figure 1 displays an example with hierarchy levels NUTS1 &gt; NUTS2
-&gt; NUTTS3 where the numbers of high risk households are displayed at
-the end of the edges. For instance, in the first NUTS1 region, there are
-5 high risk households that will be swapped with households from other
-NUTS1 regions. In the first NUTS2 region, there are 10 high risk
-households that will be swapped with households that are not in the same
-NUTS2 region. At the lowest level, the NUTS3 regions, the number of
-swaps, <span class="math inline">\(n_{swaps}\)</span> for the first
-district is defined by</p>
+<p>Figure 1 displays an example with hierarchy levels NUTS1 &gt; NUTS2 &gt; NUTTS3 where the numbers of high risk households are displayed at the end of the edges. For instance, in the first NUTS1 region, there are 5 high risk households that will be swapped with households from other NUTS1 regions. In the first NUTS2 region, there are 10 high risk households that will be swapped with households that are not in the same NUTS2 region. At the lowest level, the NUTS3 regions, the number of swaps, <span class="math inline">\(n_{swaps}\)</span> for the first district is defined by</p>
 <p><span class="math display">\[
 n_{swaps} = 2 + Rest\\
-Rest = \max(0,N\cdot s - n_{already})
-\]</span> with <span class="math inline">\(N\)</span> as the number of
-households in the district, <span class="math inline">\(n_{already}\)</span> as the number of already
-swapped households in the district and <span class="math inline">\(s\)</span> as the swap rate.</p>
+Rest = \max(0,N\cdot s - n_{already}) 
+\]</span> with <span class="math inline">\(N\)</span> as the number of households in the district, <span class="math inline">\(n_{already}\)</span> as the number of already swapped households in the district and <span class="math inline">\(s\)</span> as the swap rate.</p>
 <ul>
-<li><strong>SAS-Code</strong> Swaps are made in every hierarchy level
-and depending on the sampling probability, high risk households are more
-likely to be swapped than low risk households, but they are not
-mandatorily swapped. The number of swappes in each hierarchy level is
-defined by the number of high risk records and the total number of
-records in the geographic area. For instance, having the geographic
-hierarchy county &gt; municipality &gt; district, the number of Swaps in
-the municipality <span class="math inline">\(m\)</span> of county <span class="math inline">\(n\)</span> is defined by</li>
+<li><strong>SAS-Code</strong> Swaps are made in every hierarchy level and depending on the sampling probability, high risk households are more likely to be swapped than low risk households, but they are not mandatorily swapped. The number of swappes in each hierarchy level is defined by the number of high risk records and the total number of records in the geographic area. For instance, having the geographic hierarchy county &gt; municipality &gt; district, the number of Swaps in the municipality <span class="math inline">\(m\)</span> of county <span class="math inline">\(n\)</span> is defined by</li>
 </ul>
 <p><span class="math display">\[
 SWAP_m = \frac{SIZE_m+RISK_m}{2}
-\]</span> where <span class="math inline">\(SIZE_m\)</span> can be
-derived by using the reciprocal number of households of each
-municipality in county <span class="math inline">\(n\)</span>.</p>
+\]</span> where <span class="math inline">\(SIZE_m\)</span> can be derived by using the reciprocal number of households of each municipality in county <span class="math inline">\(n\)</span>.</p>
 <p><span class="math display">\[
 SIZE_m = \frac{N_m^{-1}}{\sum_iN_i^{-1}}\cdot sN_n
-\]</span> with <span class="math inline">\(N_m\)</span> as the number of
-households in municipality <span class="math inline">\(m\)</span>, <span class="math inline">\(s\)</span> the global swaprate and <span class="math inline">\(N_n\)</span> as the number of households in county
-<span class="math inline">\(n\)</span>. <span class="math inline">\(RISK_m\)</span> can be derived using the
-proportion of high risk households in each municipality</p>
+\]</span> with <span class="math inline">\(N_m\)</span> as the number of households in municipality <span class="math inline">\(m\)</span>, <span class="math inline">\(s\)</span> the global swaprate and <span class="math inline">\(N_n\)</span> as the number of households in county <span class="math inline">\(n\)</span>. <span class="math inline">\(RISK_m\)</span> can be derived using the proportion of high risk households in each municipality</p>
 <p><span class="math display">\[
 RISK_m = \frac{H_m}{\sum_iH_i}\cdot sN_n
 \]</span></p>
-<p>with <span class="math inline">\(H_m\)</span> as the proportion of
-high risk households in municipality <span class="math inline">\(m\)</span>.</p>
+<p>with <span class="math inline">\(H_m\)</span> as the proportion of high risk households in municipality <span class="math inline">\(m\)</span>.</p>
 </div>
 </div>
 </div>
 <div id="application" class="section level2">
 <h2>Application</h2>
-<p>The package was tested on randomly generated data, which contained 5
-geographic levels and some other sociodemographic variables.</p>
+<p>The package was tested on randomly generated data, which contained 5 geographic levels and some other sociodemographic variables.</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sdcMicro)</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">createDat</span>(<span class="at">N=</span><span class="dv">100000</span>)</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>dat</span></code></pre></div>
 <pre><code>##         nuts1 nuts2 nuts3  lau2    hid hsize ageGroup gender national htype
-##      1:     1    12  1210 12104      1     6        4      2        2     6
-##      2:     1    12  1210 12104      1     6        6      1        3     6
-##      3:     1    12  1210 12104      1     6        6      2        3     6
-##      4:     1    12  1210 12104      1     6        5      2        1     6
-##      5:     1    12  1210 12104      1     6        4      1        1     6
+##      1:     2    24  2406 24065      1     4        4      1        1     5
+##      2:     2    24  2406 24065      1     4        1      1        2     5
+##      3:     2    24  2406 24065      1     4        7      1        4     5
+##      4:     2    24  2406 24065      1     4        6      2        2     5
+##      5:     1    12  1215 12153      2     3        3      1        3     6
 ##     ---                                                                    
-## 349731:     3    31  3115 31155  99998     4        6      1        4    10
-## 349732:     2    23  2311 23112  99999     1        7      2        1    10
-## 349733:     3    32  3206 32065 100000     3        3      2        4     3
-## 349734:     3    32  3206 32065 100000     3        7      2        2     3
-## 349735:     3    32  3206 32065 100000     3        2      2        2     3
+## 348733:     3    33  3313 33133 100000     5        7      2        3    10
+## 348734:     3    33  3313 33133 100000     5        6      1        3    10
+## 348735:     3    33  3313 33133 100000     5        7      1        3    10
+## 348736:     3    33  3313 33133 100000     5        7      1        1    10
+## 348737:     3    33  3313 33133 100000     5        6      1        3    10
 ##         hincome
-##      1:       8
-##      2:       8
-##      3:       8
-##      4:       8
-##      5:       8
+##      1:       6
+##      2:       6
+##      3:       6
+##      4:       6
+##      5:       4
 ##     ---        
-## 349731:       5
-## 349732:       4
-## 349733:       4
-## 349734:       4
-## 349735:       4</code></pre>
+## 348733:       6
+## 348734:       6
+## 348735:       6
+## 348736:       6
+## 348737:       6</code></pre>
 <p>Applying the record swapping to dat could look like this</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>hierarchy <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;nuts1&quot;</span>,<span class="st">&quot;nuts2&quot;</span>)</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>risk_variables <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;hincome&quot;</span>,<span class="st">&quot;ageGroup&quot;</span>,<span class="st">&quot;gender&quot;</span>)</span>
@@ -597,20 +298,13 @@ geographic levels and some other sociodemographic variables.</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>dat_swapped</span></code></pre></div>
 <p>Here the procedure was applied to <code>dat</code></p>
 <ul>
-<li>using every hierarchy level, <code>nuts1</code> and
-<code>nuts2</code></li>
-<li>using <code>hsize</code> as the similarity variable (so only
-households with the same household size are swapped)</li>
-<li>using <code>hIncome</code>, <code>ageGroup</code>,
-<code>gender</code> as risk variables</li>
+<li>using every hierarchy level, <code>nuts1</code> and <code>nuts2</code></li>
+<li>using <code>hsize</code> as the similarity variable (so only households with the same household size are swapped)</li>
+<li>using <code>hIncome</code>, <code>ageGroup</code>, <code>gender</code> as risk variables</li>
 <li>setting the k-anonymity rule to 3</li>
 <li>setting the swaprate to 0.05</li>
 </ul>
-<p>If <code>k_anonymity &lt;- 0</code> only the swaprate is considered.
-Then at most <code>th*100</code>% of the households are swapped. If the
-sample is very small, the actual number of swaps can be smaller,
-however, this can only happen if some regions have a very small number
-of households, e.g. 1,2,3,…</p>
+<p>If <code>k_anonymity &lt;- 0</code> only the swaprate is considered. Then at most <code>th*100</code>% of the households are swapped. If the sample is very small, the actual number of swaps can be smaller, however, this can only happen if some regions have a very small number of households, e.g. 1,2,3,…</p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>k_anonymity <span class="ot">&lt;-</span> <span class="dv">0</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>swaprate <span class="ot">&lt;-</span> .<span class="dv">05</span></span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>dat_swapped <span class="ot">&lt;-</span> <span class="fu">recordSwap</span>(<span class="at">data =</span> dat, <span class="at">hid =</span> hid,</span>
@@ -633,9 +327,7 @@ of households, e.g. 1,2,3,…</p>
 <pre><code>## [1] 5000</code></pre>
 <div id="supplying-index-vectors" class="section level3">
 <h3>Supplying index vectors</h3>
-<p>Instead of column names, index vectors can be supplied for parameters
-<code>hid</code>, <code>hierarchy</code>, <code>similar</code> and
-<code>risk_variables</code>.</p>
+<p>Instead of column names, index vectors can be supplied for parameters <code>hid</code>, <code>hierarchy</code>, <code>similar</code> and <code>risk_variables</code>.</p>
 <div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>hierarchy <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>) <span class="co"># ~ c(&quot;nuts1&quot;,&quot;nuts2&quot;)</span></span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>risk_variables <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">11</span>,<span class="dv">7</span>,<span class="dv">8</span>) <span class="co"># ~ c(&quot;hincome&quot;,&quot;ageGroup&quot;,&quot;gender&quot;)</span></span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>hid <span class="ot">&lt;-</span> <span class="dv">5</span> <span class="co"># ~ &quot;hid&quot;</span></span>
@@ -648,19 +340,11 @@ of households, e.g. 1,2,3,…</p>
 <span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>                          <span class="at">k_anonymity =</span> k_anonymity,</span>
 <span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>                          <span class="at">swaprate =</span> swaprate)</span></code></pre></div>
 <pre><code>## Recordswapping was successful!</code></pre>
-<p>Please note that the underlying <code>c++</code>-routines expect
-indices starting from 0 but in <code>R</code> indices start with 1. The
-wrapper function <code>recordSwap()</code> converts indices or column
-names in <code>R</code> into the correct format for the <code>c++</code>
-routines. So using column indices for this function call should be done
-in the usually <code>R</code>-fashion where indices start with 1.</p>
+<p>Please note that the underlying <code>c++</code>-routines expect indices starting from 0 but in <code>R</code> indices start with 1. The wrapper function <code>recordSwap()</code> converts indices or column names in <code>R</code> into the correct format for the <code>c++</code> routines. So using column indices for this function call should be done in the usually <code>R</code>-fashion where indices start with 1.</p>
 </div>
 <div id="similarity-profiles" class="section level3">
 <h3>Similarity profiles</h3>
-<p>In some cases, the condition of finding a <em>similar</em> household
-given by the parameter <code>similarity</code> might be too strict. And
-thus, it is not possible to swap the necessary number of households due
-to the lack of a suitable donor household.</p>
+<p>In some cases, the condition of finding a <em>similar</em> household given by the parameter <code>similarity</code> might be too strict. And thus, it is not possible to swap the necessary number of households due to the lack of a suitable donor household.</p>
 <div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># demonstrate on small data set</span></span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">createDat</span>(<span class="at">N=</span><span class="dv">10000</span>)</span>
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>hierarchy <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;nuts1&quot;</span>,<span class="st">&quot;nuts2&quot;</span>)</span>
@@ -677,24 +361,17 @@ to the lack of a suitable donor household.</p>
 <span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>                          <span class="at">k_anonymity =</span> <span class="dv">3</span>,</span>
 <span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>                          <span class="at">swaprate =</span> <span class="fl">0.05</span>,</span>
 <span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>                          <span class="at">seed =</span> 123456L)</span></code></pre></div>
-<pre><code>## Donor household was not found in 5 case(s).
+<pre><code>## Donor household was not found in 3 case(s).
 ## See TRS_logfile.txt for a detailed list</code></pre>
-<p>The expected number of swapped households for a population of 10000
-households and a swapping rate of 0.05 is 500. The actual number of
-swaps was however:</p>
+<p>The expected number of swapped households for a population of 10000 households and a swapping rate of 0.05 is 500. The actual number of swaps was however:</p>
 <div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>dat_compare <span class="ot">&lt;-</span> <span class="fu">merge</span>(dat[,.(<span class="fu">paste</span>(nuts1[<span class="dv">1</span>],nuts2[<span class="dv">1</span>])),<span class="at">by=</span>hid],</span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>                     dat_swapped[,.(<span class="fu">paste</span>(nuts1[<span class="dv">1</span>],nuts2[<span class="dv">1</span>])),<span class="at">by=</span>hid],<span class="at">by=</span><span class="st">&quot;hid&quot;</span>)</span>
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="co"># number of swapped households</span></span>
 <span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(dat_compare[V1.x<span class="sc">!=</span>V1.y])</span></code></pre></div>
-<pre><code>## [1] 490</code></pre>
-<p>With the parameter <code>similar</code> multiple similarity profiles
-can be defined, if the parameter input is a <code>list</code>. If a
-donor could not be found for the first similarity profile
-(<code>similar[[1]]</code>) then a donor is searched for using the next
-similarity profile (<code>similar[[2]]</code>) and so on.</p>
-<p>Using multiple similarity profiles makes it easy to supply fall-back
-profiles if the initial profile is too specific.</p>
+<pre><code>## [1] 494</code></pre>
+<p>With the parameter <code>similar</code> multiple similarity profiles can be defined, if the parameter input is a <code>list</code>. If a donor could not be found for the first similarity profile (<code>similar[[1]]</code>) then a donor is searched for using the next similarity profile (<code>similar[[2]]</code>) and so on.</p>
+<p>Using multiple similarity profiles makes it easy to supply fall-back profiles if the initial profile is too specific.</p>
 <div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># additional profile contains only hsize</span></span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>similar <span class="ot">&lt;-</span> <span class="fu">list</span>(similar)</span>
 <span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>similar[[<span class="dv">2</span>]] <span class="ot">&lt;-</span> <span class="st">&quot;hsize&quot;</span></span>
@@ -722,16 +399,8 @@ profiles if the initial profile is too specific.</p>
 </div>
 <div id="carry-along-variables" class="section level3">
 <h3>Carry along variables</h3>
-<p>Using the function <code>recordSwap()</code> like above always
-results in swapping the variables defined through variable
-<code>hierarchy</code>. Sometimes it might be useful to swap more
-variables than the ones stated in hierarchy.</p>
-<p>When we apply the record swapping using <code>hierarchy</code>-levels
-<code>nuts1</code> and <code>nuts2</code> then the <code>nuts3</code>
-and <code>lau2</code>-variable in our data set will stay unchanged. Thus
-for the resulting data set, the variables <code>nuts1</code> and
-<code>nuts2</code> are no longer coherent with <code>nuts3</code> and
-<code>lau2</code>.</p>
+<p>Using the function <code>recordSwap()</code> like above always results in swapping the variables defined through variable <code>hierarchy</code>. Sometimes it might be useful to swap more variables than the ones stated in hierarchy.</p>
+<p>When we apply the record swapping using <code>hierarchy</code>-levels <code>nuts1</code> and <code>nuts2</code> then the <code>nuts3</code> and <code>lau2</code>-variable in our data set will stay unchanged. Thus for the resulting data set, the variables <code>nuts1</code> and <code>nuts2</code> are no longer coherent with <code>nuts3</code> and <code>lau2</code>.</p>
 <p>Let’s have a more detailed look at the problem</p>
 <div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>hid <span class="ot">&lt;-</span> <span class="st">&quot;hid&quot;</span></span>
 <span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>hierarchy <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;nuts1&quot;</span>,<span class="st">&quot;nuts2&quot;</span>)</span>
@@ -751,27 +420,21 @@ for the resulting data set, the variables <code>nuts1</code> and
 <span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>                     dat_swapped[,.(<span class="fu">paste</span>(nuts1[<span class="dv">1</span>],nuts2[<span class="dv">1</span>])),<span class="at">by=</span>hid],<span class="at">by=</span><span class="st">&quot;hid&quot;</span>)</span>
 <span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(dat_compare[V1.x<span class="sc">!=</span>V1.y])</span></code></pre></div>
 <pre><code>##    hid V1.x V1.y
-## 1:   9 3 34 2 24
-## 2:  37 2 23 2 24
-## 3:  77 3 33 3 31
-## 4:  83 3 35 1 13
-## 5:  84 2 24 2 22
-## 6:  85 2 25 2 24</code></pre>
-<p>For <code>nuts1==1</code> and <code>nuts2==14</code> the
-<code>nuts3</code> variables takes on values</p>
+## 1:   5 1 14 3 35
+## 2:  37 3 34 2 22
+## 3:  47 2 24 3 32
+## 4:  68 1 12 1 14
+## 5:  84 2 24 1 12
+## 6:  85 3 31 1 15</code></pre>
+<p>For <code>nuts1==1</code> and <code>nuts2==14</code> the <code>nuts3</code> variables takes on values</p>
 <div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>dat[nuts1<span class="sc">==</span><span class="dv">1</span><span class="sc">&amp;</span>nuts2<span class="sc">==</span><span class="dv">14</span>,<span class="fu">sort</span>(<span class="fu">unique</span>(nuts3))]</span></code></pre></div>
 <pre><code>##  [1] 1401 1402 1403 1404 1405 1406 1407 1408 1409 1410 1411 1412 1413 1414 1415</code></pre>
-<p>In the swapped data set there are however many more values for
-<code>nuts3</code> now which are not coherent with <code>nuts1==1</code>
-and <code>nuts2==14</code></p>
+<p>In the swapped data set there are however many more values for <code>nuts3</code> now which are not coherent with <code>nuts1==1</code> and <code>nuts2==14</code></p>
 <div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>dat_swapped[nuts1<span class="sc">==</span><span class="dv">1</span><span class="sc">&amp;</span>nuts2<span class="sc">==</span><span class="dv">14</span>,<span class="fu">sort</span>(<span class="fu">unique</span>(nuts3))]</span></code></pre></div>
-<pre><code>##  [1] 1106 1107 1108 1111 1302 1306 1308 1315 1401 1402 1403 1404 1405 1406 1407
-## [16] 1408 1409 1410 1411 1412 1413 1414 1415 1501 1504 1506 1508 1511 1513 1514
-## [31] 2109 2111 2206 2211 2214 2302 2310 2408 2413 2503 2504 2510 2513 2515 3112
-## [46] 3202 3205 3210 3215 3307 3313 3402 3514</code></pre>
-<p>Using the parameter <code>carry_along</code> one can define certain
-variables which are additionally swapped but do not interfere with the
-risk calculation, sampling and procedure of finding a donor.</p>
+<pre><code>##  [1] 1202 1205 1206 1308 1309 1310 1311 1313 1401 1402 1403 1404 1405 1406 1407
+## [16] 1408 1409 1410 1411 1412 1413 1414 1415 1504 1509 2104 2111 2112 2115 2311
+## [31] 2314 2503 2508 3103 3107 3115 3302 3305 3412 3507 3509 3510 3512</code></pre>
+<p>Using the parameter <code>carry_along</code> one can define certain variables which are additionally swapped but do not interfere with the risk calculation, sampling and procedure of finding a donor.</p>
 <div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>dat_swapped2 <span class="ot">&lt;-</span> <span class="fu">recordSwap</span>(<span class="at">data =</span> <span class="fu">copy</span>(dat),</span>
 <span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>                        <span class="at">hid =</span> hid,</span>
 <span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>                        <span class="at">hierarchy =</span> hierarchy,</span>
@@ -790,10 +453,7 @@ risk calculation, sampling and procedure of finding a donor.</p>
 <span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a><span class="co"># check if value combinations of swapped and original data are the same</span></span>
 <span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a><span class="fu">all.equal</span>(dat_geo,dat_geo_swapped)</span></code></pre></div>
 <pre><code>## [1] TRUE</code></pre>
-<p>Both the original and swapped data set have the same value
-combinations for <code>nuts1</code>, <code>nuts2</code> and
-<code>nuts3</code>. Setting this parameter did, however, not interfere
-with the swapping procedure</p>
+<p>Both the original and swapped data set have the same value combinations for <code>nuts1</code>, <code>nuts2</code> and <code>nuts3</code>. Setting this parameter did, however, not interfere with the swapping procedure</p>
 <div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>dat_compare2 <span class="ot">&lt;-</span> <span class="fu">merge</span>(dat[,.(<span class="fu">paste</span>(nuts1[<span class="dv">1</span>],nuts2[<span class="dv">1</span>])),<span class="at">by=</span>hid],</span>
 <span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>                     dat_swapped[,.(<span class="fu">paste</span>(nuts1[<span class="dv">1</span>],nuts2[<span class="dv">1</span>])),<span class="at">by=</span>hid],<span class="at">by=</span><span class="st">&quot;hid&quot;</span>)</span>
 <span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -801,9 +461,7 @@ with the swapping procedure</p>
 <span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a><span class="fu">all.equal</span>(dat_compare2[<span class="fu">order</span>(hid),.(hid)],</span>
 <span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a>          dat_compare[<span class="fu">order</span>(hid),.(hid)])</span></code></pre></div>
 <pre><code>## [1] TRUE</code></pre>
-<p>Using the same idea one can set <code>return_swapped_id = TRUE</code>
-to return the <code>hid</code> with which the records were swapped
-with.</p>
+<p>Using the same idea one can set <code>return_swapped_id = TRUE</code> to return the <code>hid</code> with which the records were swapped with.</p>
 <div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>dat_swapped3 <span class="ot">&lt;-</span> <span class="fu">recordSwap</span>(<span class="at">data =</span> <span class="fu">copy</span>(dat),</span>
 <span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>                        <span class="at">hid =</span> hid,</span>
 <span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>                        <span class="at">hierarchy =</span> hierarchy,</span>
@@ -814,9 +472,7 @@ with.</p>
 <span id="cb40-8"><a href="#cb40-8" aria-hidden="true" tabindex="-1"></a>                        <span class="at">return_swapped_id =</span> <span class="cn">TRUE</span>,</span>
 <span id="cb40-9"><a href="#cb40-9" aria-hidden="true" tabindex="-1"></a>                        <span class="at">seed=</span>1234L)</span></code></pre></div>
 <pre><code>## Recordswapping was successful!</code></pre>
-<p>The output now has an additional column named
-<code>hid_swapped</code>, which contains the household ID with which a
-household was swapped with.</p>
+<p>The output now has an additional column named <code>hid_swapped</code>, which contains the household ID with which a household was swapped with.</p>
 <p>Number of swapped <code>hid</code>s</p>
 <div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>dat_swapped3[<span class="sc">!</span><span class="fu">duplicated</span>(hid),.N,by<span class="ot">=</span>.(<span class="at">id_swapped =</span> hid<span class="sc">!=</span>hid_swapped)]</span></code></pre></div>
 <pre><code>##    id_swapped    N
@@ -825,39 +481,30 @@ household was swapped with.</p>
 </div>
 <div id="information-loss" class="section level3">
 <h3>Information loss</h3>
-<p>With the function <code>infoLoss()</code> one can calculate various
-information loss measures over a pre defined frequency table. This
-frequency table is defined by the parameter <code>table_vars</code>,
-which accepts column names of the original and swapped micro data. The
-frequency table is internally constructed using both the original and
-swapped micro data. Afterwards, various information loss measures are
-estimated over each of the table cells.</p>
+<p>With the function <code>infoLoss()</code> one can calculate various information loss measures over a pre defined frequency table. This frequency table is defined by the parameter <code>table_vars</code>, which accepts column names of the original and swapped micro data. The frequency table is internally constructed using both the original and swapped micro data. Afterwards, various information loss measures are estimated over each of the table cells.</p>
 <div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="co"># calculate information loss for frequecy table nuts2 x national</span></span>
 <span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>table_vars <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;nuts2&quot;</span>,<span class="st">&quot;national&quot;</span>)</span>
 <span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>iloss <span class="ot">&lt;-</span> <span class="fu">infoLoss</span>(<span class="at">data=</span>dat, <span class="at">data_swapped =</span> dat_swapped3,</span>
 <span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>                  <span class="at">table_vars =</span> table_vars)</span>
 <span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>iloss<span class="sc">$</span>measures</span></code></pre></div>
-<pre><code>##       what      absD   abssqrtD     relabsD
-##  1:    Min  0.000000 0.00000000 0.000000000
-##  2:    10%  0.000000 0.00000000 0.000000000
-##  3:    20%  0.000000 0.00000000 0.000000000
-##  4:    30%  1.000000 0.02344338 0.002195981
-##  5:    40%  2.000000 0.04573896 0.004175365
-##  6:   Mean  3.578947 0.08273530 0.007657521
-##  7: Median  3.000000 0.07122707 0.006741573
-##  8:    60%  4.000000 0.09170863 0.008375218
-##  9:    70%  5.000000 0.11747533 0.011077883
-## 10:    80%  7.000000 0.15840579 0.014241102
-## 11:    90%  8.600000 0.19352072 0.017585059
-## 12:    95% 10.000000 0.22631982 0.020661157
-## 13:    99% 11.000000 0.25959760 0.024722442
-## 14:    Max 11.000000 0.26235645 0.024774775</code></pre>
-<p>Per default the absolute deviation (<span class="math inline">\(abs(x,y)\)</span>), relative absolute deviation
-(<span class="math inline">\(r\_abs(x,y)\)</span>), and absolute
-deviaion of square roots (<span class="math inline">\(abs\_sqr(x,y)\)</span>) is calculated between the
-table cells x and y, see also parameter <code>metric</code>.</p>
+<pre><code>##       what      absD    abssqrtD      relabsD
+##  1:    Min  0.000000 0.000000000 0.0000000000
+##  2:    10%  0.000000 0.000000000 0.0000000000
+##  3:    20%  0.000000 0.000000000 0.0000000000
+##  4:    30%  0.200000 0.004519847 0.0004081633
+##  5:    40%  2.000000 0.045139410 0.0040834989
+##  6:   Mean  4.021053 0.092956892 0.0085997737
+##  7: Median  3.000000 0.068006489 0.0061855670
+##  8:    60%  4.400000 0.102259106 0.0095290453
+##  9:    70%  6.000000 0.136359104 0.0124744719
+## 10:    80%  7.200000 0.169478280 0.0159526113
+## 11:    90%  9.000000 0.214439835 0.0202826223
+## 12:    95% 12.000000 0.281515860 0.0258782334
+## 13:    99% 17.240000 0.413849145 0.0404334900
+## 14:    Max 21.000000 0.479036417 0.0427698574</code></pre>
+<p>Per default the absolute deviation (<span class="math inline">\(abs(x,y)\)</span>), relative absolute deviation (<span class="math inline">\(r\_abs(x,y)\)</span>), and absolute deviaion of square roots (<span class="math inline">\(abs\_sqr(x,y)\)</span>) is calculated between the table cells x and y, see also parameter <code>metric</code>.</p>
 <p><span class="math display">\[
-abs(x,y) = |x-y|
+abs(x,y) = |x-y| 
 \]</span></p>
 <p><span class="math display">\[
 r\_abs(x,y) = \frac{|x-y|}{x}
@@ -865,8 +512,7 @@ r\_abs(x,y) = \frac{|x-y|}{x}
 <p><span class="math display">\[
 abs\_sqr(x,y) = |\sqrt{x}-\sqrt{y}|
 \]</span></p>
-<p>It is also possible to supply a custom information loss metric by
-using parameter <code>custom_meric</code></p>
+<p>It is also possible to supply a custom information loss metric by using parameter <code>custom_meric</code></p>
 <div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="co"># define squared distance as custom metric</span></span>
 <span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>squareD <span class="ot">&lt;-</span> <span class="cf">function</span>(x,y){</span>
 <span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>   (x<span class="sc">-</span>y)<span class="sc">^</span><span class="dv">2</span></span>
@@ -876,28 +522,25 @@ using parameter <code>custom_meric</code></p>
 <span id="cb46-7"><a href="#cb46-7" aria-hidden="true" tabindex="-1"></a>                  <span class="at">table_vars =</span> <span class="fu">c</span>(<span class="st">&quot;nuts2&quot;</span>,<span class="st">&quot;national&quot;</span>),</span>
 <span id="cb46-8"><a href="#cb46-8" aria-hidden="true" tabindex="-1"></a>                  <span class="at">custom_metric =</span> <span class="fu">list</span>(<span class="at">squareD=</span>squareD))</span>
 <span id="cb46-9"><a href="#cb46-9" aria-hidden="true" tabindex="-1"></a>iloss<span class="sc">$</span>measures <span class="co"># includes custom loss as well</span></span></code></pre></div>
-<pre><code>##       what      absD   abssqrtD     relabsD   squareD
-##  1:    Min  0.000000 0.00000000 0.000000000   0.00000
-##  2:    10%  0.000000 0.00000000 0.000000000   0.00000
-##  3:    20%  0.000000 0.00000000 0.000000000   0.00000
-##  4:    30%  1.000000 0.02344338 0.002195981   1.00000
-##  5:    40%  2.000000 0.04573896 0.004175365   4.00000
-##  6:   Mean  3.578947 0.08273530 0.007657521  23.74737
-##  7: Median  3.000000 0.07122707 0.006741573   9.00000
-##  8:    60%  4.000000 0.09170863 0.008375218  16.00000
-##  9:    70%  5.000000 0.11747533 0.011077883  25.00000
-## 10:    80%  7.000000 0.15840579 0.014241102  49.00000
-## 11:    90%  8.600000 0.19352072 0.017585059  74.20000
-## 12:    95% 10.000000 0.22631982 0.020661157 100.00000
-## 13:    99% 11.000000 0.25959760 0.024722442 121.00000
-## 14:    Max 11.000000 0.26235645 0.024774775 121.00000</code></pre>
+<pre><code>##       what      absD    abssqrtD      relabsD   squareD
+##  1:    Min  0.000000 0.000000000 0.0000000000   0.00000
+##  2:    10%  0.000000 0.000000000 0.0000000000   0.00000
+##  3:    20%  0.000000 0.000000000 0.0000000000   0.00000
+##  4:    30%  0.200000 0.004519847 0.0004081633   0.20000
+##  5:    40%  2.000000 0.045139410 0.0040834989   4.00000
+##  6:   Mean  4.021053 0.092956892 0.0085997737  34.77895
+##  7: Median  3.000000 0.068006489 0.0061855670   9.00000
+##  8:    60%  4.400000 0.102259106 0.0095290453  19.60000
+##  9:    70%  6.000000 0.136359104 0.0124744719  36.00000
+## 10:    80%  7.200000 0.169478280 0.0159526113  52.00000
+## 11:    90%  9.000000 0.214439835 0.0202826223  81.00000
+## 12:    95% 12.000000 0.281515860 0.0258782334 144.00000
+## 13:    99% 17.240000 0.413849145 0.0404334900 298.12000
+## 14:    Max 21.000000 0.479036417 0.0427698574 441.00000</code></pre>
 </div>
 <div id="sdcmicro-objects" class="section level3">
 <h3>sdcMicro Objects</h3>
-<p>The function <code>recordSwap()</code> can be called using the micro
-data directly, as seen above, or with an sdcMicro-Object. Parameters for
-the swapping routine can be passed to the options-slot when creating the
-sdcMicro-Object.</p>
+<p>The function <code>recordSwap()</code> can be called using the micro data directly, as seen above, or with an sdcMicro-Object. Parameters for the swapping routine can be passed to the options-slot when creating the sdcMicro-Object.</p>
 <div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="co"># define paramters</span></span>
 <span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>hierarchy <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;nuts1&quot;</span>,<span class="st">&quot;nuts2&quot;</span>)</span>
 <span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>risk_variables <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;hincome&quot;</span>,<span class="st">&quot;ageGroup&quot;</span>,<span class="st">&quot;gender&quot;</span>)</span>
@@ -918,8 +561,8 @@ sdcMicro-Object.</p>
 <pre><code>## Recordswapping was successful!</code></pre>
 <div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>dat_swapped_sdc[<span class="sc">!</span><span class="fu">duplicated</span>(hid),.N,by<span class="ot">=</span>.(<span class="at">id_swapped =</span> hid<span class="sc">!=</span>hid_swapped)]</span></code></pre></div>
 <pre><code>##    id_swapped    N
-## 1:       TRUE  500
-## 2:      FALSE 9500</code></pre>
+## 1:      FALSE 9500
+## 2:       TRUE  500</code></pre>
 </div>
 </div>
 

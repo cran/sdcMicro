@@ -63,25 +63,28 @@
 #' \code{kAnon} is a more intutitive term for localSuppression because the aim is always
 #' to obtain k-anonymity for some parts of the data.
 #' @examples
+#' \donttest{
 #' data(francdat)
+#'
 #' ## Local Suppression
 #' localS <- localSuppression(francdat, keyVar=c(4,5,6))
 #' localS
 #' plot(localS)
-#' \dontrun{
+#'
 #' ## for objects of class sdcMicro, no stratification
 #' data(testdata2)
-#' sdc <- createSdcObj(testdata2,
-#'   keyVars=c('urbrur','roof','walls','water','electcon','relat','sex'),
-#'   numVars=c('expend','income','savings'), w='sampling_weight')
+#' kv <- c("urbrur", "roof", "walls", "water", "electcon", "relat", "sex")
+#' sdc <- createSdcObj(testdata2, keyVars = kv, w = "sampling_weight")
 #' sdc <- localSuppression(sdc)
 #'
 #' ## for objects of class sdcMicro, with stratification
 #' testdata2$ageG <- cut(testdata2$age, 5, labels=paste0("AG",1:5))
-#' sdc <- createSdcObj(testdata2,
-#'   keyVars=c('urbrur','roof','walls','water','electcon','relat','sex'),
-#'   numVars=c('expend','income','savings'), w='sampling_weight',
-#'   strataVar='ageG')
+#' sdc <- createSdcObj(
+#'   dat = testdata2,
+#'   keyVars = kv,
+#'   w = "sampling_weight",
+#'   strataVar = "ageG"
+#' )
 #' sdc <- localSuppression(sdc)
 #'
 #' ## it is also possible to provide k-anonymity for subsets of key-variables
@@ -89,25 +92,21 @@
 #' ## in this case we want to provide 10-anonymity for all combinations
 #' ## of 5 key variables, 20-anonymity for all combinations with 4 key variables
 #' ## and 30-anonymity for all combinations of 3 key variables.
-#' sdc <- createSdcObj(testdata2,
-#'   keyVars=c('urbrur','roof','walls','water','electcon','relat','sex'),
-#'   numVars=c('expend','income','savings'), w='sampling_weight')
+#' sdc <- createSdcObj(testdata2, keyVars = kv, w = "sampling_weight")
 #' combs <- 5:3
-#' k <- c(10,20,30)
-#' sdc <- localSuppression(sdc, k=k, combs=combs)
+#' k <- c(10, 20, 30)
+#' sdc <- localSuppression(sdc, k = k, combs = combs)
 #'
 #' ## data.frame method (no stratification)
-#' keyVars <- c("urbrur","roof","walls","water","electcon","relat","sex")
-#' strataVars <- c("ageG")
-#' inp <- testdata2[,c(keyVars, strataVars)]
-#' ls <- localSuppression(inp, keyVars=1:7)
+#' inp <- testdata2[,c(kv, "ageG")]
+#' ls <- localSuppression(inp, keyVars = 1:7)
 #' print(ls)
 #' plot(ls)
 #'
 #' ## data.frame method (with stratification)
-#' ls <- kAnon(inp, keyVars=1:7, strataVars=8)
+#' ls <- kAnon(inp, keyVars = 1:7, strataVars = 8)
 #' print(ls)
-#' plot(ls, showTotalSupps=TRUE)
+#' plot(ls)
 #' }
 localSuppression <- function(obj, k = 2, importance = NULL, combs = NULL, ...) {
   localSuppressionX(
@@ -641,41 +640,38 @@ print.localSuppression <- function(x, ...) {
   invisible(NULL)
 }
 
-#' plot method for localSuppression objects
+#' Plots for localSuppression objects
 #'
-#' Barplot for objects from class localSuppression.
+#' This function creates barplots to display the number of suppressed values
+#' in categorical key variables to achieve `k`-anonymity.
 #'
-#' Just look at the resulting plot.
-#'
-#' @param x object of class \sQuote{localSuppression}
-#' @param \dots Additional arguments, currently available are:
-#' \itemize{
-#' \item showDetails logical, if set, a plot of suppressions by
+#' @param x object of derived from [localSuppression()]
+#' @param ... Additional arguments, currently available are:
+#' - `"showDetails"`: logical, if set, a plot of suppressions by
 #' strata is shown (if possible)
-#' }
 #' @author Bernhard Meindl, Matthias Templ
-#' @seealso \code{\link{localSuppression}}
-#' @keywords aplot
+#' @md
+#' @seealso [localSuppression()]
+#' @keywords plot
 #' @method plot localSuppression
 #' @export
+#' @return a `ggplot` plot object
 #' @examples
-#' ## example from Capobianchi, Polettini and Lucarelli:
 #' data(francdat)
-#' l1 <- localSuppression(francdat, keyVars=c(2,4,5,6))
+#' l1 <- localSuppression(obj = francdat, k = 2, keyVars = c(2, 4:6))
 #' l1
 #' plot(l1)
 #'
 #' ## with details of suppression by strata
 #' data(testdata2)
-#' testdata2$ageG <- cut(testdata2$age, 5, labels=paste0("AG",1:5))
-#' keyVars <- c("urbrur","roof","walls","water","electcon","relat","sex")
-#' strataVars <- c("ageG")
-#' inp <- testdata2[,c(keyVars, strataVars)]
-#' ls <- localSuppression(inp, keyVars=1:7, strataVars=8)
+#' testdata2$ageG <- cut(testdata2$age, 5, labels = paste0("AG",1:5))
+#' keyVars <- c("urbrur", "roof", "walls", "water", "electcon", "relat", "sex")
+#' strataVars <- "ageG"
+#' inp <- testdata2[, c(keyVars, strataVars)]
+#' ls <- localSuppression(inp, keyVars = 1:7, strataVars = 8)
 #' print(ls)
 #' plot(ls)
-#' plot(ls, showDetails=TRUE)
-#'
+#' plot(ls, showDetails = TRUE)
 #' @export plot.localSuppression
 plot.localSuppression <- function(x, ...) {
   vals <- NULL

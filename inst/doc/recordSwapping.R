@@ -172,6 +172,31 @@ dat_swapped3 <- recordSwap(data = copy(dat),
 dat_swapped3[!duplicated(hid),.N,by=.(id_swapped = hid!=hid_swapped)]
 
 ## -----------------------------------------------------------------------------
+hid <- "hid"
+similar <- list(c("hsize"))
+hier <- c("nuts1","nuts2","nuts3")
+risk_threshold <- 0.9
+# set risk matrix with low risk for everybody
+risk <- matrix(
+  data = rep(0.0001,3*nrow(dat)), 
+  ncol = 3,
+  dimnames = list(1:nrow(dat),
+                  hier)) 
+# for example, assign random people high risk value 
+set.seed(1234L)
+risk[sample(1:(length(hier)*nrow(dat)),size = 50)] <- 99 # risk value
+
+dat_swapped4  <- recordSwap(data = copy(dat), 
+                            hid = hid, 
+                            hierarchy = hier,
+                            similar,
+                            risk = risk, 
+                            risk_threshold = risk_threshold, 
+                            swaprate = 0,
+                            return_swapped_id = TRUE,
+                            seed = 1234L)
+
+## -----------------------------------------------------------------------------
 # calculate information loss for frequecy table nuts2 x national
 table_vars <- c("nuts2","national")
 iloss <- infoLoss(data=dat, data_swapped = dat_swapped3,

@@ -12,7 +12,7 @@
 
 <meta name="author" content="Johannes Gussenbauer" />
 
-<meta name="date" content="2022-10-13" />
+<meta name="date" content="2023-01-02" />
 
 <title>Targeted Record Swapping</title>
 
@@ -142,7 +142,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <h1 class="title toc-ignore">Targeted Record Swapping</h1>
 <h4 class="author">Johannes Gussenbauer</h4>
-<h4 class="date">2022-10-13</h4>
+<h4 class="date">2023-01-02</h4>
 
 
 
@@ -257,29 +257,29 @@ RISK_m = \frac{H_m}{\sum_iH_i}\cdot sN_n
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">createDat</span>(<span class="at">N=</span><span class="dv">100000</span>)</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>dat</span></code></pre></div>
 <pre><code>##         nuts1 nuts2 nuts3  lau2    hid hsize ageGroup gender national htype
-##      1:     2    25  2511 25114      1     4        2      2        3     9
-##      2:     2    25  2511 25114      1     4        5      1        3     9
-##      3:     2    25  2511 25114      1     4        1      2        2     9
-##      4:     2    25  2511 25114      1     4        7      2        2     9
-##      5:     2    21  2101 21012      2     6        2      2        1     3
+##      1:     1    14  1413 14133      1     2        2      2        3     2
+##      2:     1    14  1413 14133      1     2        2      2        5     2
+##      3:     2    22  2205 22052      2     1        1      2        2     6
+##      4:     2    22  2209 22094      3     6        4      2        3    10
+##      5:     2    22  2209 22094      3     6        6      1        3    10
 ##     ---                                                                    
-## 349005:     1    11  1104 11043 100000     5        2      1        1     3
-## 349006:     1    11  1104 11043 100000     5        4      1        5     3
-## 349007:     1    11  1104 11043 100000     5        6      2        4     3
-## 349008:     1    11  1104 11043 100000     5        6      1        3     3
-## 349009:     1    11  1104 11043 100000     5        7      2        3     3
+## 350678:     3    33  3309 33094 100000     5        4      1        3     7
+## 350679:     3    33  3309 33094 100000     5        3      2        2     7
+## 350680:     3    33  3309 33094 100000     5        4      1        1     7
+## 350681:     3    33  3309 33094 100000     5        3      2        1     7
+## 350682:     3    33  3309 33094 100000     5        6      1        3     7
 ##         hincome
-##      1:       5
-##      2:       5
-##      3:       5
-##      4:       5
-##      5:       1
+##      1:       7
+##      2:       7
+##      3:       4
+##      4:       3
+##      5:       3
 ##     ---        
-## 349005:       4
-## 349006:       4
-## 349007:       4
-## 349008:       4
-## 349009:       4</code></pre>
+## 350678:       3
+## 350679:       3
+## 350680:       3
+## 350681:       3
+## 350682:       3</code></pre>
 <p>Applying the record swapping to dat could look like this</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>hierarchy <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;nuts1&quot;</span>,<span class="st">&quot;nuts2&quot;</span>)</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>risk_variables <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;hincome&quot;</span>,<span class="st">&quot;ageGroup&quot;</span>,<span class="st">&quot;gender&quot;</span>)</span>
@@ -361,7 +361,7 @@ RISK_m = \frac{H_m}{\sum_iH_i}\cdot sN_n
 <span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>                          <span class="at">k_anonymity =</span> <span class="dv">3</span>,</span>
 <span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>                          <span class="at">swaprate =</span> <span class="fl">0.05</span>,</span>
 <span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>                          <span class="at">seed =</span> 123456L)</span></code></pre></div>
-<pre><code>## Donor household was not found in 5 case(s).
+<pre><code>## Donor household was not found in 7 case(s).
 ## See TRS_logfile.txt for a detailed list</code></pre>
 <p>The expected number of swapped households for a population of 10000 households and a swapping rate of 0.05 is 500. The actual number of swaps was however:</p>
 <div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>dat_compare <span class="ot">&lt;-</span> <span class="fu">merge</span>(dat[,.(<span class="fu">paste</span>(nuts1[<span class="dv">1</span>],nuts2[<span class="dv">1</span>])),<span class="at">by=</span>hid],</span>
@@ -369,7 +369,7 @@ RISK_m = \frac{H_m}{\sum_iH_i}\cdot sN_n
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="co"># number of swapped households</span></span>
 <span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(dat_compare[V1.x<span class="sc">!=</span>V1.y])</span></code></pre></div>
-<pre><code>## [1] 490</code></pre>
+<pre><code>## [1] 486</code></pre>
 <p>With the parameter <code>similar</code> multiple similarity profiles can be defined, if the parameter input is a <code>list</code>. If a donor could not be found for the first similarity profile (<code>similar[[1]]</code>) then a donor is searched for using the next similarity profile (<code>similar[[2]]</code>) and so on.</p>
 <p>Using multiple similarity profiles makes it easy to supply fall-back profiles if the initial profile is too specific.</p>
 <div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># additional profile contains only hsize</span></span>
@@ -420,21 +420,21 @@ RISK_m = \frac{H_m}{\sum_iH_i}\cdot sN_n
 <span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>                     dat_swapped[,.(<span class="fu">paste</span>(nuts1[<span class="dv">1</span>],nuts2[<span class="dv">1</span>])),<span class="at">by=</span>hid],<span class="at">by=</span><span class="st">&quot;hid&quot;</span>)</span>
 <span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(dat_compare[V1.x<span class="sc">!=</span>V1.y])</span></code></pre></div>
 <pre><code>##    hid V1.x V1.y
-## 1:   9 3 35 2 23
-## 2:  18 2 25 1 14
-## 3:  37 1 14 2 24
-## 4:  84 2 21 1 15
-## 5:  85 1 12 1 14
-## 6: 100 1 13 2 25</code></pre>
+## 1:  37 3 34 2 22
+## 2:  84 2 25 3 31
+## 3:  85 1 14 2 21
+## 4:  97 3 35 2 24
+## 5: 100 1 14 3 32
+## 6: 113 1 11 1 12</code></pre>
 <p>For <code>nuts1==1</code> and <code>nuts2==14</code> the <code>nuts3</code> variables takes on values</p>
 <div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>dat[nuts1<span class="sc">==</span><span class="dv">1</span><span class="sc">&amp;</span>nuts2<span class="sc">==</span><span class="dv">14</span>,<span class="fu">sort</span>(<span class="fu">unique</span>(nuts3))]</span></code></pre></div>
 <pre><code>##  [1] 1401 1402 1403 1404 1405 1406 1407 1408 1409 1410 1411 1412 1413 1414 1415</code></pre>
 <p>In the swapped data set there are however many more values for <code>nuts3</code> now which are not coherent with <code>nuts1==1</code> and <code>nuts2==14</code></p>
 <div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>dat_swapped[nuts1<span class="sc">==</span><span class="dv">1</span><span class="sc">&amp;</span>nuts2<span class="sc">==</span><span class="dv">14</span>,<span class="fu">sort</span>(<span class="fu">unique</span>(nuts3))]</span></code></pre></div>
-<pre><code>##  [1] 1111 1112 1205 1212 1213 1307 1401 1402 1403 1404 1405 1406 1407 1408 1409
-## [16] 1410 1411 1412 1413 1414 1415 1504 1505 1506 1508 1513 2115 2207 2211 2212
-## [31] 2214 2310 2406 2408 2410 2503 2507 2509 3109 3114 3303 3312 3314 3403 3408
-## [46] 3411 3501 3504 3507</code></pre>
+<pre><code>##  [1] 1107 1109 1214 1305 1401 1402 1403 1404 1405 1406 1407 1408 1409 1410 1411
+## [16] 1412 1413 1414 1415 1502 1513 1514 1515 2102 2106 2203 2206 2308 2413 2502
+## [31] 3102 3103 3110 3112 3114 3202 3210 3212 3215 3307 3313 3410 3501 3506 3511
+## [46] 3514</code></pre>
 <p>Using the parameter <code>carry_along</code> one can define certain variables which are additionally swapped but do not interfere with the risk calculation, sampling and procedure of finding a donor.</p>
 <div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>dat_swapped2 <span class="ot">&lt;-</span> <span class="fu">recordSwap</span>(<span class="at">data =</span> <span class="fu">copy</span>(dat),</span>
 <span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>                        <span class="at">hid =</span> hid,</span>
@@ -480,29 +480,58 @@ RISK_m = \frac{H_m}{\sum_iH_i}\cdot sN_n
 ## 1:      FALSE 9500
 ## 2:       TRUE  500</code></pre>
 </div>
+<div id="supplying-your-own-risk-values" class="section level3">
+<h3>Supplying your own risk values</h3>
+<p>Instead of using <code>k_anonymity</code> and <code>risk_variables</code> for the calculation of a number of swaps, custom risk can be supplied. For custom risk for households can be used parameters <code>risk</code> and then the parameter <code>risk_threshold</code> is used to determine high-risk households. High-risk households are always swapped, and households with risk lower than the threshold are also used as donor households. To ensure that the household is not swapped, its risk must be set to 0.</p>
+<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>hid <span class="ot">&lt;-</span> <span class="st">&quot;hid&quot;</span></span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>similar <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="fu">c</span>(<span class="st">&quot;hsize&quot;</span>))</span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>hier <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;nuts1&quot;</span>,<span class="st">&quot;nuts2&quot;</span>,<span class="st">&quot;nuts3&quot;</span>)</span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>risk_threshold <span class="ot">&lt;-</span> <span class="fl">0.9</span></span>
+<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a><span class="co"># set risk matrix with low risk for everybody</span></span>
+<span id="cb44-6"><a href="#cb44-6" aria-hidden="true" tabindex="-1"></a>risk <span class="ot">&lt;-</span> <span class="fu">matrix</span>(</span>
+<span id="cb44-7"><a href="#cb44-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> <span class="fu">rep</span>(<span class="fl">0.0001</span>,<span class="dv">3</span><span class="sc">*</span><span class="fu">nrow</span>(dat)), </span>
+<span id="cb44-8"><a href="#cb44-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">ncol =</span> <span class="dv">3</span>,</span>
+<span id="cb44-9"><a href="#cb44-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">dimnames =</span> <span class="fu">list</span>(<span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(dat),</span>
+<span id="cb44-10"><a href="#cb44-10" aria-hidden="true" tabindex="-1"></a>                  hier)) </span>
+<span id="cb44-11"><a href="#cb44-11" aria-hidden="true" tabindex="-1"></a><span class="co"># for example, assign random people high risk value </span></span>
+<span id="cb44-12"><a href="#cb44-12" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(1234L)</span>
+<span id="cb44-13"><a href="#cb44-13" aria-hidden="true" tabindex="-1"></a>risk[<span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span>(<span class="fu">length</span>(hier)<span class="sc">*</span><span class="fu">nrow</span>(dat)),<span class="at">size =</span> <span class="dv">50</span>)] <span class="ot">&lt;-</span> <span class="dv">99</span> <span class="co"># risk value</span></span>
+<span id="cb44-14"><a href="#cb44-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-15"><a href="#cb44-15" aria-hidden="true" tabindex="-1"></a>dat_swapped4  <span class="ot">&lt;-</span> <span class="fu">recordSwap</span>(<span class="at">data =</span> <span class="fu">copy</span>(dat), </span>
+<span id="cb44-16"><a href="#cb44-16" aria-hidden="true" tabindex="-1"></a>                            <span class="at">hid =</span> hid, </span>
+<span id="cb44-17"><a href="#cb44-17" aria-hidden="true" tabindex="-1"></a>                            <span class="at">hierarchy =</span> hier,</span>
+<span id="cb44-18"><a href="#cb44-18" aria-hidden="true" tabindex="-1"></a>                            similar,</span>
+<span id="cb44-19"><a href="#cb44-19" aria-hidden="true" tabindex="-1"></a>                            <span class="at">risk =</span> risk, </span>
+<span id="cb44-20"><a href="#cb44-20" aria-hidden="true" tabindex="-1"></a>                            <span class="at">risk_threshold =</span> risk_threshold, </span>
+<span id="cb44-21"><a href="#cb44-21" aria-hidden="true" tabindex="-1"></a>                            <span class="at">swaprate =</span> <span class="dv">0</span>,</span>
+<span id="cb44-22"><a href="#cb44-22" aria-hidden="true" tabindex="-1"></a>                            <span class="at">return_swapped_id =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb44-23"><a href="#cb44-23" aria-hidden="true" tabindex="-1"></a>                            <span class="at">seed =</span> 1234L)</span></code></pre></div>
+<pre><code>## risk was adjusted in order to give each household member the maximum household risk value</code></pre>
+<pre><code>## Recordswapping was successful!</code></pre>
+</div>
 <div id="information-loss" class="section level3">
 <h3>Information loss</h3>
 <p>With the function <code>infoLoss()</code> one can calculate various information loss measures over a pre defined frequency table. This frequency table is defined by the parameter <code>table_vars</code>, which accepts column names of the original and swapped micro data. The frequency table is internally constructed using both the original and swapped micro data. Afterwards, various information loss measures are estimated over each of the table cells.</p>
-<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="co"># calculate information loss for frequecy table nuts2 x national</span></span>
-<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>table_vars <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;nuts2&quot;</span>,<span class="st">&quot;national&quot;</span>)</span>
-<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>iloss <span class="ot">&lt;-</span> <span class="fu">infoLoss</span>(<span class="at">data=</span>dat, <span class="at">data_swapped =</span> dat_swapped3,</span>
-<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>                  <span class="at">table_vars =</span> table_vars)</span>
-<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>iloss<span class="sc">$</span>measures</span></code></pre></div>
+<div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="co"># calculate information loss for frequecy table nuts2 x national</span></span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>table_vars <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;nuts2&quot;</span>,<span class="st">&quot;national&quot;</span>)</span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>iloss <span class="ot">&lt;-</span> <span class="fu">infoLoss</span>(<span class="at">data=</span>dat, <span class="at">data_swapped =</span> dat_swapped3,</span>
+<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a>                  <span class="at">table_vars =</span> table_vars)</span>
+<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a>iloss<span class="sc">$</span>measures</span></code></pre></div>
 <pre><code>##       what      absD   abssqrtD     relabsD
 ##  1:    Min  0.000000 0.00000000 0.000000000
 ##  2:    10%  0.000000 0.00000000 0.000000000
 ##  3:    20%  0.000000 0.00000000 0.000000000
-##  4:    30%  1.000000 0.02340696 0.002190107
-##  5:    40%  2.000000 0.04639418 0.004302945
-##  6:   Mean  3.747368 0.08693769 0.008082145
-##  7: Median  3.000000 0.06549663 0.005703422
-##  8:    60%  4.000000 0.08884110 0.007861701
-##  9:    70%  4.000000 0.09748174 0.009448550
-## 10:    80%  7.000000 0.16399846 0.015204913
-## 11:    90% 10.000000 0.23193654 0.021468536
-## 12:    95% 12.000000 0.27242454 0.024826456
-## 13:    99% 13.060000 0.31985208 0.030520460
-## 14:    Max 14.000000 0.32889851 0.031862745</code></pre>
+##  4:    30%  1.200000 0.02755415 0.002532580
+##  5:    40%  2.000000 0.04744603 0.004505346
+##  6:   Mean  4.021053 0.09319447 0.008642341
+##  7: Median  3.000000 0.07067153 0.006681514
+##  8:    60%  4.000000 0.09209674 0.008510638
+##  9:    70%  5.000000 0.12125443 0.011753685
+## 10:    80%  7.200000 0.16781462 0.015752586
+## 11:    90%  9.000000 0.20452779 0.018629047
+## 12:    95% 10.000000 0.23626913 0.022243552
+## 13:    99% 14.240000 0.32879853 0.030008445
+## 14:    Max 18.000000 0.42666273 0.041284404</code></pre>
 <p>Per default the absolute deviation (<span class="math inline">\(abs(x,y)\)</span>), relative absolute deviation (<span class="math inline">\(r\_abs(x,y)\)</span>), and absolute deviaion of square roots (<span class="math inline">\(abs\_sqr(x,y)\)</span>) is calculated between the table cells x and y, see also parameter <code>metric</code>.</p>
 <p><span class="math display">\[
 abs(x,y) = |x-y| 
@@ -514,56 +543,56 @@ r\_abs(x,y) = \frac{|x-y|}{x}
 abs\_sqr(x,y) = |\sqrt{x}-\sqrt{y}|
 \]</span></p>
 <p>It is also possible to supply a custom information loss metric by using parameter <code>custom_meric</code></p>
-<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="co"># define squared distance as custom metric</span></span>
-<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>squareD <span class="ot">&lt;-</span> <span class="cf">function</span>(x,y){</span>
-<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>   (x<span class="sc">-</span>y)<span class="sc">^</span><span class="dv">2</span></span>
-<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-6"><a href="#cb46-6" aria-hidden="true" tabindex="-1"></a>iloss <span class="ot">&lt;-</span> <span class="fu">infoLoss</span>(<span class="at">data=</span>dat, <span class="at">data_swapped =</span> dat_swapped3,</span>
-<span id="cb46-7"><a href="#cb46-7" aria-hidden="true" tabindex="-1"></a>                  <span class="at">table_vars =</span> <span class="fu">c</span>(<span class="st">&quot;nuts2&quot;</span>,<span class="st">&quot;national&quot;</span>),</span>
-<span id="cb46-8"><a href="#cb46-8" aria-hidden="true" tabindex="-1"></a>                  <span class="at">custom_metric =</span> <span class="fu">list</span>(<span class="at">squareD=</span>squareD))</span>
-<span id="cb46-9"><a href="#cb46-9" aria-hidden="true" tabindex="-1"></a>iloss<span class="sc">$</span>measures <span class="co"># includes custom loss as well</span></span></code></pre></div>
-<pre><code>##       what      absD   abssqrtD     relabsD   squareD
-##  1:    Min  0.000000 0.00000000 0.000000000   0.00000
-##  2:    10%  0.000000 0.00000000 0.000000000   0.00000
-##  3:    20%  0.000000 0.00000000 0.000000000   0.00000
-##  4:    30%  1.000000 0.02340696 0.002190107   1.00000
-##  5:    40%  2.000000 0.04639418 0.004302945   4.00000
-##  6:   Mean  3.747368 0.08693769 0.008082145  28.02105
-##  7: Median  3.000000 0.06549663 0.005703422   9.00000
-##  8:    60%  4.000000 0.08884110 0.007861701  16.00000
-##  9:    70%  4.000000 0.09748174 0.009448550  16.00000
-## 10:    80%  7.000000 0.16399846 0.015204913  49.00000
-## 11:    90% 10.000000 0.23193654 0.021468536 100.00000
-## 12:    95% 12.000000 0.27242454 0.024826456 144.00000
-## 13:    99% 13.060000 0.31985208 0.030520460 170.62000
-## 14:    Max 14.000000 0.32889851 0.031862745 196.00000</code></pre>
+<div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="co"># define squared distance as custom metric</span></span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>squareD <span class="ot">&lt;-</span> <span class="cf">function</span>(x,y){</span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>   (x<span class="sc">-</span>y)<span class="sc">^</span><span class="dv">2</span></span>
+<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-6"><a href="#cb49-6" aria-hidden="true" tabindex="-1"></a>iloss <span class="ot">&lt;-</span> <span class="fu">infoLoss</span>(<span class="at">data=</span>dat, <span class="at">data_swapped =</span> dat_swapped3,</span>
+<span id="cb49-7"><a href="#cb49-7" aria-hidden="true" tabindex="-1"></a>                  <span class="at">table_vars =</span> <span class="fu">c</span>(<span class="st">&quot;nuts2&quot;</span>,<span class="st">&quot;national&quot;</span>),</span>
+<span id="cb49-8"><a href="#cb49-8" aria-hidden="true" tabindex="-1"></a>                  <span class="at">custom_metric =</span> <span class="fu">list</span>(<span class="at">squareD=</span>squareD))</span>
+<span id="cb49-9"><a href="#cb49-9" aria-hidden="true" tabindex="-1"></a>iloss<span class="sc">$</span>measures <span class="co"># includes custom loss as well</span></span></code></pre></div>
+<pre><code>##       what      absD   abssqrtD     relabsD squareD
+##  1:    Min  0.000000 0.00000000 0.000000000    0.00
+##  2:    10%  0.000000 0.00000000 0.000000000    0.00
+##  3:    20%  0.000000 0.00000000 0.000000000    0.00
+##  4:    30%  1.200000 0.02755415 0.002532580    1.60
+##  5:    40%  2.000000 0.04744603 0.004505346    4.00
+##  6:   Mean  4.021053 0.09319447 0.008642341   30.40
+##  7: Median  3.000000 0.07067153 0.006681514    9.00
+##  8:    60%  4.000000 0.09209674 0.008510638   16.00
+##  9:    70%  5.000000 0.12125443 0.011753685   25.00
+## 10:    80%  7.200000 0.16781462 0.015752586   52.00
+## 11:    90%  9.000000 0.20452779 0.018629047   81.00
+## 12:    95% 10.000000 0.23626913 0.022243552  100.00
+## 13:    99% 14.240000 0.32879853 0.030008445  203.68
+## 14:    Max 18.000000 0.42666273 0.041284404  324.00</code></pre>
 </div>
 <div id="sdcmicro-objects" class="section level3">
 <h3>sdcMicro Objects</h3>
 <p>The function <code>recordSwap()</code> can be called using the micro data directly, as seen above, or with an sdcMicro-Object. Parameters for the swapping routine can be passed to the options-slot when creating the sdcMicro-Object.</p>
-<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="co"># define paramters</span></span>
-<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>hierarchy <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;nuts1&quot;</span>,<span class="st">&quot;nuts2&quot;</span>)</span>
-<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>risk_variables <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;hincome&quot;</span>,<span class="st">&quot;ageGroup&quot;</span>,<span class="st">&quot;gender&quot;</span>)</span>
-<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>k_anonymity <span class="ot">&lt;-</span> <span class="dv">3</span></span>
-<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a>swaprate <span class="ot">&lt;-</span> .<span class="dv">05</span></span>
-<span id="cb48-6"><a href="#cb48-6" aria-hidden="true" tabindex="-1"></a>hid <span class="ot">&lt;-</span> <span class="st">&quot;hid&quot;</span></span>
-<span id="cb48-7"><a href="#cb48-7" aria-hidden="true" tabindex="-1"></a>similar <span class="ot">&lt;-</span> <span class="st">&quot;hsize&quot;</span></span>
-<span id="cb48-8"><a href="#cb48-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb48-9"><a href="#cb48-9" aria-hidden="true" tabindex="-1"></a><span class="co"># create sdcMicro object with parameters for recordSwap()</span></span>
-<span id="cb48-10"><a href="#cb48-10" aria-hidden="true" tabindex="-1"></a>data_sdc <span class="ot">&lt;-</span> <span class="fu">createSdcObj</span>(dat,<span class="at">hhId =</span> hid,</span>
-<span id="cb48-11"><a href="#cb48-11" aria-hidden="true" tabindex="-1"></a>                         <span class="at">keyVars=</span>risk_variables,</span>
-<span id="cb48-12"><a href="#cb48-12" aria-hidden="true" tabindex="-1"></a>                         <span class="at">options =</span> <span class="fu">list</span>(<span class="at">k_anonymity =</span> k_anonymity,</span>
-<span id="cb48-13"><a href="#cb48-13" aria-hidden="true" tabindex="-1"></a>                                                    <span class="at">swaprate =</span> swaprate,</span>
-<span id="cb48-14"><a href="#cb48-14" aria-hidden="true" tabindex="-1"></a>                                                    <span class="at">similar =</span> similar,</span>
-<span id="cb48-15"><a href="#cb48-15" aria-hidden="true" tabindex="-1"></a>                                                    <span class="at">hierarchy =</span> hierarchy))</span></code></pre></div>
-<div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>dat_swapped_sdc <span class="ot">&lt;-</span> <span class="fu">recordSwap</span>(<span class="at">data =</span> data_sdc,</span>
-<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>                              <span class="at">return_swapped_id =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="co"># define paramters</span></span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>hierarchy <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;nuts1&quot;</span>,<span class="st">&quot;nuts2&quot;</span>)</span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a>risk_variables <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;hincome&quot;</span>,<span class="st">&quot;ageGroup&quot;</span>,<span class="st">&quot;gender&quot;</span>)</span>
+<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a>k_anonymity <span class="ot">&lt;-</span> <span class="dv">3</span></span>
+<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a>swaprate <span class="ot">&lt;-</span> .<span class="dv">05</span></span>
+<span id="cb51-6"><a href="#cb51-6" aria-hidden="true" tabindex="-1"></a>hid <span class="ot">&lt;-</span> <span class="st">&quot;hid&quot;</span></span>
+<span id="cb51-7"><a href="#cb51-7" aria-hidden="true" tabindex="-1"></a>similar <span class="ot">&lt;-</span> <span class="st">&quot;hsize&quot;</span></span>
+<span id="cb51-8"><a href="#cb51-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-9"><a href="#cb51-9" aria-hidden="true" tabindex="-1"></a><span class="co"># create sdcMicro object with parameters for recordSwap()</span></span>
+<span id="cb51-10"><a href="#cb51-10" aria-hidden="true" tabindex="-1"></a>data_sdc <span class="ot">&lt;-</span> <span class="fu">createSdcObj</span>(dat,<span class="at">hhId =</span> hid,</span>
+<span id="cb51-11"><a href="#cb51-11" aria-hidden="true" tabindex="-1"></a>                         <span class="at">keyVars=</span>risk_variables,</span>
+<span id="cb51-12"><a href="#cb51-12" aria-hidden="true" tabindex="-1"></a>                         <span class="at">options =</span> <span class="fu">list</span>(<span class="at">k_anonymity =</span> k_anonymity,</span>
+<span id="cb51-13"><a href="#cb51-13" aria-hidden="true" tabindex="-1"></a>                                                    <span class="at">swaprate =</span> swaprate,</span>
+<span id="cb51-14"><a href="#cb51-14" aria-hidden="true" tabindex="-1"></a>                                                    <span class="at">similar =</span> similar,</span>
+<span id="cb51-15"><a href="#cb51-15" aria-hidden="true" tabindex="-1"></a>                                                    <span class="at">hierarchy =</span> hierarchy))</span></code></pre></div>
+<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>dat_swapped_sdc <span class="ot">&lt;-</span> <span class="fu">recordSwap</span>(<span class="at">data =</span> data_sdc,</span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>                              <span class="at">return_swapped_id =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
 <pre><code>## Recordswapping was successful!</code></pre>
-<div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>dat_swapped_sdc[<span class="sc">!</span><span class="fu">duplicated</span>(hid),.N,by<span class="ot">=</span>.(<span class="at">id_swapped =</span> hid<span class="sc">!=</span>hid_swapped)]</span></code></pre></div>
+<div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>dat_swapped_sdc[<span class="sc">!</span><span class="fu">duplicated</span>(hid),.N,by<span class="ot">=</span>.(<span class="at">id_swapped =</span> hid<span class="sc">!=</span>hid_swapped)]</span></code></pre></div>
 <pre><code>##    id_swapped    N
-## 1:       TRUE  500
-## 2:      FALSE 9500</code></pre>
+## 1:      FALSE 9500
+## 2:       TRUE  500</code></pre>
 </div>
 </div>
 

@@ -1,3 +1,9 @@
+# 5.7.6
+- resolved a note from CRAN
+- removed `SystemRequirements: C++11` and corresponding Makevars-Files
+- removed conditional definition for unused typedef in `src/Framework.h`
+- Bugfix in `sdcApp()`
+
 # 5.7.5
 - minor modifications in target swapping procedures
 - resolved a note from CRAN

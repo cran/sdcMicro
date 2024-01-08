@@ -10,9 +10,9 @@ dRisk(obj, ...)
 \item{obj}{a \code{data.frame} or object of class \code{\link{sdcMicroObj-class}}}
 
 \item{...}{possible arguments are:
-\itemize{
-\item {\code{xm}: }{perturbed data}
-\item {\code{k}: }{percentage of the standard deviation}}}
+\describe{
+\item{\code{xm}:}{perturbed data}
+\item{\code{k}:}{percentage of the standard deviation}}}
 }
 \value{
 The disclosure risk or/and the modified \code{\link{sdcMicroObj-class}}

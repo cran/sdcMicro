@@ -74,7 +74,7 @@
 #' @return If \sQuote{obj} was of class \code{\link{sdcMicroObj-class}} the corresponding
 #' slots are filled, like manipNumVars, risk and utility. If \sQuote{obj} was
 #' of class \dQuote{data.frame}, an object of class \dQuote{micro} with following entities is returned:
-#' \itemize{
+#' \describe{
 #' \item{\code{x}: }{original data}
 #' \item{\code{mx}: }{the microaggregated dataset}
 #' \item{\code{method}: }{method}
@@ -119,6 +119,9 @@
 #' @export
 #' @examples
 #' data(testdata)
+#' # dontrun since Examples with CPU time larger 2.5 times elapsed time, because
+#' # of using data.table and multicore computation.
+#' \dontrun{
 #' m <- microaggregation(
 #'   obj = testdata[1:100, c("expend", "income", "savings")],
 #'   method = "mdav",
@@ -146,6 +149,7 @@
 #'   obj = sdc,
 #'   variables = "savings"
 #' )
+#' }
 microaggregation <- function(obj, variables=NULL, aggr=3, strata_variables=NULL,
   method="mdav", weights=NULL, nc=8, clustermethod="clara",
   measure="mean", trim=0, varsort=1, transf="log") {

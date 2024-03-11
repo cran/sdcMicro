@@ -399,7 +399,7 @@ overwrites k_anonymity. Should be ignored, for now, it is not fully
 tested yet.</li>
 <li><strong>k_anonymity</strong> integer defining the threshold of high
 risk households (k-anonymity). A record is not at risk if
-<code>k_anonymity &gt; counts</code>.</li>
+<code>k_anonymity &gt;= counts</code>.</li>
 <li><strong>risk_variables</strong> column indices of variables in which
 will be considered for estimating the risk. This is only used if
 <code>risk</code> was not supplied.</li>

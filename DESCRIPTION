@@ -2,8 +2,8 @@ Package: sdcMicro
 Type: Package
 Title: Statistical Disclosure Control Methods for Anonymization of Data
         and Risk Estimation
-Version: 5.7.8
-Date: 2024-03-09
+Version: 5.7.9
+Date: 2025-08-01
 Authors@R: c(
   person("Matthias", "Templ", email="matthias.templ@gmail.com", role = c("aut", "cre"), comment=c(ORCID="0000-0002-8638-5276")),
   person("Bernhard", "Meindl", email = "Bernhard.Meindl@statistik.gv.at", role = c("aut")),
@@ -23,7 +23,7 @@ LazyData: TRUE
 ByteCompile: TRUE
 LinkingTo: Rcpp
 Depends: R (>= 2.10)
-Suggests: laeken,testthat
+Suggests: laeken, parallel, testthat
 Imports: utils, stats, graphics, car, carData, rmarkdown, knitr,
         data.table, xtable, robustbase, cluster, MASS, e1071, tools,
         Rcpp, methods, ggplot2, shiny (>= 1.4.0), haven, rhandsontable,
@@ -43,14 +43,16 @@ Collate: '0classes.r' 'addGhostVars.R' 'addNoise.r' 'aux_functions.r'
         'sdcMicro-package.R' 'shuffle.R' 'suda2.R' 'timeEstimation.R'
         'topBotCoding.R' 'valTable.R' 'zzz.R' 'printFunctions.R'
         'mafast.R' 'maG.R' 'sdcApp.R' 'show_sdcMicroObj.R'
-RoxygenNote: 7.3.1
+RoxygenNote: 7.3.2
 VignetteBuilder: knitr
 Encoding: UTF-8
 NeedsCompilation: yes
-Packaged: 2024-03-10 12:00:14 UTC; matthias
-Author: Matthias Templ [aut, cre] (<https://orcid.org/0000-0002-8638-5276>),
+Packaged: 2025-08-06 11:24:10 UTC; matthias
+Author: Matthias Templ [aut, cre] (ORCID:
+    <https://orcid.org/0000-0002-8638-5276>),
   Bernhard Meindl [aut],
-  Alexander Kowarik [aut] (<https://orcid.org/0000-0001-8598-4130>),
+  Alexander Kowarik [aut] (ORCID:
+    <https://orcid.org/0000-0001-8598-4130>),
   Johannes Gussenbauer [aut],
   Organisation For Economic Co-Operation And Development [cph] (Initial
     published c(++) code (under LGPL) code for rank swapping,
@@ -61,4 +63,4 @@ Author: Matthias Templ [aut, cre] (<https://orcid.org/0000-0002-8638-5276>),
   Pascal Heus [cph] (original measure threshold cpp code (under LGPL))
 Maintainer: Matthias Templ <matthias.templ@gmail.com>
 Repository: CRAN
-Date/Publication: 2024-03-11 19:00:02 UTC
+Date/Publication: 2025-08-22 14:40:02 UTC

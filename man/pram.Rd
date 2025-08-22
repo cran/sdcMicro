@@ -29,7 +29,7 @@ be constructed as follows:
 \item the matrix must be a square matrix
 \item the rownames and colnames of the matrix must match the levels (in the same order) of the factor-variable that should be
 postrandomized.
-\item the rowSums and colSums of the matrix need to equal 1
+\item the rowSums of the matrix need to equal 1
 }
 
 It is also possible to combine the different ways. For details have a look at the examples.}
@@ -55,7 +55,7 @@ in sdcMicro > 4.5.0
 \examples{
 data(testdata)
 \donttest{
-## donttest is necessary because of 
+## donttest is necessary because of
 ## Examples with CPU time > 2.5 times elapsed time
 ## caused by using C++ code and/or data.table
 ## using a factor variable as input
@@ -142,7 +142,7 @@ sdc <- pram(sdc)
 print(sdc, type="pram")
 
 ## we can specify transition matrices for sdcMicroObj-objects too
-#testdata2$roof <- factor(testdata2$roof)
+testdata2$roof <- factor(testdata2$roof)
 sdc <- createSdcObj(
   dat = testdata2,
   keyVars = c("roof", "walls", "water", "electcon", "relat", "sex"),

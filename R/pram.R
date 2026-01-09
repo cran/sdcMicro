@@ -35,7 +35,6 @@
 #' @return a modified [sdcMicroObj-class] object or a new object containing
 #' original and post-randomized variables (with suffix "_pram").
 #' @author Alexander Kowarik, Matthias Templ, Bernhard Meindl
-#' @references \url{https://www.gnu.org/software/glpk/}
 #'
 #' Kowarik, A. and Templ, M. and Meindl, B. and Fonteneau, F. and Prantner, B.:
 #' *Testing of IHSN Cpp Code and Inclusion of New Methods into sdcMicro*,
@@ -507,9 +506,9 @@ pramWORK <- function(data, variables=NULL, strata_variables=NULL, params) {
     ll <- levels(data$tmpfactor_for_pram)
 
     # calculate or check and use transition-matrix
-    Rs <- calcTransitionMatrix(xvec=data[[v]], pd=pd[[i]], alpha=alpha[[i]])
     for (si in ll) {
       ii <- which(data$tmpfactor_for_pram==si & !is.na(data[[v]]))
+      Rs <- calcTransitionMatrix(xvec=data[[v]][ii], pd=pd[[i]], alpha=alpha[[i]])
       res <- do.pram(x=data[ii][[v]], Rs=Rs)$xpramed
       cmd <- paste0("data[ii,",v,"_pram:=res]")
       eval(parse(text=cmd))

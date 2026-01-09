@@ -2,8 +2,8 @@ Package: sdcMicro
 Type: Package
 Title: Statistical Disclosure Control Methods for Anonymization of Data
         and Risk Estimation
-Version: 5.7.9
-Date: 2025-08-01
+Version: 5.8.0
+Date: 2026-08-01
 Authors@R: c(
   person("Matthias", "Templ", email="matthias.templ@gmail.com", role = c("aut", "cre"), comment=c(ORCID="0000-0002-8638-5276")),
   person("Bernhard", "Meindl", email = "Bernhard.Meindl@statistik.gv.at", role = c("aut")),
@@ -23,18 +23,20 @@ LazyData: TRUE
 ByteCompile: TRUE
 LinkingTo: Rcpp
 Depends: R (>= 2.10)
-Suggests: laeken, parallel, testthat
+Suggests: laeken, parallel, testthat, pdftools, yaml
 Imports: utils, stats, graphics, car, carData, rmarkdown, knitr,
         data.table, xtable, robustbase, cluster, MASS, e1071, tools,
         Rcpp, methods, ggplot2, shiny (>= 1.4.0), haven, rhandsontable,
-        DT, shinyBS, prettydoc, VIM(>= 4.7.0)
+        DT, prettydoc, VIM (>= 4.7.0), httr, jsonlite
 License: GPL-2
 URL: https://github.com/sdcTools/sdcMicro
 Collate: '0classes.r' 'addGhostVars.R' 'addNoise.r' 'aux_functions.r'
         'createDat.R' 'createNewID.R' 'dataGen.r' 'dataSets.R'
         'dRisk.R' 'dRiskRMD.R' 'dUtility.R' 'freqCalc.r'
         'globalRecode.R' 'groupAndRename.R' 'GUIfunctions.R'
-        'indivRisk.R' 'infoLoss.R' 'LocalRecProg.R' 'localSupp.R'
+        'indivRisk.R' 'infoLoss.R' 'KI_createSdcObj.R'
+        'ki_access_utilities.R' 'KI_applyAnonymization.R'
+        'ki_anonymization_utilities.R' 'LocalRecProg.R' 'localSupp.R'
         'localSuppression.R' 'mdav.R' 'measure_risk.R' 'methods.r'
         'microaggregation.R' 'modRisk.R'
         'muargus_compatibility_functions.R' 'mvTopCoding.R'
@@ -43,11 +45,11 @@ Collate: '0classes.r' 'addGhostVars.R' 'addNoise.r' 'aux_functions.r'
         'sdcMicro-package.R' 'shuffle.R' 'suda2.R' 'timeEstimation.R'
         'topBotCoding.R' 'valTable.R' 'zzz.R' 'printFunctions.R'
         'mafast.R' 'maG.R' 'sdcApp.R' 'show_sdcMicroObj.R'
-RoxygenNote: 7.3.2
 VignetteBuilder: knitr
 Encoding: UTF-8
+RoxygenNote: 7.3.3
 NeedsCompilation: yes
-Packaged: 2025-08-06 11:24:10 UTC; matthias
+Packaged: 2026-01-09 08:36:03 UTC; matthias
 Author: Matthias Templ [aut, cre] (ORCID:
     <https://orcid.org/0000-0002-8638-5276>),
   Bernhard Meindl [aut],
@@ -63,4 +65,4 @@ Author: Matthias Templ [aut, cre] (ORCID:
   Pascal Heus [cph] (original measure threshold cpp code (under LGPL))
 Maintainer: Matthias Templ <matthias.templ@gmail.com>
 Repository: CRAN
-Date/Publication: 2025-08-22 14:40:02 UTC
+Date/Publication: 2026-01-09 09:20:02 UTC
